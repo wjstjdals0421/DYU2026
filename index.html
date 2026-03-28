@@ -7,7 +7,88 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1>DYU2026</h1>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <h1>DYU 2026</h1>
+    </div>
+
+    <!-- Main Content (Initially Hidden) -->
+    <div id="main-content" class="hidden">
+        <header>
+            <nav>
+                <div class="logo">DYU 2026</div>
+                <ul class="nav-links">
+                    <li><a href="#works">Works</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section id="hero">
+                <div class="hero-content">
+                    <p class="subtitle">Graduation Exhibition</p>
+                    <h2 class="title">New Horizons</h2>
+                </div>
+            </section>
+
+            <section id="works">
+                <div class="section-header">
+                    <h3>Featured Works</h3>
+                </div>
+                <div class="works-grid">
+                    <div class="work-item large">
+                        <div class="work-image" style="background-color: #f0f0f0;"></div>
+                        <div class="work-info">
+                            <span class="category">Digital Art</span>
+                            <h4>The Future of Form</h4>
+                        </div>
+                    </div>
+                    <div class="work-item">
+                        <div class="work-image" style="background-color: #e0e0e0;"></div>
+                        <div class="work-info">
+                            <span class="category">Sculpture</span>
+                            <h4>Silent Echoes</h4>
+                        </div>
+                    </div>
+                    <div class="work-item">
+                        <div class="work-image" style="background-color: #d0d0d0;"></div>
+                        <div class="work-info">
+                            <span class="category">Photography</span>
+                            <h4>Light & Shadow</h4>
+                        </div>
+                    </div>
+                    <div class="work-item wide">
+                        <div class="work-image" style="background-color: #c0c0c0;"></div>
+                        <div class="work-info">
+                            <span class="category">Interaction Design</span>
+                            <h4>Connected Realms</h4>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about">
+                <div class="container">
+                    <h3>About the Exhibition</h3>
+                    <p>The DYU 2026 Graduation Exhibition showcases the diverse talents and creative visions of our graduating class. Each piece is a testament to years of exploration, dedication, and artistic growth.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">DYU 2026</div>
+                <p>&copy; 2026 Graduation Exhibition. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
     <script src="./main.js"></script>
 </body>
 </html>
