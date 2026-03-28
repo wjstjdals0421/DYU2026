@@ -8,4 +8,26 @@ body {
 }
 h1 {
     font-size: 3rem;
+    opacity: 0;
+    animation: fadeEffect 4s ease-in-out forwards;
+}
+
+@keyframes fadeEffect {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    25% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    75% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+        visibility: hidden;
+    }
 }
