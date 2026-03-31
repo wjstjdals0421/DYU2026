@@ -1,89 +1,122 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYU2026</title>
+    <title>DYU2026 | Wireframe</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <!-- Loading Screen -->
     <div id="loading-screen">
-        <h1>DYU 2026</h1>
+        <div class="placeholder-box" style="width: 200px; height: 40px; background: #ddd;"></div>
     </div>
 
-    <!-- Main Content (Initially Hidden) -->
+    <!-- Main Wrapper -->
     <div id="main-content" class="hidden">
         <header>
+            <div class="logo">LOGO</div>
             <nav>
-                <div class="logo">DYU 2026</div>
                 <ul class="nav-links">
-                    <li><a href="#works">Works</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="./index.html" class="nav-item" data-target="home-section">Home</a></li>
+                    <li><a href="./archive.html" class="nav-item" data-target="archive-section">Archive</a></li>
+                    <li><a href="./about.html" class="nav-item" data-target="about-section">About</a></li>
                 </ul>
             </nav>
         </header>
 
-        <main>
-            <section id="hero">
-                <div class="hero-content">
-                    <p class="subtitle">Graduation Exhibition</p>
-                    <h2 class="title">New Horizons</h2>
-                </div>
+        <main id="content-area">
+            <!-- Home Section -->
+            <section id="home-section" class="page-section active">
+                <section id="hero">
+                    <div class="hero-content">
+                        <p class="subtitle">LOREM IPSUM DOLOR</p>
+                        <h2 class="title">LOREM IPSUM</h2>
+                    </div>
+                </section>
+
+                <section id="works">
+                    <div class="section-header">
+                        <div class="placeholder-text" style="width: 300px; height: 3rem; background: #eee; margin: 0 auto;"></div>
+                    </div>
+                    <div class="works-grid">
+                        <div class="work-item large project-link" data-project="1">
+                            <div class="work-image placeholder-grey"></div>
+                            <div class="work-info">
+                                <span class="category">CATEGORY</span>
+                                <h4>PROJECT TITLE</h4>
+                            </div>
+                        </div>
+                        <div class="work-item project-link" data-project="2">
+                            <div class="work-image placeholder-grey"></div>
+                            <div class="work-info">
+                                <span class="category">CATEGORY</span>
+                                <h4>PROJECT TITLE</h4>
+                            </div>
+                        </div>
+                        <div class="work-item project-link" data-project="3">
+                            <div class="work-image placeholder-grey"></div>
+                            <div class="work-info">
+                                <span class="category">CATEGORY</span>
+                                <h4>PROJECT TITLE</h4>
+                            </div>
+                        </div>
+                        <div class="work-item wide project-link" data-project="4">
+                            <div class="work-image placeholder-grey"></div>
+                            <div class="work-info">
+                                <span class="category">CATEGORY</span>
+                                <h4>PROJECT TITLE</h4>
+                            </div>
+                        </div>
+                        <div class="work-item project-link" data-project="5">
+                            <div class="work-image placeholder-grey"></div>
+                            <div class="work-info">
+                                <span class="category">CATEGORY</span>
+                                <h4>PROJECT TITLE</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
 
-            <section id="works">
-                <div class="section-header">
-                    <h3>Featured Works</h3>
-                </div>
-                <div class="works-grid">
-                    <div class="work-item large">
-                        <div class="work-image" style="background-color: #f0f0f0;"></div>
-                        <div class="work-info">
-                            <span class="category">Digital Art</span>
-                            <h4>The Future of Form</h4>
-                        </div>
-                    </div>
-                    <div class="work-item">
-                        <div class="work-image" style="background-color: #e0e0e0;"></div>
-                        <div class="work-info">
-                            <span class="category">Sculpture</span>
-                            <h4>Silent Echoes</h4>
-                        </div>
-                    </div>
-                    <div class="work-item">
-                        <div class="work-image" style="background-color: #d0d0d0;"></div>
-                        <div class="work-info">
-                            <span class="category">Photography</span>
-                            <h4>Light & Shadow</h4>
-                        </div>
-                    </div>
-                    <div class="work-item wide">
-                        <div class="work-image" style="background-color: #c0c0c0;"></div>
-                        <div class="work-info">
-                            <span class="category">Interaction Design</span>
-                            <h4>Connected Realms</h4>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="about">
+            <!-- Project Detail Section -->
+            <section id="project-detail-section" class="page-section">
                 <div class="container">
-                    <h3>About the Exhibition</h3>
-                    <p>The DYU 2026 Graduation Exhibition showcases the diverse talents and creative visions of our graduating class. Each piece is a testament to years of exploration, dedication, and artistic growth.</p>
+                    <a href="./index.html" class="back-link">&larr; BACK</a>
+                    <div class="project-header">
+                        <h2 class="project-title">PROJECT TITLE</h2>
+                        <p class="project-category">CATEGORY / YEAR</p>
+                    </div>
+                    <div class="project-main-image placeholder-grey" style="height: 60vh; margin-bottom: 4rem;"></div>
+                    <div class="project-description">
+                        <div class="desc-col">
+                            <h3>DESCRIPTION</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
+                        </div>
+                        <div class="info-col">
+                            <h3>DETAILS</h3>
+                            <ul>
+                                <li><strong>ROLE:</strong> LOREM IPSUM</li>
+                                <li><strong>TOOLS:</strong> DOLOR, SIT, AMET</li>
+                                <li><strong>DATE:</strong> MARCH 2026</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="project-gallery">
+                        <div class="gallery-item placeholder-grey" style="height: 400px;"></div>
+                        <div class="gallery-item placeholder-grey" style="height: 400px;"></div>
+                    </div>
                 </div>
             </section>
         </main>
 
         <footer>
             <div class="footer-content">
-                <div class="footer-logo">DYU 2026</div>
-                <p>&copy; 2026 Graduation Exhibition. All rights reserved.</p>
+                <div class="footer-logo">LOGO</div>
+                <p>&copy; 2026 LOREM IPSUM. ALL RIGHTS RESERVED.</p>
                 <div class="social-links">
-                    <a href="#">Instagram</a>
-                    <a href="#">LinkedIn</a>
+                    <a href="#">LINK</a>
+                    <a href="#">LINK</a>
                 </div>
             </div>
         </footer>

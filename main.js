@@ -1,68 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById('loading-screen');
     const mainContent = document.getElementById('main-content');
+    const sections = document.querySelectorAll('.page-section');
+    const projectLinks = document.querySelectorAll('.project-link');
 
-    // Wait for the loading animation to finish (4 seconds)
-    setTimeout(() => {
-        // Fade out loading screen
-        loadingScreen.style.transition = 'opacity 1s ease-in-out';
-        loadingScreen.style.opacity = '0';
-
+    // 1. Loading Animation (Only on Home if present)
+    if (loadingScreen) {
         setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-            mainContent.classList.remove('hidden');
-            
-            // Trigger fade-in of main content
-            setTimeout(() => {
-                mainContent.classList.add('visible');
-            }, 50);
-        }, 1000);
-    }, 4000);
+            loadingScreen.style.transition = 'opacity 0.8s ease';
+            loadingScreen.style.opacity = '0';
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop,
-                    behavior: 'smooth'
-                });
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                if (mainContent) mainContent.classList.remove('hidden');
+                setTimeout(() => {
+                    if (mainContent) mainContent.classList.add('visible');
+                }, 50);
+            }, 800);
+        }, 1500);
+    } else {
+        // If no loading screen, just show content
+        if (mainContent) {
+            mainContent.classList.remove('hidden');
+            mainContent.classList.add('visible');
+        }
+    }
+
+    // 2. Navigation Logic
+    // For wireframe, clicking project links toggles local section display
+    function showSection(sectionId) {
+        sections.forEach(section => {
+            section.classList.remove('active');
+            if (section.id === sectionId) {
+                section.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    // Project Item Clicks (Single-file fallback for demo)
+    projectLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // If we're on index.html, we can show the detail section
+            if (document.getElementById('project-detail-section')) {
+                e.preventDefault();
+                showSection('project-detail-section');
             }
         });
     });
 
-    // Reveal elements on scroll
-    const observerOptions = {
-        threshold: 0.1
-    };
+    // Logo Click to Home
+    const logo = document.querySelector('.logo');
+    if (logo) {
+        logo.addEventListener('click', () => {
+            window.location.href = './index.html';
+        });
+    }
 
+    // 3. Scroll Reveal (Always active)
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('reveal');
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
                 observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
+    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.work-item, #about h3, #about p').forEach(el => {
+    document.querySelectorAll('.work-item, .archive-item, .about-content').forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'all 0.8s ease-out';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'all 0.6s ease-out';
         observer.observe(el);
     });
-
-    // Add a class for revealing
-    const style = document.createElement('style');
-    style.innerHTML = `
-        .reveal {
-            opacity: 1 !important;
-            transform: translateY(0) !important;
-        }
-    `;
-    document.head.appendChild(style);
 });
