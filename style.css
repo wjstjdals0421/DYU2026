@@ -315,7 +315,7 @@ nav {
     font-size: 0.9rem;
 }
 
-/* Text Line Clamp Utilities */
+/* Text Line Clamp Utilities (v1.1) */
 .line-clamp {
     display: -webkit-box;
     -webkit-box-orient: vertical;
