@@ -140,6 +140,10 @@
             let currentIndex = 0;
             let isScrolling = false;
 
+            // Touch support for Mobile
+            let touchStartY = 0;
+            let touchEndY = 0;
+
             function goToSection(index) {
                 if (index < 0 || index >= sections.length) return;
                 isScrolling = true;
@@ -151,7 +155,6 @@
                     dot.classList.toggle('active', i === index);
                 });
 
-                // 섹션 내 요소들 애니메이션 트리거
                 sections.forEach((sec, i) => {
                     const reveals = sec.querySelectorAll('.reveal, .reveal-scale');
                     reveals.forEach(el => {
@@ -163,11 +166,28 @@
                 setTimeout(() => { isScrolling = false; }, 1000);
             }
 
+            // Wheel Event (Desktop)
             window.addEventListener('wheel', (e) => {
                 if (isScrolling) return;
                 if (e.deltaY > 0) goToSection(currentIndex + 1);
                 else goToSection(currentIndex - 1);
             }, { passive: false });
+
+            // Touch Events (Mobile Swiping)
+            window.addEventListener('touchstart', (e) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            window.addEventListener('touchend', (e) => {
+                if (isScrolling) return;
+                touchEndY = e.changedTouches[0].clientY;
+                const diff = touchStartY - touchEndY;
+
+                if (Math.abs(diff) > 50) { // 50px 이상 스와이프 시 이동
+                    if (diff > 0) goToSection(currentIndex + 1);
+                    else goToSection(currentIndex - 1);
+                }
+            }, { passive: true });
 
             dots.forEach(dot => {
                 dot.addEventListener('click', () => {
@@ -175,8 +195,10 @@
                 });
             });
 
-            // 초기 실행
-            setTimeout(() => goToSection(0), 2500);
+            // 초기 실행 (로딩 후 첫 섹션 애니메이션 트리거)
+            setTimeout(() => {
+                if (currentIndex === 0) goToSection(0);
+            }, 2500);
         });
     </script>
 </body>
