@@ -1,57 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archive | DYU2026</title>
+    <title>Archive | GSDD 2026</title>
     <link rel="stylesheet" href="./style.css">
+    <style>
+        .archive-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 12rem 5% 8rem 5%;
+        }
+        .archive-title {
+            font-family: var(--serif-font);
+            font-size: 3.5rem;
+            margin-bottom: 4rem;
+        }
+        .archive-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .archive-item {
+            border-bottom: 1px solid #eee;
+        }
+        .archive-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+            text-decoration: none;
+            color: #000;
+            transition: all 0.3s;
+        }
+        .archive-link:hover {
+            color: #888;
+            padding-left: 1rem;
+        }
+        .year {
+            font-size: 2.5rem;
+            font-weight: 300;
+            font-family: var(--serif-font);
+        }
+        .url {
+            font-size: 0.8rem;
+            color: #aaa;
+            letter-spacing: 0.05rem;
+        }
+        .arrow { font-size: 1.5rem; }
+    </style>
 </head>
 <body>
-    <div id="main-content">
-        <header>
-            <div class="logo">LOGO</div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="./index.html">Home</a></li>
-                    <li><a href="./archive.html">Archive</a></li>
-                    <li><a href="./about.html">About</a></li>
-                </ul>
-            </nav>
-        </header>
+    <header>
+        <div class="logo" onclick="location.href='./index.html'">GSDD</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="./about/about.html">About</a></li>
+                <li><a href="./gallery/gallery.html?view=project">Project</a></li>
+                <li><a href="./gallery/gallery.html?view=designer">Designer</a></li>
+                <li><a href="./archive.html">Archive</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <main>
-            <section id="archive-section" class="page-section active">
-                <div class="container">
-                    <h2 class="section-title">ARCHIVE</h2>
-                    <div class="archive-list">
-                        <div class="archive-item">
-                            <span class="year">2026</span>
-                            <div class="placeholder-line" style="width: 60%; height: 1rem; background: #eee;"></div>
-                        </div>
-                        <div class="archive-item">
-                            <span class="year">2026</span>
-                            <div class="placeholder-line" style="width: 45%; height: 1rem; background: #eee;"></div>
-                        </div>
-                        <div class="archive-item">
-                            <span class="year">2026</span>
-                            <div class="placeholder-line" style="width: 70%; height: 1rem; background: #eee;"></div>
-                        </div>
-                        <div class="archive-item">
-                            <span class="year">2026</span>
-                            <div class="placeholder-line" style="width: 55%; height: 1rem; background: #eee;"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <main class="archive-container">
+        <h1 class="archive-title reveal">Archive</h1>
+        <ul class="archive-list">
+            <li class="archive-item reveal delay-1">
+                <a href="http://gsdd.org/2025/" target="_blank" class="archive-link">
+                    <span class="year">2025</span>
+                    <span class="url">gsdd.org/2025</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal delay-2">
+                <a href="http://gsdd.org/2024/" target="_blank" class="archive-link">
+                    <span class="year">2024</span>
+                    <span class="url">gsdd.org/2024</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal delay-3">
+                <a href="http://gsdd.org/2023/" target="_blank" class="archive-link">
+                    <span class="year">2023</span>
+                    <span class="url">gsdd.org/2023</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal">
+                <a href="http://gsdd.org/2022/" target="_blank" class="archive-link">
+                    <span class="year">2022</span>
+                    <span class="url">gsdd.org/2022</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal">
+                <a href="http://gsdd.org/2021/" target="_blank" class="archive-link">
+                    <span class="year">2021</span>
+                    <span class="url">gsdd.org/2021</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal">
+                <a href="http://gsdd.org/2020/" target="_blank" class="archive-link">
+                    <span class="year">2020</span>
+                    <span class="url">gsdd.org/2020</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+            <li class="archive-item reveal">
+                <a href="http://gsdd.org/2019/" target="_blank" class="archive-link">
+                    <span class="year">2019</span>
+                    <span class="url">gsdd.org/2019</span>
+                    <span class="arrow">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </main>
 
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">LOGO</div>
-                <p>&copy; 2026 LOREM IPSUM. ALL RIGHTS RESERVED.</p>
-            </div>
-        </footer>
-    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">GSDD</div>
+            <p>&copy; 2026 GSDD. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
     <script src="./main.js"></script>
 </body>
 </html>

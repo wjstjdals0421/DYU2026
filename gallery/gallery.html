@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | GSDD 2026</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .work-container { padding: 8rem 5% 4rem 5%; }
+        .sub-tab-container { margin-bottom: 2rem; display: none; gap: 1.5rem; }
+        .sub-tab-container.visible { display: flex; }
+        .sub-tab { background: none; border: none; font-size: 0.9rem; font-weight: 500; color: #aaa; cursor: pointer; padding: 0; transition: color 0.3s; }
+        .sub-tab.active { color: #000; font-weight: 700; }
+
+        #project-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5rem 1.5rem; }
+        .project-card { cursor: pointer; }
+        .project-thumb { width: 100%; aspect-ratio: 3/4; background: #f5f5f5; margin-bottom: 1rem; overflow: hidden; border-radius: 12px; }
+        .project-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .project-card:hover .project-thumb img { transform: scale(1.05); }
+        .project-info h3 { font-size: 1rem; margin: 0.5rem 0; font-weight: 700; }
+        .project-info .author { font-size: 0.85rem; color: #888; margin-bottom: 0.5rem; }
+        .project-info .desc { font-size: 0.85rem; color: #666; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        #designer-list { display: flex; flex-direction: column; }
+        .designer-item { display: flex; padding: 1.5rem 0; border-bottom: 1px solid #eee; font-size: 1rem; align-items: center; cursor: pointer; transition: background 0.2s; }
+        .designer-item:hover { background: #fafafa; }
+        .designer-item span { flex: 1; }
+        .designer-item .name { font-weight: 700; max-width: 120px; }
+        .designer-item .major-tag { font-size: 0.75rem; color: #888; max-width: 80px; text-transform: uppercase; }
+        .designer-item .student-id { color: #aaa; max-width: 120px; font-size: 0.9rem; }
+        .designer-item .project-title { color: #333; }
+        .designer-item .divider { flex: 0 0 20px; text-align: center; color: #eee; }
+
+        .nav-links li a.active { color: #000; font-weight: 800; }
+
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px);
+            display: flex; justify-content: center; align-items: center; z-index: 2000;
+            visibility: hidden; opacity: 0; pointer-events: none;
+            transition: opacity 0.5s var(--ease-ios), visibility 0.5s;
+        }
+        #modal-overlay.active { visibility: visible; opacity: 1; pointer-events: auto; }
+        #modal-content {
+            background: #fff; width: 96%; max-width: 1600px; height: 90vh;
+            display: flex; position: relative; overflow: hidden; 
+            box-shadow: 0 50px 100px rgba(0,0,0,0.5); border-radius: 32px;
+            transform: scale(0); opacity: 0;
+            transition: transform 0.7s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.4s var(--ease-ios);
+            will-change: transform, opacity;
+        }
+        #modal-overlay.active #modal-content { transform: scale(1); opacity: 1; }
+        .modal-left { width: 65%; height: 100%; overflow-y: auto; background: #f9f9f9; padding: 40px; }
+        .modal-left img { width: 100%; height: auto; margin-bottom: 20px; display: block; border-radius: 12px; }
+        .modal-right { width: 35%; height: 100%; display: flex; flex-direction: column; padding: 60px 40px; border-left: 1px solid #eee; }
+        .modal-info-top { margin-bottom: 40px; }
+        .modal-info-top .modal-author { font-size: 1rem; color: #888; margin-bottom: 10px; }
+        .modal-info-top .modal-title { font-size: 3rem; font-family: var(--serif-font); line-height: 1.1; margin-bottom: 20px; }
+        .modal-info-bottom { flex-grow: 1; overflow-y: auto; padding-top: 20px; border-top: 1px solid #eee; }
+        .modal-info-bottom .modal-desc { font-size: 1.05rem; line-height: 1.8; color: #444; word-break: keep-all; }
+        .close-btn {
+            position: absolute; top: 30px; right: 30px; background: rgba(0,0,0,0.05); border: none;
+            width: 44px; height: 44px; border-radius: 50%;
+            font-size: 1.5rem; cursor: pointer; z-index: 2001; color: #000;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.3s;
+        }
+
+        @media (max-width: 1024px) {
+            #project-grid { grid-template-columns: repeat(2, 1fr); }
+            #modal-content { flex-direction: column; height: 95vh; }
+            .modal-left { width: 100%; height: 50%; }
+            .modal-right { width: 100%; height: 50%; padding: 30px; }
+            .modal-info-top .modal-title { font-size: 1.8rem; }
+        }
+        @media (max-width: 768px) {
+            #project-grid { grid-template-columns: 1fr; }
+            .designer-item { font-size: 0.9rem; flex-wrap: wrap; gap: 0.3rem; }
+            .designer-item .divider { display: none; }
+            .designer-item span { flex: none; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo" onclick="location.href='../index.html'">GSDD</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../about/about.html">About</a></li>
+                <li><a href="./gallery.html?view=project" id="nav-project">Project</a></li>
+                <li><a href="./gallery.html?view=designer" id="nav-designer">Designer</a></li>
+                <li><a href="../archive.html">Archive</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="work-container">
+        <div class="sub-tab-container" id="designer-sub-tabs">
+            <button class="sub-tab active" data-major="All">전체</button>
+            <button class="sub-tab" data-major="Visual">Visual</button>
+            <button class="sub-tab" data-major="Space">Space</button>
+        </div>
+        <div id="gallery-content"></div>
+    </main>
+
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <button class="close-btn">&times;</button>
+            <div class="modal-left" id="modal-images"></div>
+            <div class="modal-right">
+                <div class="modal-info-top">
+                    <div class="modal-author" id="modal-author-info"></div>
+                    <h2 class="modal-title" id="modal-project-name"></h2>
+                </div>
+                <div class="modal-info-bottom">
+                    <p class="modal-desc" id="modal-project-desc"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import galleryData from './data.js';
+
+        const contentDisplay = document.getElementById('gallery-content');
+        const navProject = document.getElementById('nav-project');
+        const navDesigner = document.getElementById('nav-designer');
+        const subTabContainer = document.getElementById('designer-sub-tabs');
+        const subTabs = document.querySelectorAll('.sub-tab');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const closeModal = document.querySelector('.close-btn');
+
+        // Scroll Reveal Observer
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        function applyReveal() {
+            const elements = document.querySelectorAll('.reveal');
+            elements.forEach(el => revealObserver.observe(el));
+        }
+
+        function openProjectDetail(id, clickedElement) {
+            const data = galleryData.find(item => item.id == id);
+            if (!data) return;
+
+            if (clickedElement) {
+                const rect = clickedElement.getBoundingClientRect();
+                const originX = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+                const originY = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+                modalContent.style.transformOrigin = `${originX}% ${originY}%`;
+            }
+
+            document.getElementById('modal-author-info').textContent = `${data.name} (${data.studentId}) | ${data.major}`;
+            document.getElementById('modal-project-name').textContent = data.projectName;
+            document.getElementById('modal-project-desc').textContent = data.projectDesc;
+            document.getElementById('modal-images').innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
+
+            requestAnimationFrame(() => {
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        function closeProjectDetail() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        closeModal.addEventListener('click', closeProjectDetail);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeProjectDetail(); });
+
+        function renderProjects() {
+            navProject.classList.add('active');
+            navDesigner.classList.remove('active');
+            subTabContainer.classList.remove('visible');
+            
+            let html = '<div id="project-grid">';
+            galleryData.forEach((item, index) => {
+                const delayClass = `delay-${(index % 4) + 1}`;
+                html += `
+                    <div class="project-card reveal ${delayClass}" data-id="${item.id}">
+                        <div class="project-thumb">
+                            <img src="./${item.imagePath}" alt="${item.projectName}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="project-info">
+                            <div class="author">${item.name} (${item.studentId})</div>
+                            <h3>${item.projectName}</h3>
+                            <p class="desc line-clamp line-clamp-2">${item.projectDesc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            contentDisplay.innerHTML = html;
+
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.addEventListener('click', () => openProjectDetail(card.dataset.id, card));
+            });
+            
+            applyReveal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderDesigners(filterMajor = 'All') {
+            navDesigner.classList.add('active');
+            navProject.classList.remove('active');
+            subTabContainer.classList.add('visible');
+
+            subTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.major === filterMajor));
+
+            const filteredData = filterMajor === 'All' 
+                ? galleryData 
+                : galleryData.filter(item => item.major === filterMajor);
+
+            let html = '<div id="designer-list">';
+            filteredData.forEach((item, index) => {
+                const delayClass = `delay-${(index % 5) + 1}`;
+                html += `
+                    <div class="designer-item reveal ${delayClass}" data-id="${item.id}">
+                        <span class="name">${item.name}</span>
+                        <span class="major-tag">${item.major}</span>
+                        <span class="divider">|</span>
+                        <span class="student-id">${item.studentId}</span>
+                        <span class="divider">|</span>
+                        <span class="project-title line-clamp line-clamp-1">${item.projectName}</span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            contentDisplay.innerHTML = html;
+
+            document.querySelectorAll('.designer-item').forEach(item => {
+                item.addEventListener('click', () => openProjectDetail(item.dataset.id, item));
+            });
+
+            applyReveal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        navProject.addEventListener('click', (e) => { e.preventDefault(); renderProjects(); window.history.pushState({view: 'project'}, '', './gallery.html?view=project'); });
+        navDesigner.addEventListener('click', (e) => { e.preventDefault(); renderDesigners(); window.history.pushState({view: 'designer', major: 'All'}, '', './gallery.html?view=designer'); });
+
+        subTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const major = tab.dataset.major;
+                renderDesigners(major);
+                window.history.pushState({view: 'designer', major: major}, '', `./gallery.html?view=designer&major=${major}`);
+            });
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const view = urlParams.get('view');
+        const major = urlParams.get('major') || 'All';
+        if (view === 'designer') renderDesigners(major);
+        else renderProjects();
+
+        window.addEventListener('popstate', (e) => {
+            const state = e.state;
+            if (state && state.view === 'designer') renderDesigners(state.major || 'All');
+            else renderProjects();
+        });
+    </script>
+</body>
+</html>

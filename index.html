@@ -1,127 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DYU2026 | Wireframe</title>
+    <title>GSDD | DYU2026</title>
     <link rel="stylesheet" href="./style.css">
+    <style>
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+
+        #main-content {
+            height: 100vh;
+            width: 100%;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); /* 훨씬 부드러운 속도 */
+            will-change: transform;
+        }
+
+        .full-section {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10%;
+            box-sizing: border-box;
+        }
+
+        .preview-content { max-width: 1200px; width: 100%; display: flex; align-items: center; gap: 5rem; }
+        .preview-text { flex: 1; }
+        .preview-visual { flex: 1.2; height: 60vh; background: #f5f5f5; border-radius: 24px; overflow: hidden; }
+        .preview-title { font-family: var(--serif-font); font-size: 5rem; line-height: 1; margin: 0 0 2rem 0; }
+        .preview-desc { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 3rem; }
+        
+        .btn-more { display: inline-block; padding: 1rem 2.5rem; border: 1px solid #000; text-decoration: none; color: #000; border-radius: 100px; font-weight: 700; transition: all 0.4s var(--ease-ios); }
+        .btn-more:hover { background: #000; color: #fff; transform: scale(1.05); }
+
+        #designer-preview { background: #000; color: #fff; }
+        #designer-preview .preview-title, #designer-preview .preview-desc { color: #fff; }
+        #designer-preview .btn-more { border-color: #fff; color: #fff; }
+        #designer-preview .btn-more:hover { background: #fff; color: #000; }
+
+        .hero-title { font-family: var(--serif-font); font-size: 8rem; font-weight: 300; margin: 0; }
+        .hero-subtitle { letter-spacing: 0.8rem; color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+
+        .scroll-nav { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .scroll-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.2); cursor: pointer; transition: all 0.4s var(--ease-ios); }
+        .scroll-dot.active { background: #000; transform: scale(2); }
+        #designer-preview-dot.active { background: #fff; }
+
+        @media (max-width: 1024px) {
+            .preview-content { flex-direction: column; text-align: center; gap: 2rem; }
+            .preview-title { font-size: 3rem; }
+            .hero-title { font-size: 4rem; }
+        }
+    </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="placeholder-box" style="width: 200px; height: 40px; background: #ddd;"></div>
+    <div id="loading-screen"><h1 class="loading-logo">GSDD</h1></div>
+
+    <div class="scroll-nav">
+        <div class="scroll-dot active" data-index="0"></div>
+        <div class="scroll-dot" data-index="1"></div>
+        <div class="scroll-dot" data-index="2"></div>
+        <div class="scroll-dot" data-index="3" id="designer-preview-dot"></div>
+        <div class="scroll-dot" data-index="4"></div>
     </div>
 
-    <!-- Main Wrapper -->
-    <div id="main-content" class="hidden">
+    <div id="main-wrapper" style="overflow: hidden; height: 100vh;">
         <header>
-            <div class="logo">LOGO</div>
+            <div class="logo">GSDD</div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="./index.html" class="nav-item" data-target="home-section">Home</a></li>
-                    <li><a href="./archive.html" class="nav-item" data-target="archive-section">Archive</a></li>
-                    <li><a href="./about.html" class="nav-item" data-target="about-section">About</a></li>
+                    <li><a href="./about/about.html">About</a></li>
+                    <li><a href="./gallery/gallery.html?view=project">Project</a></li>
+                    <li><a href="./gallery/gallery.html?view=designer">Designer</a></li>
+                    <li><a href="./archive.html">Archive</a></li>
                 </ul>
             </nav>
         </header>
 
-        <main id="content-area">
-            <!-- Home Section -->
-            <section id="home-section" class="page-section active">
-                <section id="hero">
-                    <div class="hero-content">
-                        <p class="subtitle">LOREM IPSUM DOLOR</p>
-                        <h2 class="title">LOREM IPSUM</h2>
-                    </div>
-                </section>
-
-                <section id="works">
-                    <div class="section-header">
-                        <div class="placeholder-text" style="width: 300px; height: 3rem; background: #eee; margin: 0 auto;"></div>
-                    </div>
-                    <div class="works-grid">
-                        <div class="work-item large project-link" data-project="1">
-                            <div class="work-image placeholder-grey"></div>
-                            <div class="work-info">
-                                <span class="category">CATEGORY</span>
-                                <h4>PROJECT TITLE</h4>
-                            </div>
-                        </div>
-                        <div class="work-item project-link" data-project="2">
-                            <div class="work-image placeholder-grey"></div>
-                            <div class="work-info">
-                                <span class="category">CATEGORY</span>
-                                <h4>PROJECT TITLE</h4>
-                            </div>
-                        </div>
-                        <div class="work-item project-link" data-project="3">
-                            <div class="work-image placeholder-grey"></div>
-                            <div class="work-info">
-                                <span class="category">CATEGORY</span>
-                                <h4>PROJECT TITLE</h4>
-                            </div>
-                        </div>
-                        <div class="work-item wide project-link" data-project="4">
-                            <div class="work-image placeholder-grey"></div>
-                            <div class="work-info">
-                                <span class="category">CATEGORY</span>
-                                <h4>PROJECT TITLE</h4>
-                            </div>
-                        </div>
-                        <div class="work-item project-link" data-project="5">
-                            <div class="work-image placeholder-grey"></div>
-                            <div class="work-info">
-                                <span class="category">CATEGORY</span>
-                                <h4>PROJECT TITLE</h4>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+        <main id="main-content" class="hidden">
+            <section id="hero-section" class="full-section">
+                <p class="hero-subtitle reveal">GRADUATION SHOW DESIGN DEPARTMENT</p>
+                <h1 class="hero-title reveal delay-1">GSDD 2026</h1>
             </section>
 
-            <!-- Project Detail Section -->
-            <section id="project-detail-section" class="page-section">
-                <div class="container">
-                    <a href="./index.html" class="back-link">&larr; BACK</a>
-                    <div class="project-header">
-                        <h2 class="project-title">PROJECT TITLE</h2>
-                        <p class="project-category">CATEGORY / YEAR</p>
+            <section id="about-preview" class="full-section">
+                <div class="preview-content">
+                    <div class="preview-text reveal">
+                        <h2 class="preview-title">About Identity</h2>
+                        <p class="preview-desc">GSDD 2026은 동해물과 백두산이 마르고 닳도록,<br>하느님이 보우하사 우리나라 만세.</p>
+                        <a href="./about/about.html" class="btn-more">READ MORE</a>
                     </div>
-                    <div class="project-main-image placeholder-grey" style="height: 60vh; margin-bottom: 4rem;"></div>
-                    <div class="project-description">
-                        <div class="desc-col">
-                            <h3>DESCRIPTION</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula.</p>
-                        </div>
-                        <div class="info-col">
-                            <h3>DETAILS</h3>
-                            <ul>
-                                <li><strong>ROLE:</strong> LOREM IPSUM</li>
-                                <li><strong>TOOLS:</strong> DOLOR, SIT, AMET</li>
-                                <li><strong>DATE:</strong> MARCH 2026</li>
-                            </ul>
-                        </div>
+                    <div class="preview-visual reveal-scale delay-1"></div>
+                </div>
+            </section>
+
+            <section id="project-preview" class="full-section">
+                <div class="preview-content">
+                    <div class="preview-visual reveal-scale"></div>
+                    <div class="preview-text reveal delay-1">
+                        <h2 class="preview-title">Selected Works</h2>
+                        <p class="preview-desc">40명의 디자이너들이 선보이는 각기 다른 시각적 언어.<br>미래를 향한 첫 번째 발걸음을 확인해 보세요.</p>
+                        <a href="./gallery/gallery.html?view=project" class="btn-more">VIEW PROJECTS</a>
                     </div>
-                    <div class="project-gallery">
-                        <div class="gallery-item placeholder-grey" style="height: 400px;"></div>
-                        <div class="gallery-item placeholder-grey" style="height: 400px;"></div>
+                </div>
+            </section>
+
+            <section id="designer-preview" class="full-section">
+                <div class="preview-content">
+                    <div class="preview-text reveal">
+                        <h2 class="preview-title">Meet the Designers</h2>
+                        <p class="preview-desc">Visual & Space Design. <br>끊임없이 경계를 허물고 새로운 가치를 찾아가는 우리들.</p>
+                        <a href="./gallery/gallery.html?view=designer" class="btn-more">VIEW DESIGNERS</a>
+                    </div>
+                    <div class="preview-visual reveal-scale delay-1" style="background:#222;"></div>
+                </div>
+            </section>
+
+            <section id="archive-preview" class="full-section">
+                <div class="preview-content">
+                    <div class="preview-visual reveal-scale"></div>
+                    <div class="preview-text reveal delay-1">
+                        <h2 class="preview-title">Archive</h2>
+                        <p class="preview-desc">우리의 여정은 계속됩니다. <br>지난 6년간의 기록들을 만나보세요.</p>
+                        <a href="./archive.html" class="btn-more">VIEW ARCHIVE</a>
                     </div>
                 </div>
             </section>
         </main>
-
-        <footer>
-            <div class="footer-content">
-                <div class="footer-logo">LOGO</div>
-                <p>&copy; 2026 LOREM IPSUM. ALL RIGHTS RESERVED.</p>
-                <div class="social-links">
-                    <a href="#">LINK</a>
-                    <a href="#">LINK</a>
-                </div>
-            </div>
-        </footer>
     </div>
 
     <script src="./main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const content = document.getElementById('main-content');
+            const dots = document.querySelectorAll('.scroll-dot');
+            const sections = document.querySelectorAll('.full-section');
+            let currentIndex = 0;
+            let isScrolling = false;
+
+            function goToSection(index) {
+                if (index < 0 || index >= sections.length) return;
+                isScrolling = true;
+                currentIndex = index;
+                
+                content.style.transform = `translateY(-${index * 100}vh)`;
+                
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+
+                // 섹션 내 요소들 애니메이션 트리거
+                sections.forEach((sec, i) => {
+                    const reveals = sec.querySelectorAll('.reveal, .reveal-scale');
+                    reveals.forEach(el => {
+                        if (i === index) el.classList.add('active');
+                        else el.classList.remove('active');
+                    });
+                });
+
+                setTimeout(() => { isScrolling = false; }, 1000);
+            }
+
+            window.addEventListener('wheel', (e) => {
+                if (isScrolling) return;
+                if (e.deltaY > 0) goToSection(currentIndex + 1);
+                else goToSection(currentIndex - 1);
+            }, { passive: false });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    goToSection(parseInt(dot.dataset.index));
+                });
+            });
+
+            // 초기 실행
+            setTimeout(() => goToSection(0), 2500);
+        });
+    </script>
 </body>
 </html>
