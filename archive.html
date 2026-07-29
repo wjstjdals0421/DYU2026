@@ -5,127 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Archive | GSDD 2026</title>
     <link rel="stylesheet" href="./style.css">
-    <style>
-        .archive-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 12rem 5% 8rem 5%;
-        }
-        .archive-title {
-            font-family: var(--serif-font);
-            font-size: 3.5rem;
-            margin-bottom: 4rem;
-        }
-        .archive-list {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .archive-item {
-            border-bottom: 1px solid #eee;
-        }
-        .archive-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 0;
-            text-decoration: none;
-            color: #000;
-            transition: all 0.3s;
-        }
-        .archive-link:hover {
-            color: #888;
-            padding-left: 1rem;
-        }
-        .year {
-            font-size: 2.5rem;
-            font-weight: 300;
-            font-family: var(--serif-font);
-        }
-        .url {
-            font-size: 0.8rem;
-            color: #aaa;
-            letter-spacing: 0.05rem;
-        }
-        .arrow { font-size: 1.5rem; }
-    </style>
 </head>
-<body>
+<body class="archive-body">
     <header>
-        <div class="logo" onclick="location.href='./index.html'">GSDD</div>
+        <div class="logo" onclick="location.href='./index.html'">GSDD 2026</div>
         <nav>
             <ul class="nav-links">
-                <li><a href="./about/about.html">About</a></li>
-                <li><a href="./gallery/gallery.html?view=project">Project</a></li>
-                <li><a href="./gallery/gallery.html?view=designer">Designer</a></li>
-                <li><a href="./archive.html">Archive</a></li>
+                <li><a href="./gallery/gallery.html?view=project">Works</a></li>
+                <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
+                <li><a href="./archive.html" class="active">Archive</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="archive-container">
-        <h1 class="archive-title reveal">Archive</h1>
-        <ul class="archive-list">
-            <li class="archive-item reveal delay-1">
-                <a href="http://gsdd.org/2025/" target="_blank" class="archive-link">
-                    <span class="year">2025</span>
-                    <span class="url">gsdd.org/2025</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal delay-2">
-                <a href="http://gsdd.org/2024/" target="_blank" class="archive-link">
-                    <span class="year">2024</span>
-                    <span class="url">gsdd.org/2024</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal delay-3">
-                <a href="http://gsdd.org/2023/" target="_blank" class="archive-link">
-                    <span class="year">2023</span>
-                    <span class="url">gsdd.org/2023</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal">
-                <a href="http://gsdd.org/2022/" target="_blank" class="archive-link">
-                    <span class="year">2022</span>
-                    <span class="url">gsdd.org/2022</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal">
-                <a href="http://gsdd.org/2021/" target="_blank" class="archive-link">
-                    <span class="year">2021</span>
-                    <span class="url">gsdd.org/2021</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal">
-                <a href="http://gsdd.org/2020/" target="_blank" class="archive-link">
-                    <span class="year">2020</span>
-                    <span class="url">gsdd.org/2020</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-            <li class="archive-item reveal">
-                <a href="http://gsdd.org/2019/" target="_blank" class="archive-link">
-                    <span class="year">2019</span>
-                    <span class="url">gsdd.org/2019</span>
-                    <span class="arrow">&rarr;</span>
-                </a>
-            </li>
-        </ul>
+    <!-- 과거 전시 기록 3D 카드 인터랙티브 슬라이더 영역 -->
+    <main class="archive-page-container" id="archive-container">
+        <div class="archive-slider-wrapper" id="archive-track"></div>
+        <div class="archive-dots-container" id="archive-dots"></div>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">GSDD</div>
-            <p>&copy; 2026 GSDD. ALL RIGHTS RESERVED.</p>
+    <!-- 푸터 바 (시안 이미지 레이아웃 반영) -->
+    <footer class="site-footer">
+        <div class="footer-inner-container">
+            <div class="footer-left-info">
+                <div class="footer-title-line">&lsquo;GSDD 2026&rsquo; &mdash; Dongyang University Design Department</div>
+                <div class="footer-sub-line">7th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
+            </div>
+            <div class="footer-right-elements">
+                <div class="footer-links-group">
+                    <a href="javascript:void(0)" onclick="alert('인스타그램 링크는 추후 업데이트 예정입니다.')">Instagram</a>
+                    <a href="https://www.dyu.ac.kr/" target="_blank" rel="noopener noreferrer">Dongyang Univ</a>
+                </div>
+                <div class="footer-badge-text">
+                    CUT!<br>LAYER!<br>PASTE!
+                </div>
+                <div class="footer-emblem-seal">
+                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18" cy="18" r="16.5" stroke="white" stroke-width="1.5"/>
+                        <circle cx="18" cy="18" r="12.5" stroke="white" stroke-width="1" stroke-dasharray="2 2"/>
+                        <text x="18" y="22" font-size="11" font-weight="bold" fill="white" text-anchor="middle">DYU</text>
+                    </svg>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="./main.js"></script>
+    <script src="./archive.js"></script>
 </body>
 </html>

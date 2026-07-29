@@ -3,203 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSDD | DYU2026</title>
+    <title>GSDD 2026 | 동양대학교 디자인학부 졸업전시회</title>
     <link rel="stylesheet" href="./style.css">
-    <style>
-        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-
-        #main-content {
-            height: 100vh;
-            width: 100%;
-            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1); /* 훨씬 부드러운 속도 */
-            will-change: transform;
-        }
-
-        .full-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 0 10%;
-            box-sizing: border-box;
-        }
-
-        .preview-content { max-width: 1200px; width: 100%; display: flex; align-items: center; gap: 5rem; }
-        .preview-text { flex: 1; }
-        .preview-visual { flex: 1.2; height: 60vh; background: #f5f5f5; border-radius: 24px; overflow: hidden; }
-        .preview-title { font-family: var(--serif-font); font-size: 5rem; line-height: 1; margin: 0 0 2rem 0; }
-        .preview-desc { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 3rem; }
-        
-        .btn-more { display: inline-block; padding: 1rem 2.5rem; border: 1px solid #000; text-decoration: none; color: #000; border-radius: 100px; font-weight: 700; transition: all 0.4s var(--ease-ios); }
-        .btn-more:hover { background: #000; color: #fff; transform: scale(1.05); }
-
-        #designer-preview { background: #000; color: #fff; }
-        #designer-preview .preview-title, #designer-preview .preview-desc { color: #fff; }
-        #designer-preview .btn-more { border-color: #fff; color: #fff; }
-        #designer-preview .btn-more:hover { background: #fff; color: #000; }
-
-        .hero-title { font-family: var(--serif-font); font-size: 8rem; font-weight: 300; margin: 0; }
-        .hero-subtitle { letter-spacing: 0.8rem; color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
-
-        .scroll-nav { position: fixed; right: 30px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
-        .scroll-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.2); cursor: pointer; transition: all 0.4s var(--ease-ios); }
-        .scroll-dot.active { background: #000; transform: scale(2); }
-        #designer-preview-dot.active { background: #fff; }
-
-        @media (max-width: 1024px) {
-            .preview-content { flex-direction: column; text-align: center; gap: 2rem; }
-            .preview-title { font-size: 3rem; }
-            .hero-title { font-size: 4rem; }
-        }
-    </style>
 </head>
 <body>
-    <div id="loading-screen"><h1 class="loading-logo">GSDD</h1></div>
-
-    <div class="scroll-nav">
-        <div class="scroll-dot active" data-index="0"></div>
-        <div class="scroll-dot" data-index="1"></div>
-        <div class="scroll-dot" data-index="2"></div>
-        <div class="scroll-dot" data-index="3" id="designer-preview-dot"></div>
-        <div class="scroll-dot" data-index="4"></div>
-    </div>
-
-    <div id="main-wrapper" style="overflow: hidden; height: 100vh;">
+    <div id="main-wrapper">
         <header>
-            <div class="logo">GSDD</div>
+            <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">GSDD 2026</div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="./about/about.html">About</a></li>
-                    <li><a href="./gallery/gallery.html?view=project">Project</a></li>
-                    <li><a href="./gallery/gallery.html?view=designer">Designer</a></li>
+                    <li><a href="./gallery/gallery.html?view=project">Works</a></li>
+                    <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
                     <li><a href="./archive.html">Archive</a></li>
                 </ul>
             </nav>
         </header>
 
         <main id="main-content" class="hidden">
+            <!-- 1. 초기 메인 히어로 섹션 (GSDD 2026 대표 비주얼 & 이벤트 정보) -->
             <section id="hero-section" class="full-section">
-                <p class="hero-subtitle reveal">GRADUATION SHOW DESIGN DEPARTMENT</p>
-                <h1 class="hero-title reveal delay-1">GSDD 2026</h1>
-            </section>
+                <!-- 좌측 상단 기하학 SVG 그래픽 -->
+                <div class="hero-graphic hero-graphic-tl reveal">
+                    <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="0" y="0" width="55" height="55" fill="#dedede"/>
+                        <path d="M 65 0 A 55 55 0 0 1 120 55 L 65 55 Z" fill="#75787f"/>
+                        <path d="M 120 65 A 55 55 0 0 1 65 120 L 65 65 Z" fill="#6c7077"/>
+                    </svg>
+                </div>
 
-            <section id="about-preview" class="full-section">
-                <div class="preview-content">
-                    <div class="preview-text reveal">
-                        <h2 class="preview-title">About Identity</h2>
-                        <p class="preview-desc">GSDD 2026은 동해물과 백두산이 마르고 닳도록,<br>하느님이 보우하사 우리나라 만세.</p>
-                        <a href="./about/about.html" class="btn-more">READ MORE</a>
+                <!-- 중앙 타이틀 & 서브타이틀 및 일정/장소 -->
+                <div class="hero-center-content reveal">
+                    <h1 class="hero-main-title">GSDD 2026</h1>
+                    <p class="hero-dept-title">동양대학교 디자인학부 졸업전시회</p>
+                    
+                    <div class="hero-event-info">
+                        <p class="hero-date">2026. 전시 날짜 ~ 2026. 전시 날짜</p>
+                        <p class="hero-location">마루아트센터</p>
                     </div>
-                    <div class="preview-visual reveal-scale delay-1"></div>
+                </div>
+
+                <!-- 우측 하단 기하학 SVG 그래픽 -->
+                <div class="hero-graphic hero-graphic-br reveal delay-1">
+                    <svg width="220" height="200" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="175,5 215,28 215,73 175,96 135,73 135,28" fill="#dedede"/>
+                        <path d="M 100 45 C 95 70 80 85 55 90 C 80 95 95 110 100 135 C 105 110 120 95 145 90 C 120 85 105 70 100 45 Z" fill="#73777f"/>
+                        <polygon points="40,135 65,145 50,195 25,185" fill="#dedede"/>
+                        <circle cx="120" cy="165" r="28" fill="#6c7077"/>
+                    </svg>
                 </div>
             </section>
 
-            <section id="project-preview" class="full-section">
-                <div class="preview-content">
-                    <div class="preview-visual reveal-scale"></div>
-                    <div class="preview-text reveal delay-1">
-                        <h2 class="preview-title">Selected Works</h2>
-                        <p class="preview-desc">40명의 디자이너들이 선보이는 각기 다른 시각적 언어.<br>미래를 향한 첫 번째 발걸음을 확인해 보세요.</p>
-                        <a href="./gallery/gallery.html?view=project" class="btn-more">VIEW PROJECTS</a>
+            <!-- 2. 메인 전시 소개 비디오 영상 영역 (스크롤 내릴 때 계속 연결) -->
+            <section class="main-video-section reveal">
+                <div class="video-container-box">
+                    <div class="play-icon-btn">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="5,3 19,12 5,21"></polygon>
+                        </svg>
                     </div>
                 </div>
             </section>
 
-            <section id="designer-preview" class="full-section">
-                <div class="preview-content">
-                    <div class="preview-text reveal">
-                        <h2 class="preview-title">Meet the Designers</h2>
-                        <p class="preview-desc">Visual & Space Design. <br>끊임없이 경계를 허물고 새로운 가치를 찾아가는 우리들.</p>
-                        <a href="./gallery/gallery.html?view=designer" class="btn-more">VIEW DESIGNERS</a>
+            <!-- 3. 어바웃 섹션 (1부: 전시 포스터 & 대표 컨셉 타이틀) -->
+            <section class="about-section-block">
+                <div class="about-intro-grid reveal">
+                    <div class="about-poster-rect">
+                        <img src="./img/project1.jpg" alt="졸업 전시 포스터" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
                     </div>
-                    <div class="preview-visual reveal-scale delay-1" style="background:#222;"></div>
+                    <div class="about-intro-text">
+                        <h2 class="about-main-title">GSDD 2026</h2>
+                        <div class="about-concept-text">
+                            <p>전시 컨셉 설명글입니다. 전시 컨셉 설명글입니다.</p>
+                            <p>전시 컨셉 설명글! 전시 컨셉 설명글입니다.</p>
+                            <p>전시 컨셉 설명글입니다.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. 어바웃 섹션 (2부: 수직 포스터 & 상세 소개 및 졸업준비위원회 조직 목록) -->
+                <div class="about-details-grid reveal delay-1">
+                    <div class="about-poster-vertical">
+                        <img src="./img/project2.jpg" alt="졸업 전시 포스터" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                    </div>
+                    <div class="about-details-info">
+                        <h2 class="about-main-title">GSDD 2026</h2>
+                        <div class="about-concept-text">
+                            <p>전시 컨셉 설명글입니다. 전시 컨셉 설명글입니다.</p>
+                            <p>전시 컨셉 설명글! 전시 컨셉 설명글입니다.</p>
+                            <p>전시 컨셉 설명글입니다. 전시 컨셉 설명글입니다.</p>
+                            <p>전시 컨셉 설명글! 전시 컨셉 설명글입니다.</p>
+                        </div>
+
+                        <!-- 위원회 및 조직 구성 정보 -->
+                        <div class="about-credits-group">
+                            <div class="credit-item-block">
+                                <span class="credit-label">지도 교수</span>
+                                <span class="credit-names">김형재 &nbsp; 이재환 &nbsp; 김유빈 &nbsp; 이태현</span>
+                            </div>
+                            <div class="credit-item-block">
+                                <span class="credit-label">졸업준비위원장</span>
+                                <span class="credit-names">시각디자인 박연지 &nbsp; 공간디자인 차무영</span>
+                            </div>
+                            <div class="credit-item-block">
+                                <span class="credit-label">졸업준비부위원장</span>
+                                <span class="credit-names">시각디자인 임정은 &nbsp; 공간디자인 조혜령</span>
+                            </div>
+                            <div class="credit-item-block">
+                                <span class="credit-label">아이덴티티</span>
+                                <span class="credit-names">김소은 &nbsp; ooo &nbsp; ooo &nbsp; ooo</span>
+                            </div>
+                            <div class="credit-item-block">
+                                <span class="credit-label">웹사이트</span>
+                                <span class="credit-names">강선진 &nbsp; ooo &nbsp; ooo</span>
+                            </div>
+                            <div class="credit-item-block">
+                                <span class="credit-label">전시</span>
+                                <span class="credit-names">ooo &nbsp; ooo &nbsp; ooo</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <section id="archive-preview" class="full-section">
-                <div class="preview-content">
-                    <div class="preview-visual reveal-scale"></div>
-                    <div class="preview-text reveal delay-1">
-                        <h2 class="preview-title">Archive</h2>
-                        <p class="preview-desc">우리의 여정은 계속됩니다. <br>지난 6년간의 기록들을 만나보세요.</p>
-                        <a href="./archive.html" class="btn-more">VIEW ARCHIVE</a>
+            <!-- 푸터 바 (시안 이미지 레이아웃 반영) -->
+            <footer class="site-footer">
+                <div class="footer-inner-container">
+                    <div class="footer-left-info">
+                        <div class="footer-title-line">&lsquo;GSDD 2026&rsquo; &mdash; Dongyang University Design Department</div>
+                        <div class="footer-sub-line">7th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
+                    </div>
+                    <div class="footer-right-elements">
+                        <div class="footer-links-group">
+                            <a href="javascript:void(0)" onclick="alert('인스타그램 링크는 추후 업데이트 예정입니다.')">Instagram</a>
+                            <a href="https://www.dyu.ac.kr/" target="_blank" rel="noopener noreferrer">Dongyang Univ</a>
+                        </div>
+                        <div class="footer-emblem-seal">
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="18" cy="18" r="16.5" stroke="white" stroke-width="1.5"/>
+                                <circle cx="18" cy="18" r="12.5" stroke="white" stroke-width="1" stroke-dasharray="2 2"/>
+                                <text x="18" y="22" font-size="11" font-weight="bold" fill="white" text-anchor="middle">DYU</text>
+                            </svg>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </footer>
         </main>
     </div>
 
     <script src="./main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const content = document.getElementById('main-content');
-            const dots = document.querySelectorAll('.scroll-dot');
-            const sections = document.querySelectorAll('.full-section');
-            let currentIndex = 0;
-            let isScrolling = false;
-
-            // Touch support for Mobile
-            let touchStartY = 0;
-            let touchEndY = 0;
-
-            function goToSection(index) {
-                if (index < 0 || index >= sections.length) return;
-                isScrolling = true;
-                currentIndex = index;
-                
-                content.style.transform = `translateY(-${index * 100}vh)`;
-                
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-
-                sections.forEach((sec, i) => {
-                    const reveals = sec.querySelectorAll('.reveal, .reveal-scale');
-                    reveals.forEach(el => {
-                        if (i === index) el.classList.add('active');
-                        else el.classList.remove('active');
-                    });
-                });
-
-                setTimeout(() => { isScrolling = false; }, 1000);
-            }
-
-            // Wheel Event (Desktop)
-            window.addEventListener('wheel', (e) => {
-                if (isScrolling) return;
-                if (e.deltaY > 0) goToSection(currentIndex + 1);
-                else goToSection(currentIndex - 1);
-            }, { passive: false });
-
-            // Touch Events (Mobile Swiping)
-            window.addEventListener('touchstart', (e) => {
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-
-            window.addEventListener('touchend', (e) => {
-                if (isScrolling) return;
-                touchEndY = e.changedTouches[0].clientY;
-                const diff = touchStartY - touchEndY;
-
-                if (Math.abs(diff) > 50) { // 50px 이상 스와이프 시 이동
-                    if (diff > 0) goToSection(currentIndex + 1);
-                    else goToSection(currentIndex - 1);
-                }
-            }, { passive: true });
-
-            dots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    goToSection(parseInt(dot.dataset.index));
-                });
-            });
-
-            // 초기 실행 (로딩 후 첫 섹션 애니메이션 트리거)
-            setTimeout(() => {
-                if (currentIndex === 0) goToSection(0);
-            }, 2500);
-        });
-    </script>
 </body>
 </html>
