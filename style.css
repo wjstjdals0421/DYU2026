@@ -28,11 +28,11 @@
     --ease-ios: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
-    /* PC 1200px 데스크톱 규격 */
-    --site-max-width: 1200px;
+    /* PC 콘텐츠 폭 1200px 규격 (좌우 마진 60px*2 포함 max-width: 1320px) */
+    --site-max-width: 1320px;
     --grid-columns: 12;
     --grid-gutter: 24px;      /* 거터 24px */
-    --site-margin: 60px;      /* PC 1200px에 맞춘 좌우 마진 */
+    --site-margin: 60px;      /* PC 1200px 콘텐츠에 맞춘 좌우 마진 60px */
 }
 
 body {
@@ -1070,7 +1070,7 @@ body.archive-body {
     margin: 0 auto;
     aspect-ratio: 16 / 9;
     background-color: #dcdcdc;
-    border-radius: 8px;
+    border-radius: 0 !important; /* 모서리 라운딩 제거 */
     position: relative;
     display: flex;
     align-items: center;
@@ -1128,7 +1128,7 @@ body.archive-body {
     width: 100%;
     aspect-ratio: 16 / 9;
     background-color: #dcdcdc;
-    border-radius: 8px;
+    border-radius: 0 !important; /* 모서리 라운딩 제거 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1143,7 +1143,7 @@ body.archive-body {
     max-width: 480px;
     aspect-ratio: 3 / 4;
     background-color: #dcdcdc;
-    border-radius: 8px;
+    border-radius: 0 !important; /* 모서리 라운딩 제거 */
     display: flex;
     align-items: center;
     justify-content: center;
