@@ -38,15 +38,27 @@
 
     <!-- 과거 전시 기록 3D 카드 인터랙티브 슬라이더 영역 -->
     <main class="archive-page-container" id="archive-container">
-        <!-- 직관적인 좌우 화살표 버튼 -->
-        <button class="archive-arrow-btn prev-btn" id="archive-prev-btn" aria-label="이전 연도">&larr;</button>
-        <button class="archive-arrow-btn next-btn" id="archive-next-btn" aria-label="다음 연도">&rarr;</button>
-
         <div class="archive-slider-wrapper" id="archive-track"></div>
-        <div class="archive-dots-container" id="archive-dots"></div>
+
+        <!-- 아카이브 하단 컨트롤 바 (검은색 버튼 + 두꺼운 짧은 흰색 화살표 + 도트) -->
+        <div class="archive-controls-bar">
+            <button class="archive-arrow-btn prev-btn" id="archive-prev-btn" aria-label="이전 연도">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="10 7 5 12 10 17"></polyline>
+                </svg>
+            </button>
+            <div class="archive-dots-container" id="archive-dots"></div>
+            <button class="archive-arrow-btn next-btn" id="archive-next-btn" aria-label="다음 연도">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="14 7 19 12 14 17"></polyline>
+                </svg>
+            </button>
+        </div>
     </main>
 
-    <!-- 푸터 바 -->
+    <!-- 메인페이지와 100% 동일한 하단 푸터 바 -->
     <footer class="site-footer">
         <div class="footer-inner-container">
             <div class="footer-left-info">
@@ -57,9 +69,6 @@
                 <div class="footer-links-group">
                     <a href="javascript:void(0)" onclick="alert('인스타그램 링크는 추후 업데이트 예정입니다.')">Instagram</a>
                     <a href="https://www.dyu.ac.kr/" target="_blank" rel="noopener noreferrer">Dongyang Univ</a>
-                </div>
-                <div class="footer-badge-text">
-                    CUT!<br>LAYER!<br>PASTE!
                 </div>
                 <div class="footer-emblem-seal">
                     <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">

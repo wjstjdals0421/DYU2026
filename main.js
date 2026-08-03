@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyReveal();
 
-    // 3. 모바일 햄버거 메뉴 토글 로직
+    // 3. 모바일 햄버거 메뉴 토글 로직 (상단 헤더 바로 아래 드롭다운)
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
 
@@ -65,6 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', () => {
                 mobileMenuOverlay.classList.remove('active');
             });
+        });
+
+        // 메뉴 외부 영역 클릭 시 드롭다운 슬라이드 닫기
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuOverlay.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                mobileMenuOverlay.classList.remove('active');
+            }
         });
     }
 

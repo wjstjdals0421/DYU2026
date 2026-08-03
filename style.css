@@ -340,21 +340,36 @@ html, body {
 }
 
 .project-thumb {
-    width: 100%;
-    aspect-ratio: 4/5; /* 4:5 비율로 설정 */
+    width: 282px;
+    max-width: 100%;
+    height: 352px;
+    aspect-ratio: 4/5; /* 4:5 비율 (282px x 352px 규격) */
     background-color: #f5f5f5;
     margin-bottom: 1rem;
     overflow: hidden;
-    border-radius: 0; /* 굴곡 제거 */
+    border-radius: 0 !important; /* 모서리 굴곡 라운딩 전체 제거 */
 }
 .project-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 0 !important;
     transition: transform 0.5s var(--ease-ios);
 }
 .project-card:hover .project-thumb img {
     transform: scale(1.05);
+}
+
+/* 모든 이미지 썸네일 모서리 굴곡 완전 제거 */
+.project-thumb, 
+.project-thumb img, 
+.designer-preview-box, 
+.designer-preview-box img, 
+.modal-left img, 
+.about-poster-rect img, 
+.about-poster-vertical img, 
+.image-placeholder img {
+    border-radius: 0 !important;
 }
 
 .project-info h3 {
@@ -423,6 +438,13 @@ html, body {
     white-space: nowrap;
 }
 
+/* 작품이 2개인 경우 두 줄로 표시 */
+.designer-item .project-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .designer-item .project-title {
     font-weight: 700;
     font-size: 0.95rem;
@@ -430,24 +452,30 @@ html, body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.35;
 }
 
-/* 오른쪽 스티키 이미지 프리뷰 박스 */
+/* 오른쪽 스티키 이미지 프리뷰 컨테이너 (작품 2개 시 아래로 사각박스 수직 직렬 배치) */
 .designer-preview-sticky {
     grid-column: span 4;
     position: sticky;
-    top: 120px;
+    top: 100px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .designer-preview-box {
-    width: 100%;
-    aspect-ratio: 1 / 1;
+    width: 282px;
+    max-width: 100%;
+    height: 352px;
+    aspect-ratio: 4 / 5; /* 4:5 비율 (282px x 352px 규격) */
     background-color: #e5e5e5;
-    border-radius: 12px;
+    border-radius: 0 !important;
     overflow: hidden;
     position: relative;
-    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -456,21 +484,6 @@ html, body {
     visibility: hidden;
     transform: scale(0.96);
     transition: opacity 0.3s var(--ease-ios), visibility 0.3s var(--ease-ios), transform 0.3s var(--ease-ios);
-}
-
-.designer-preview-box.multi-image {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 8px;
-    background-color: #f0f0f0;
-}
-
-.designer-preview-box.multi-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
 }
 
 .designer-preview-box.active {
@@ -623,7 +636,7 @@ body.archive-body {
 .archive-page-container {
     width: 100%;
     height: calc(100vh - 80px);
-    margin-top: 80px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -637,7 +650,7 @@ body.archive-body {
     position: relative;
     width: 100%;
     max-width: 1400px;
-    height: 660px;
+    height: 800px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -647,8 +660,8 @@ body.archive-body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 440px;
-    height: 600px;
+    width: 500px;
+    height: 700px;
     background-color: #ffffff;
     border-radius: 16px;
     border: 1.5px solid #eaeaea;
@@ -683,11 +696,21 @@ body.archive-body {
     color: #c4c4c4;
 }
 
+/* Archive 하단 컨트롤 바 (화살표 버튼 간격 확정) */
+.archive-controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    margin-top: 1.5rem;
+    z-index: 30;
+    position: relative;
+}
+
 .archive-dots-container {
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-top: 1.5rem;
     z-index: 20;
 }
 
@@ -705,41 +728,29 @@ body.archive-body {
     transform: scale(1.3);
 }
 
-/* Archive 3D 카드 슬라이더 좌우 이동 화살표 버튼 */
 .archive-arrow-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    background: #ffffff;
-    border: 1px solid #d0d0d0;
-    color: #111111;
-    font-size: 1.2rem;
-    font-weight: 700;
+    background-color: #000000; /* 검은색 버튼 */
+    border: none;
     cursor: pointer;
     z-index: 30;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s var(--ease-ios);
+    transition: transform 0.2s var(--ease-ios), background-color 0.2s ease;
 }
 
 .archive-arrow-btn:hover {
-    background: #111111;
-    color: #ffffff;
-    border-color: #111111;
-    transform: translateY(-50%) scale(1.1);
+    background-color: #222222;
+    transform: scale(1.08);
 }
 
-.archive-arrow-btn.prev-btn {
-    left: 40px;
-}
-
-.archive-arrow-btn.next-btn {
-    right: 40px;
+.archive-arrow-btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* 햄버거 메뉴 버튼 (모바일용) */
@@ -758,28 +769,30 @@ body.archive-body {
     stroke: #111111;
 }
 
-/* 모바일 전용 수직 세로 내비게이션 드롭다운 슬라이드 메뉴 */
+/* 모바일 전용 헤더 바 아래 슬라이드 다운 드롭다운 내비게이션 메뉴 (화면 전체 팝업 X) */
 .mobile-menu-overlay {
     position: fixed;
-    top: 0;
+    top: 58px; /* 헤더 바 바로 아래 */
     left: 0;
     width: 100%;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    height: auto;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
     z-index: 999;
+    padding: 1.5rem 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    transform: translateY(-130%); /* 상단 헤더 뒤로 슬라이드 숨김 */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.35s var(--ease-ios), visibility 0.35s ease;
+    transition: transform 0.35s var(--ease-ios), opacity 0.35s var(--ease-ios), visibility 0.35s ease;
 }
 
 .mobile-menu-overlay.active {
+    transform: translateY(0); /* 헤더 바로 아래로 내려옴 */
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -791,15 +804,18 @@ body.archive-body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.2rem;
     align-items: center;
+    width: 100%;
 }
 
 .mobile-nav-links li a {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #111111;
     text-decoration: none;
+    display: block;
+    padding: 0.3rem 0;
     transition: color 0.2s ease;
 }
 
@@ -883,8 +899,33 @@ body.archive-body {
         display: block; /* 햄버거 메뉴 버튼 노출 */
     }
 
-    /* 모바일 환경 하단 푸터가 카드를 가리지 않도록 고정 해제 */
-    body.archive-body footer.site-footer, footer.site-footer {
+    /* 모바일 환경 아카이브 페이지 정보란(푸터) 제거 및 화살표 버튼 화면 중앙 좌우 배치 */
+    body.archive-body footer.site-footer {
+        display: none !important;
+    }
+
+    body.archive-body .archive-controls-bar {
+        position: static;
+        margin-top: 1.5rem;
+    }
+
+    body.archive-body .archive-arrow-btn.prev-btn {
+        position: fixed;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+    }
+
+    body.archive-body .archive-arrow-btn.next-btn {
+        position: fixed;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 100;
+    }
+
+    footer.site-footer {
         position: relative;
         bottom: auto;
         margin-top: 3rem;

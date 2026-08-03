@@ -115,7 +115,7 @@ function renderProjects(filterMajor = currentMajor) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Designers 뷰 (디자이너 리스트 & 호버 프리뷰) 렌더링 함수
+// Designers 뷰 (디자이너 리스트 & 호버 수직 2개 사각박스 프리뷰) 렌더링 함수
 function renderDesigners(filterMajor = currentMajor) {
     currentView = 'designer';
     updateSubTabs(filterMajor);
@@ -137,15 +137,30 @@ function renderDesigners(filterMajor = currentMajor) {
 
     filteredData.forEach((item, index) => {
         const delayClass = `delay-${(index % 5) + 1}`;
-        // 시각디자인 전공의 경우 2개 프로젝트 제목 표시
-        const displayTitle = (item.major === 'Visual') 
-            ? `${item.projectName.split('/')[0] || item.projectName} / ${item.projectName.split('/')[1] || '디지털 유기체'}`
-            : item.projectName;
+        
+        // 작품이 2개인 시각디자인 전공은 두 줄로 표시
+        let projectTitleHtml = '';
+        if (item.major === 'Visual') {
+            const title1 = item.projectName.split('/')[0] || item.projectName;
+            const title2 = item.projectName.split('/')[1] || '디지털 유기체';
+            projectTitleHtml = `
+                <div class="project-title-group">
+                    <span class="project-title line-clamp line-clamp-1">${title1}</span>
+                    <span class="project-title line-clamp line-clamp-1">${title2}</span>
+                </div>
+            `;
+        } else {
+            projectTitleHtml = `
+                <div class="project-title-group">
+                    <span class="project-title line-clamp line-clamp-1">${item.projectName}</span>
+                </div>
+            `;
+        }
 
         html += `
             <div class="designer-item reveal ${delayClass}" data-id="${item.id}" data-major="${item.major}">
                 <span class="name">${item.name}</span>
-                <span class="project-title line-clamp line-clamp-1">${displayTitle}</span>
+                ${projectTitleHtml}
             </div>
         `;
     });
@@ -153,9 +168,9 @@ function renderDesigners(filterMajor = currentMajor) {
     html += `
                 </div>
             </div>
-            <div class="designer-preview-sticky">
+            <div class="designer-preview-sticky" id="designer-preview-sticky">
                 <div class="designer-preview-box" id="designer-preview-box">
-                    <div class="designer-preview-placeholder" id="designer-preview-placeholder">DESIGN PREVIEW</div>
+                    <div class="designer-preview-placeholder">DESIGN PREVIEW</div>
                 </div>
             </div>
         </div>
@@ -163,13 +178,17 @@ function renderDesigners(filterMajor = currentMajor) {
 
     contentDisplay.innerHTML = html;
 
-    const previewBox = document.getElementById('designer-preview-box');
+    const previewSticky = document.getElementById('designer-preview-sticky');
     const designerListElem = document.getElementById('designer-list');
 
-    // 프리뷰 박스 마우스 이탈 시 숨김 처리
-    if (designerListElem && previewBox) {
+    // 프리뷰 영역 마우스 이탈 시 초기화
+    if (designerListElem && previewSticky) {
         designerListElem.addEventListener('mouseleave', () => {
-            previewBox.classList.remove('active');
+            previewSticky.innerHTML = `
+                <div class="designer-preview-box">
+                    <div class="designer-preview-placeholder">DESIGN PREVIEW</div>
+                </div>
+            `;
         });
     }
 
@@ -179,22 +198,27 @@ function renderDesigners(filterMajor = currentMajor) {
             const dataId = item.dataset.id;
             const itemData = galleryData.find(d => d.id == dataId);
 
-            if (previewBox && itemData) {
-                // 시각디자인(Visual) 전공의 경우 2개 미리보기 이미지 노출
+            if (previewSticky && itemData) {
+                // 시각디자인(Visual) 전공의 경우 아래에 사각박스가 하나 더 있는 2개 수직 사각박스 노출
                 if (itemData.major === 'Visual') {
                     const img1 = itemData.imagePath;
-                    const img2 = (itemData.id % 2 === 0) ? './img/project3.jpg' : './img/project5.jpg';
-                    previewBox.classList.add('multi-image');
-                    previewBox.innerHTML = `
-                        <img src="./${img1}" alt="${itemData.name} 작품1" onerror="this.style.display='none'">
-                        <img src="${img2}" alt="${itemData.name} 작품2" onerror="this.style.display='none'">
+                    const img2 = (itemData.id % 2 === 0) ? 'img/project3.jpg' : 'img/project5.jpg';
+                    previewSticky.innerHTML = `
+                        <div class="designer-preview-box active">
+                            <img src="./${img1}" alt="${itemData.name} 작품1" onerror="this.style.display='none'">
+                        </div>
+                        <div class="designer-preview-box active">
+                            <img src="./${img2}" alt="${itemData.name} 작품2" onerror="this.style.display='none'">
+                        </div>
                     `;
                 } else {
-                    // 공간디자인(Space) 전공의 경우 1개 미리보기 이미지 노출
-                    previewBox.classList.remove('multi-image');
-                    previewBox.innerHTML = `<img src="./${itemData.imagePath}" alt="${itemData.projectName}" onerror="this.style.display='none'">`;
+                    // 공간디자인(Space) 전공의 경우 1개 사각박스 노출
+                    previewSticky.innerHTML = `
+                        <div class="designer-preview-box active">
+                            <img src="./${itemData.imagePath}" alt="${itemData.projectName}" onerror="this.style.display='none'">
+                        </div>
+                    `;
                 }
-                previewBox.classList.add('active');
             }
         });
 
