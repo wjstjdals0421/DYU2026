@@ -636,7 +636,8 @@ body.archive-body {
 .archive-page-container {
     width: 100%;
     height: calc(100vh - 80px);
-    margin-top: 10px;
+    margin-top: 80px;
+    padding-bottom: 140px; /* 푸터 높이만큼 바닥 공간 보장 */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -644,13 +645,14 @@ body.archive-body {
     position: relative;
     overflow: hidden;
     background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .archive-slider-wrapper {
     position: relative;
     width: 100%;
     max-width: 1400px;
-    height: 800px;
+    height: min(560px, calc(100vh - 300px));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -660,8 +662,8 @@ body.archive-body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 500px;
-    height: 700px;
+    width: min(430px, 70vw);
+    height: min(540px, calc(100vh - 320px));
     background-color: #ffffff;
     border-radius: 16px;
     border: 1.5px solid #eaeaea;
@@ -874,6 +876,27 @@ body.archive-body {
 
     .archive-arrow-btn.prev-btn { left: 15px; }
     .archive-arrow-btn.next-btn { right: 15px; }
+}
+
+/* 창 세로 높이가 작아질 때 (노트북/소형 모니터 환경) 푸터가 화살표 버튼을 가리지 않도록 자동 대응 */
+@media (max-height: 800px) {
+    body.archive-body {
+        overflow-y: auto !important;
+        height: auto !important;
+    }
+
+    body.archive-body .archive-page-container {
+        height: auto !important;
+        min-height: calc(100vh - 80px);
+        padding-bottom: 3rem !important;
+    }
+
+    body.archive-body footer.site-footer {
+        position: relative !important;
+        bottom: auto !important;
+        margin-top: 2rem !important;
+        z-index: 100 !important;
+    }
 }
 
 /* 모바일 (스마트폰 최적화: <= 768px) */
