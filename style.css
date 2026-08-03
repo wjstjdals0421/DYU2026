@@ -343,7 +343,7 @@ html, body {
     width: 282px;
     max-width: 100%;
     height: 352px;
-    aspect-ratio: 4/5; /* 4:5 비율 (282px x 352px 규격) */
+    aspect-ratio: 4 / 5; /* PC 환경 4:5 비율 (282px x 352px 규격) */
     background-color: #f5f5f5;
     margin-bottom: 1rem;
     overflow: hidden;
@@ -945,6 +945,13 @@ body.archive-body {
 
     .project-card, .work-item {
         grid-column: span 6; /* 깔끔한 2열 카드 정렬 */
+    }
+
+    /* 모바일 환경 전용 썸네일: 깃허브 업로드 전 오리지널 규격 (width 100%, height auto, 4:5) */
+    .project-thumb {
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 4 / 5 !important;
     }
 
     .project-info h3 {

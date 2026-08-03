@@ -99,7 +99,6 @@ function renderProjects(filterMajor = currentMajor) {
                 <div class="project-info">
                     <div class="author">${item.name} (${item.studentId})</div>
                     <h3>${item.projectName}</h3>
-                    <p class="desc line-clamp line-clamp-2">${item.projectDesc}</p>
                 </div>
             </div>
         `;
