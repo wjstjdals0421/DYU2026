@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archive | GSDD 2026</title>
+    <title>GSDD 2026 | Archive</title>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body class="archive-body">
@@ -11,25 +11,47 @@
         <div class="logo" onclick="location.href='./index.html'">GSDD 2026</div>
         <nav>
             <ul class="nav-links">
+                <li><a href="./index.html#about" class="nav-link-about">About</a></li>
                 <li><a href="./gallery/gallery.html?view=project">Works</a></li>
                 <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
                 <li><a href="./archive.html" class="active">Archive</a></li>
             </ul>
         </nav>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="메뉴 열기">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
     </header>
+
+    <!-- 모바일 드롭다운 세로 내비게이션 메뉴 -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+        <ul class="mobile-nav-links">
+            <li><a href="./index.html#about" class="nav-link-about">About</a></li>
+            <li><a href="./gallery/gallery.html?view=project">Works</a></li>
+            <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
+            <li><a href="./archive.html">Archive</a></li>
+        </ul>
+    </div>
 
     <!-- 과거 전시 기록 3D 카드 인터랙티브 슬라이더 영역 -->
     <main class="archive-page-container" id="archive-container">
+        <!-- 직관적인 좌우 화살표 버튼 -->
+        <button class="archive-arrow-btn prev-btn" id="archive-prev-btn" aria-label="이전 연도">&larr;</button>
+        <button class="archive-arrow-btn next-btn" id="archive-next-btn" aria-label="다음 연도">&rarr;</button>
+
         <div class="archive-slider-wrapper" id="archive-track"></div>
         <div class="archive-dots-container" id="archive-dots"></div>
     </main>
 
-    <!-- 푸터 바 (시안 이미지 레이아웃 반영) -->
+    <!-- 푸터 바 -->
     <footer class="site-footer">
         <div class="footer-inner-container">
             <div class="footer-left-info">
                 <div class="footer-title-line">&lsquo;GSDD 2026&rsquo; &mdash; Dongyang University Design Department</div>
-                <div class="footer-sub-line">7th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
+                <div class="footer-sub-line">8th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
             </div>
             <div class="footer-right-elements">
                 <div class="footer-links-group">

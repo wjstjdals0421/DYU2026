@@ -12,12 +12,30 @@
             <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">GSDD 2026</div>
             <nav>
                 <ul class="nav-links">
+                    <li><a href="#about" class="nav-link-about">About</a></li>
                     <li><a href="./gallery/gallery.html?view=project">Works</a></li>
                     <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
                     <li><a href="./archive.html">Archive</a></li>
                 </ul>
             </nav>
+            <button class="hamburger-btn" id="hamburger-btn" aria-label="메뉴 열기">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
         </header>
+
+        <!-- 모바일 드롭다운 세로 내비게이션 메뉴 -->
+        <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+            <ul class="mobile-nav-links">
+                <li><a href="#about" class="nav-link-about">About</a></li>
+                <li><a href="./gallery/gallery.html?view=project">Works</a></li>
+                <li><a href="./gallery/gallery.html?view=designer">Designers</a></li>
+                <li><a href="./archive.html">Archive</a></li>
+            </ul>
+        </div>
 
         <main id="main-content" class="hidden">
             <!-- 1. 초기 메인 히어로 섹션 (GSDD 2026 대표 비주얼 & 이벤트 정보) -->
@@ -130,7 +148,7 @@
                 <div class="footer-inner-container">
                     <div class="footer-left-info">
                         <div class="footer-title-line">&lsquo;GSDD 2026&rsquo; &mdash; Dongyang University Design Department</div>
-                        <div class="footer-sub-line">7th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
+                        <div class="footer-sub-line">8th Graduation Exhibition Website &copy; 2026. All rights reserved.</div>
                     </div>
                     <div class="footer-right-elements">
                         <div class="footer-links-group">

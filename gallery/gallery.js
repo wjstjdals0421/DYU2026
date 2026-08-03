@@ -11,6 +11,9 @@ const modalOverlay = document.getElementById('modal-overlay');
 const modalContent = document.getElementById('modal-content');
 const closeModal = document.querySelector('.close-btn');
 
+let currentView = 'project';
+let currentMajor = 'All';
+
 // 스크롤 리빌 애니메이션 인터섹션 옵저버 설정
 const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -43,7 +46,13 @@ function openProjectDetail(id, clickedElement) {
     document.getElementById('modal-author-info').textContent = `${data.name} (${data.studentId}) | ${data.major}`;
     document.getElementById('modal-project-name').textContent = data.projectName;
     document.getElementById('modal-project-desc').textContent = data.projectDesc;
-    document.getElementById('modal-images').innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
+    
+    // 시각디자인 전공 2개 이미지 지원
+    if (data.major === 'Visual' && data.images && data.images.length > 1) {
+        document.getElementById('modal-images').innerHTML = data.images.map(img => `<img src="./${img}" onerror="this.style.display='none'">`).join('');
+    } else {
+        document.getElementById('modal-images').innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
+    }
 
     requestAnimationFrame(() => {
         modalOverlay.classList.add('active');
@@ -57,17 +66,30 @@ function closeProjectDetail() {
     document.body.style.overflow = 'auto';
 }
 
-closeModal.addEventListener('click', closeProjectDetail);
-modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeProjectDetail(); });
+if (closeModal) closeModal.addEventListener('click', closeProjectDetail);
+if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeProjectDetail(); });
 
-// Works 뷰 (작품 그리드) 렌더링 함수
-function renderProjects() {
+// 서브탭 활성화 상태 업데이트
+function updateSubTabs(activeMajor) {
+    currentMajor = activeMajor;
+    subTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.major === activeMajor));
+}
+
+// Works 뷰 (작품 그리드) 렌더링 함수 - 전공 필터링 지원 (All, Visual, Space)
+function renderProjects(filterMajor = currentMajor) {
+    currentView = 'project';
+    updateSubTabs(filterMajor);
+
     if (navProject) navProject.classList.add('active');
     if (navDesigner) navDesigner.classList.remove('active');
-    if (subTabContainer) subTabContainer.classList.remove('visible');
-    
+    if (subTabContainer) subTabContainer.classList.add('visible');
+
+    const filteredData = filterMajor === 'All' 
+        ? galleryData 
+        : galleryData.filter(item => item.major === filterMajor);
+
     let html = '<div id="project-grid">';
-    galleryData.forEach((item, index) => {
+    filteredData.forEach((item, index) => {
         const delayClass = `delay-${(index % 4) + 1}`;
         html += `
             <div class="project-card reveal ${delayClass}" data-id="${item.id}">
@@ -88,18 +110,19 @@ function renderProjects() {
     document.querySelectorAll('.project-card').forEach(card => {
         card.addEventListener('click', () => openProjectDetail(card.dataset.id, card));
     });
-    
+
     applyReveal();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Designers 뷰 (디자이너 리스트 & 호버 프리뷰) 렌더링 함수
-function renderDesigners(filterMajor = 'All') {
+function renderDesigners(filterMajor = currentMajor) {
+    currentView = 'designer';
+    updateSubTabs(filterMajor);
+
     if (navDesigner) navDesigner.classList.add('active');
     if (navProject) navProject.classList.remove('active');
     if (subTabContainer) subTabContainer.classList.add('visible');
-
-    subTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.major === filterMajor));
 
     const filteredData = filterMajor === 'All' 
         ? galleryData 
@@ -114,11 +137,15 @@ function renderDesigners(filterMajor = 'All') {
 
     filteredData.forEach((item, index) => {
         const delayClass = `delay-${(index % 5) + 1}`;
+        // 시각디자인 전공의 경우 2개 프로젝트 제목 표시
+        const displayTitle = (item.major === 'Visual') 
+            ? `${item.projectName.split('/')[0] || item.projectName} / ${item.projectName.split('/')[1] || '디지털 유기체'}`
+            : item.projectName;
+
         html += `
-            <div class="designer-item reveal ${delayClass}" data-id="${item.id}" data-img="${item.imagePath || ''}">
+            <div class="designer-item reveal ${delayClass}" data-id="${item.id}" data-major="${item.major}">
                 <span class="name">${item.name}</span>
-                <span class="project-title line-clamp line-clamp-1">${item.projectName}</span>
-                <span class="project-desc line-clamp line-clamp-1">${item.projectDesc || '작품 설명'}</span>
+                <span class="project-title line-clamp line-clamp-1">${displayTitle}</span>
             </div>
         `;
     });
@@ -128,8 +155,7 @@ function renderDesigners(filterMajor = 'All') {
             </div>
             <div class="designer-preview-sticky">
                 <div class="designer-preview-box" id="designer-preview-box">
-                    <div class="designer-preview-placeholder" id="designer-preview-placeholder"></div>
-                    <img id="designer-preview-img" src="" alt="" style="display:none;">
+                    <div class="designer-preview-placeholder" id="designer-preview-placeholder">DESIGN PREVIEW</div>
                 </div>
             </div>
         </div>
@@ -138,49 +164,38 @@ function renderDesigners(filterMajor = 'All') {
     contentDisplay.innerHTML = html;
 
     const previewBox = document.getElementById('designer-preview-box');
-    const previewImg = document.getElementById('designer-preview-img');
-    const previewPlaceholder = document.getElementById('designer-preview-placeholder');
     const designerListElem = document.getElementById('designer-list');
 
-    // 오른쪽 프리뷰 이미지 업데이트 함수
-    function updatePreview(imgPath, title) {
-        if (!previewImg) return;
-        if (imgPath) {
-            const img = new Image();
-            img.src = `./${imgPath}`;
-            img.onload = () => {
-                previewImg.src = `./${imgPath}`;
-                previewImg.alt = title || '';
-                previewImg.style.display = 'block';
-                if (previewPlaceholder) previewPlaceholder.style.display = 'none';
-            };
-            img.onerror = () => {
-                previewImg.style.display = 'none';
-                if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
-            };
-        } else {
-            previewImg.style.display = 'none';
-            if (previewPlaceholder) previewPlaceholder.style.display = 'flex';
-        }
-    }
-
-    // 마우스가 리스트 영역 밖으로 나가면 프리뷰 박스 숨기기
+    // 프리뷰 박스 마우스 이탈 시 숨김 처리
     if (designerListElem && previewBox) {
         designerListElem.addEventListener('mouseleave', () => {
             previewBox.classList.remove('active');
         });
     }
 
-    // 각 디자이너 항목 마우스 호버 이벤트 바인딩
+    // 각 디자이너 항목 마우스 호버 이벤트
     document.querySelectorAll('.designer-item').forEach(item => {
         item.addEventListener('mouseenter', () => {
-            const imgPath = item.dataset.img;
             const dataId = item.dataset.id;
             const itemData = galleryData.find(d => d.id == dataId);
-            updatePreview(imgPath, itemData ? itemData.projectName : '');
-            
-            // 호버 시 프리뷰 박스 활성화 (보이게 설정)
-            if (previewBox) previewBox.classList.add('active');
+
+            if (previewBox && itemData) {
+                // 시각디자인(Visual) 전공의 경우 2개 미리보기 이미지 노출
+                if (itemData.major === 'Visual') {
+                    const img1 = itemData.imagePath;
+                    const img2 = (itemData.id % 2 === 0) ? './img/project3.jpg' : './img/project5.jpg';
+                    previewBox.classList.add('multi-image');
+                    previewBox.innerHTML = `
+                        <img src="./${img1}" alt="${itemData.name} 작품1" onerror="this.style.display='none'">
+                        <img src="${img2}" alt="${itemData.name} 작품2" onerror="this.style.display='none'">
+                    `;
+                } else {
+                    // 공간디자인(Space) 전공의 경우 1개 미리보기 이미지 노출
+                    previewBox.classList.remove('multi-image');
+                    previewBox.innerHTML = `<img src="./${itemData.imagePath}" alt="${itemData.projectName}" onerror="this.style.display='none'">`;
+                }
+                previewBox.classList.add('active');
+            }
         });
 
         item.addEventListener('click', () => openProjectDetail(item.dataset.id, item));
@@ -191,15 +206,28 @@ function renderDesigners(filterMajor = 'All') {
 }
 
 // 상단 Works / Designers 메뉴 클릭 이벤트 핸들러
-if (navProject) navProject.addEventListener('click', (e) => { e.preventDefault(); renderProjects(); window.history.pushState({view: 'project'}, '', './gallery.html?view=project'); });
-if (navDesigner) navDesigner.addEventListener('click', (e) => { e.preventDefault(); renderDesigners(); window.history.pushState({view: 'designer', major: 'All'}, '', './gallery.html?view=designer'); });
+if (navProject) navProject.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    renderProjects(currentMajor); 
+    window.history.pushState({view: 'project', major: currentMajor}, '', `./gallery.html?view=project&major=${currentMajor}`); 
+});
+if (navDesigner) navDesigner.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    renderDesigners(currentMajor); 
+    window.history.pushState({view: 'designer', major: currentMajor}, '', `./gallery.html?view=designer&major=${currentMajor}`); 
+});
 
-// 서브 탭 (All, Visual, Space) 클릭 이벤트 핸들러
+// 서브 탭 (All, Visual, Space) 클릭 이벤트 핸들러 - Works & Designers 모두 동작
 subTabs.forEach(tab => {
     tab.addEventListener('click', () => {
         const major = tab.dataset.major;
-        renderDesigners(major);
-        window.history.pushState({view: 'designer', major: major}, '', `./gallery.html?view=designer&major=${major}`);
+        if (currentView === 'designer') {
+            renderDesigners(major);
+            window.history.pushState({view: 'designer', major: major}, '', `./gallery.html?view=designer&major=${major}`);
+        } else {
+            renderProjects(major);
+            window.history.pushState({view: 'project', major: major}, '', `./gallery.html?view=project&major=${major}`);
+        }
     });
 });
 
@@ -208,11 +236,15 @@ const urlParams = new URLSearchParams(window.location.search);
 const view = urlParams.get('view');
 const major = urlParams.get('major') || 'All';
 if (view === 'designer') renderDesigners(major);
-else renderProjects();
+else renderProjects(major);
 
 // 브라우저 뒤로가기 / 앞으로가기 처리
 window.addEventListener('popstate', (e) => {
     const state = e.state;
-    if (state && state.view === 'designer') renderDesigners(state.major || 'All');
-    else renderProjects();
+    if (state) {
+        if (state.view === 'designer') renderDesigners(state.major || 'All');
+        else renderProjects(state.major || 'All');
+    } else {
+        renderProjects('All');
+    }
 });

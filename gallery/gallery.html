@@ -11,16 +11,35 @@
         <div class="logo" onclick="location.href='../index.html'">GSDD 2026</div>
         <nav>
             <ul class="nav-links">
+                <li><a href="../index.html#about" class="nav-link-about">About</a></li>
                 <li><a href="./gallery.html?view=project" id="nav-project">Works</a></li>
                 <li><a href="./gallery.html?view=designer" id="nav-designer">Designers</a></li>
                 <li><a href="../archive.html">Archive</a></li>
             </ul>
         </nav>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="메뉴 열기">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
     </header>
 
+    <!-- 모바일 드롭다운 세로 내비게이션 메뉴 -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+        <ul class="mobile-nav-links">
+            <li><a href="../index.html#about" class="nav-link-about">About</a></li>
+            <li><a href="./gallery.html?view=project">Works</a></li>
+            <li><a href="./gallery.html?view=designer">Designers</a></li>
+            <li><a href="../archive.html">Archive</a></li>
+        </ul>
+    </div>
+
     <main class="work-container">
-        <div class="sub-tab-container" id="designer-sub-tabs">
-            <button class="sub-tab active" data-major="All">전체</button>
+        <!-- 전공 서브 탭 (All, Visual, Space) - Works & Designers 공통 적용 -->
+        <div class="sub-tab-container visible" id="designer-sub-tabs">
+            <button class="sub-tab active" data-major="All">All</button>
             <button class="sub-tab" data-major="Visual">Visual</button>
             <button class="sub-tab" data-major="Space">Space</button>
         </div>
