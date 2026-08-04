@@ -1048,11 +1048,11 @@ body.archive-body {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background-color: #000000; /* 검은색 버튼 */
+    background-color: rgb(244, 186, 0); /* 푸터 배경색과 동일한 옐로우 (요청사항) */
     border: none;
     cursor: pointer;
     z-index: 30;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 14px rgba(244, 186, 0, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1060,13 +1060,18 @@ body.archive-body {
 }
 
 .archive-arrow-btn:hover {
-    background-color: #222222;
+    background-color: #e0ab00;
     transform: scale(1.08);
 }
 
 .archive-arrow-btn svg {
     width: 16px;
     height: 16px;
+}
+
+.archive-arrow-btn svg line,
+.archive-arrow-btn svg polyline {
+    stroke: #111111 !important;
 }
 
 /* 햄버거 메뉴 버튼 (모바일용) */
