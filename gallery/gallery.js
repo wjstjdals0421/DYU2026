@@ -54,10 +54,124 @@ function openProjectDetail(id, clickedElement) {
         document.getElementById('modal-images').innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
     }
 
+    // 상세페이지 방명록 (Guestbook) 로드 연동
+    loadGuestbook(data.id);
+
+    // 상세페이지 인스타그램 스타일 좋아요 시스템 연동
+    loadLikeSystem(data.id);
+
     requestAnimationFrame(() => {
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
     });
+}
+
+// 인스타그램 스타일 좋아요 시스템 (localStorage 연동 영구 유지)
+function loadLikeSystem(projectId) {
+    const likeBtn = document.getElementById('insta-like-btn');
+    const likeCountEl = document.getElementById('modal-like-count');
+    if (!likeBtn || !likeCountEl) return;
+
+    const countKey = `gsdd_likes_${projectId}`;
+    const userLikedKey = `gsdd_user_liked_${projectId}`;
+
+    // 초기 난수 기반 좋아요 수 세팅 (12 ~ 46개)
+    let currentLikes = parseInt(localStorage.getItem(countKey) || (14 + (projectId * 9) % 32));
+    let isLiked = localStorage.getItem(userLikedKey) === 'true';
+
+    localStorage.setItem(countKey, currentLikes);
+
+    function updateLikeUI() {
+        likeCountEl.textContent = currentLikes;
+        if (isLiked) {
+            likeBtn.classList.add('liked');
+        } else {
+            likeBtn.classList.remove('liked');
+        }
+    }
+
+    updateLikeUI();
+
+    likeBtn.onclick = function () {
+        if (isLiked) {
+            currentLikes--;
+            isLiked = false;
+        } else {
+            currentLikes++;
+            isLiked = true;
+            likeBtn.classList.add('pop-anim');
+            setTimeout(() => likeBtn.classList.remove('pop-anim'), 350);
+        }
+
+        localStorage.setItem(countKey, currentLikes);
+        localStorage.setItem(userLikedKey, isLiked);
+        updateLikeUI();
+    };
+}
+
+// 방명록 (Guestbook) 로드 및 렌더링 함수 (localStorage 저장 영구 연동)
+function loadGuestbook(projectId) {
+    const listEl = document.getElementById('modal-guestbook-list');
+    const formEl = document.getElementById('guestbook-form');
+    if (!listEl || !formEl) return;
+
+    const storageKey = `gsdd_guestbook_${projectId}`;
+    let comments = JSON.parse(localStorage.getItem(storageKey) || '[]');
+
+    // 초기 샘플 응원 방명록 메시지 세팅 (등록된 코멘트 없을 시)
+    if (comments.length === 0) {
+        comments = [
+            { name: "동문 후배", msg: "졸업 전시 너무 축하드려요! 작품 컨셉과 디테일이 멋집니다 🎉", date: "2026.11.10" },
+            { name: "관람객 A", msg: "표현력이 훌륭해서 한참 감상했네요 👏 고생 많으셨습니다!", date: "2026.11.11" }
+        ];
+        localStorage.setItem(storageKey, JSON.stringify(comments));
+    }
+
+    function renderComments() {
+        if (comments.length === 0) {
+            listEl.innerHTML = `<div class="guestbook-empty">첫 번째 응원 방명록을 남겨주세요!</div>`;
+        } else {
+            listEl.innerHTML = comments.map(c => `
+                <div class="guestbook-item">
+                    <div class="guestbook-item-header">
+                        <span class="guestbook-author">${escapeHtml(c.name)}</span>
+                        <span class="guestbook-date">${c.date}</span>
+                    </div>
+                    <div class="guestbook-item-body">${escapeHtml(c.msg)}</div>
+                </div>
+            `).join('');
+        }
+        listEl.scrollTop = listEl.scrollHeight;
+    }
+
+    renderComments();
+
+    // 폼 제출 시 localStorage 연동 저장
+    formEl.onsubmit = function (e) {
+        e.preventDefault();
+        const nameInput = document.getElementById('guestbook-name-input');
+        const msgInput = document.getElementById('guestbook-msg-input');
+
+        const name = nameInput.value.trim();
+        const msg = msgInput.value.trim();
+
+        if (!name || !msg) return;
+
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')}`;
+
+        comments.push({ name, msg, date: dateStr });
+        localStorage.setItem(storageKey, JSON.stringify(comments));
+
+        renderComments();
+
+        nameInput.value = '';
+        msgInput.value = '';
+    };
+}
+
+function escapeHtml(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
 // 모달 팝업 닫기 함수

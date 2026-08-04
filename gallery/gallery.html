@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <div class="logo" onclick="location.href='../index.html'">GSDD 2026</div>
+        <div class="logo" onclick="location.href='../index.html'">Finding Balance<br class="mobile-br"> In ___</div>
         <nav>
             <ul class="nav-links">
                 <li><a href="../index.html#about" class="nav-link-about">About</a></li>
@@ -52,11 +52,33 @@
             <div class="modal-left" id="modal-images"></div>
             <div class="modal-right">
                 <div class="modal-info-top">
-                    <div class="modal-author" id="modal-author-info"></div>
+                    <div class="modal-author-row">
+                        <div class="modal-author" id="modal-author-info"></div>
+                        <!-- 인스타그램 스타일 좋아요 버튼 (요청사항) -->
+                        <button class="insta-like-btn" id="insta-like-btn" title="좋아요 누르기">
+                            <svg class="heart-icon" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                            <span class="like-count" id="modal-like-count">0</span>
+                        </button>
+                    </div>
                     <h2 class="modal-title" id="modal-project-name"></h2>
                 </div>
                 <div class="modal-info-bottom">
                     <p class="modal-desc" id="modal-project-desc"></p>
+                </div>
+                <!-- 상세페이지 우측 하단 방명록 (Guestbook) 코너 -->
+                <div class="modal-guestbook-section">
+                    <div class="guestbook-list" id="modal-guestbook-list">
+                        <!-- 작성된 방명록 댓글이 동적으로 연동됨 -->
+                    </div>
+                    <form class="guestbook-form" id="guestbook-form">
+                        <div class="guestbook-input-row">
+                            <input type="text" id="guestbook-name-input" placeholder="이름 (닉네임)" required maxLength="15">
+                            <button type="submit" class="guestbook-submit-btn">등록</button>
+                        </div>
+                        <textarea id="guestbook-msg-input" placeholder="축하 메시지나 응원의 한마디를 남겨주세요!" required maxLength="150" rows="2"></textarea>
+                    </form>
                 </div>
             </div>
         </div>

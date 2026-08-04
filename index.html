@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GSDD 2026 | 동양대학교 디자인학부 졸업전시회</title>
     <link rel="stylesheet" href="./style.css">
+    <!-- Matter.js 2D Physics Engine (블록 낙하 중력 연동) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
-<body>
+<body class="loading-state">
     <div id="main-wrapper">
-        <header>
-            <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">GSDD 2026</div>
+        <header class="hero-fade-element">
+            <div class="logo" onclick="location.href='./index.html'">Finding Balance<br class="mobile-br"> In ___</div>
             <nav>
                 <ul class="nav-links">
                     <li><a href="#about" class="nav-link-about">About</a></li>
@@ -37,38 +39,11 @@
             </ul>
         </div>
 
-        <main id="main-content" class="hidden">
-            <!-- 1. 초기 메인 히어로 섹션 (GSDD 2026 대표 비주얼 & 이벤트 정보) -->
+        <main id="main-content">
+            <!-- 1. 초기 메인 히어로 섹션 (Finding Balance In ___ 2D 유닛 블록 물리 히어로) -->
             <section id="hero-section" class="full-section">
-                <!-- 좌측 상단 기하학 SVG 그래픽 -->
-                <div class="hero-graphic hero-graphic-tl reveal">
-                    <svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="0" y="0" width="55" height="55" fill="#dedede"/>
-                        <path d="M 65 0 A 55 55 0 0 1 120 55 L 65 55 Z" fill="#75787f"/>
-                        <path d="M 120 65 A 55 55 0 0 1 65 120 L 65 65 Z" fill="#6c7077"/>
-                    </svg>
-                </div>
-
-                <!-- 중앙 타이틀 & 서브타이틀 및 일정/장소 -->
-                <div class="hero-center-content reveal">
-                    <h1 class="hero-main-title">GSDD 2026</h1>
-                    <p class="hero-dept-title">동양대학교 디자인학부 졸업전시회</p>
-                    
-                    <div class="hero-event-info">
-                        <p class="hero-date">2026. 전시 날짜 ~ 2026. 전시 날짜</p>
-                        <p class="hero-location">마루아트센터</p>
-                    </div>
-                </div>
-
-                <!-- 우측 하단 기하학 SVG 그래픽 -->
-                <div class="hero-graphic hero-graphic-br reveal delay-1">
-                    <svg width="220" height="200" viewBox="0 0 220 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <polygon points="175,5 215,28 215,73 175,96 135,73 135,28" fill="#dedede"/>
-                        <path d="M 100 45 C 95 70 80 85 55 90 C 80 95 95 110 100 135 C 105 110 120 95 145 90 C 120 85 105 70 100 45 Z" fill="#73777f"/>
-                        <polygon points="40,135 65,145 50,195 25,185" fill="#dedede"/>
-                        <circle cx="120" cy="165" r="28" fill="#6c7077"/>
-                    </svg>
-                </div>
+                <!-- 2D 물리 엔진 캔버스 -->
+                <canvas id="physics-canvas"></canvas>
             </section>
 
             <!-- 2. 메인 전시 소개 비디오 영상 영역 (스크롤 내릴 때 계속 연결) -->
@@ -82,12 +57,9 @@
                 </div>
             </section>
 
-            <!-- 3. 어바웃 섹션 (1부: 전시 포스터 & 대표 컨셉 타이틀) -->
+            <!-- 3. 어바웃 섹션 (1부: 대표 컨셉 타이틀 & 설명) -->
             <section class="about-section-block">
                 <div class="about-intro-grid reveal">
-                    <div class="about-poster-rect">
-                        <img src="./img/project1.jpg" alt="졸업 전시 포스터" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
-                    </div>
                     <div class="about-intro-text">
                         <h2 class="about-main-title">GSDD 2026</h2>
                         <div class="about-concept-text">
@@ -101,7 +73,7 @@
                 <!-- 4. 어바웃 섹션 (2부: 수직 포스터 & 상세 소개 및 졸업준비위원회 조직 목록) -->
                 <div class="about-details-grid reveal delay-1">
                     <div class="about-poster-vertical">
-                        <img src="./img/project2.jpg" alt="졸업 전시 포스터" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                        <img src="./gallery/img/main_poster.png" alt="GSDD 2026 졸업전시 메인 포스터" style="width:100%; height:auto; display:block; border-radius:0 !important;">
                     </div>
                     <div class="about-details-info">
                         <h2 class="about-main-title">GSDD 2026</h2>
