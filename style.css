@@ -292,9 +292,24 @@ html, body {
     transform: translateY(0);
 }
 
+/* 상단 헤더 전용 슬라이드 다운 등장 애니메이션 (아래에서 위로 올라오는 어색함 완전 해결) (요청사항) */
+header.hero-fade-element {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: opacity 0.75s var(--ease-ios), transform 0.75s var(--ease-ios);
+}
+
+header.hero-fade-element.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
 body.loading-state header.hero-fade-element {
     opacity: 0;
     pointer-events: none;
+    transform: translateY(-100%);
 }
 
 .hero-top-subtitle {
