@@ -258,12 +258,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const hitboxW = bodyW * 0.95;
             const hitboxH = bodyH * 0.95;
 
-            // 화면 상단 15% ~ 85% 위치 시작점 (상단 옐로우 헤더바 바로 아래에서 떨어짐)
+            // 화면 상단 15% ~ 85% 위치 시작점 (천장 벽과 충돌 겹침 없이 헤더 바로 아래에서 자연스럽게 낙하)
             const minX = width * 0.15;
             const maxX = width * 0.85;
             const spawnX = minX + Math.random() * (maxX - minX);
             const currentHeaderH = (width <= 768) ? 58 : 72;
-            const spawnY = currentHeaderH + 15 + (Math.random() * 20);
+            const safeHalfH = (hitboxH / 2) + 15;
+            const spawnY = currentHeaderH + safeHalfH;
 
             const block = Bodies.rectangle(spawnX, spawnY, hitboxW, hitboxH, {
                 restitution: 0.25, // 반발력 (통통 튀어 오르는 정도)
