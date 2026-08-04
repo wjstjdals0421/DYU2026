@@ -48,10 +48,13 @@ function openProjectDetail(id, clickedElement) {
     document.getElementById('modal-project-desc').textContent = data.projectDesc;
     
     // 시각디자인 전공 2개 이미지 지원
+    const modalImages = document.getElementById('modal-images');
     if (data.major === 'Visual' && data.images && data.images.length > 1) {
-        document.getElementById('modal-images').innerHTML = data.images.map(img => `<img src="./${img}" onerror="this.style.display='none'">`).join('');
+        modalImages.innerHTML = data.images.map(img => `<img src="./${img}" onerror="this.style.display='none'">`).join('');
+        modalImages.classList.add('two-images');
     } else {
-        document.getElementById('modal-images').innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
+        modalImages.innerHTML = `<img src="./${data.imagePath}" onerror="this.style.display='none'">`;
+        modalImages.classList.remove('two-images');
     }
 
     requestAnimationFrame(() => {

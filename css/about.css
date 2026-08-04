@@ -1,0 +1,94 @@
+/* ==========================================================
+   about.css — 전시 비디오 섹션, About 섹션
+   ========================================================== */
+
+/* ── 전시 비디오 섹션 ── */
+.main-video-section {
+    width: 100%;
+    max-width: var(--site-max-width);
+    margin: 110px auto 3rem auto;
+    padding: 0 var(--site-margin);
+}
+.video-container-box {
+    width: 100%; max-width: 1060px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    background-color: #dcdcdc;
+    border-radius: 0 !important;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+    transition: transform 0.4s var(--ease-ios), box-shadow 0.4s var(--ease-ios);
+}
+.video-container-box:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.09); }
+.play-icon-btn {
+    width: 80px; height: 80px;
+    background-color: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transition: transform 0.3s var(--ease-ios);
+}
+.video-container-box:hover .play-icon-btn { transform: scale(1.1); }
+.play-icon-btn svg { width: 28px; height: 28px; fill: #444444; margin-left: 4px; }
+
+/* ── About 섹션 블록 ── */
+.about-section-block {
+    width: 100%;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 3rem var(--site-margin) 6rem var(--site-margin);
+}
+.about-intro-grid  { display: block; margin-bottom: 4rem; }
+.about-intro-text  { text-align: center; max-width: 1200px; margin: 0 auto; }
+.about-main-title  { font-family: var(--sans-font); font-size: 3.6rem; font-weight: 800; letter-spacing: -0.02em; color: #000000; margin: 0 0 1.5rem 0; line-height: 1.1; }
+
+.about-concept-text       { font-size: 1.05rem; line-height: 1.8; color: #222222; margin-bottom: 2.5rem; word-break: keep-all; }
+.about-concept-text p     { margin: 0 0 0.3rem 0; }
+
+/* About 전체 너비 이미지 스택 (about_1, about_2) */
+.about-image-stack {
+    display: flex; flex-direction: column; gap: 0;
+    width: 100%; max-width: 1200px;
+    margin: 2rem auto 3rem auto;
+}
+.about-full-img { width: 100%; height: auto; display: block; border-radius: 0; }
+
+/* About 포스터 */
+.about-poster-rect {
+    width: 100%; aspect-ratio: 16 / 9;
+    background-color: #dcdcdc;
+    border-radius: 0 !important;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; font-weight: 700; color: #444444; letter-spacing: -0.01em;
+}
+.about-poster-vertical {
+    width: 100%; max-width: 480px;
+    aspect-ratio: auto;
+    background-color: transparent;
+    border-radius: 0 !important;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+.about-poster-vertical img,
+.about-poster-rect img {
+    width: 100% !important; height: auto !important;
+    max-height: 100%;
+    object-fit: contain !important;
+    display: block;
+}
+
+/* About 상세 (텍스트 좌, 포스터 우) */
+.about-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* 크레딧 조직 목록 */
+.about-credits-group { display: flex; flex-direction: column; gap: 1.6rem; margin-top: 2rem; }
+.credit-item-block   { display: flex; flex-direction: column; gap: 0.25rem; }
+.credit-label        { font-size: 0.95rem; font-weight: 800; color: #111111; }
+.credit-names        { font-size: 0.95rem; font-weight: 500; color: #444444; }

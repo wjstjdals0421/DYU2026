@@ -1,0 +1,122 @@
+/* ==========================================================
+   modal.css — Works/Designers 상세 팝업 모달
+   ========================================================== */
+
+/* ── 모달 오버레이 & 컨텐츠 박스 ── */
+#modal-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+    visibility: hidden; opacity: 0; pointer-events: none;
+    transition: opacity 0.5s var(--ease-ios), visibility 0.5s;
+}
+#modal-overlay.active { visibility: visible; opacity: 1; pointer-events: auto; }
+
+#modal-content {
+    background: #ffffff;
+    width: 96%; max-width: 1600px;
+    height: 90vh;
+    display: flex; position: relative;
+    overflow: hidden;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+    border-radius: 32px;
+    transform: scale(0); opacity: 0;
+    transition: transform 0.7s cubic-bezier(0.32,0.72,0,1), opacity 0.4s var(--ease-ios);
+    will-change: transform, opacity;
+}
+#modal-overlay.active #modal-content { transform: scale(1); opacity: 1; }
+
+/* ── 좌측 이미지 패널 ── */
+.modal-left {
+    width: 65%; height: 100%;
+    overflow-y: auto;
+    background: #f9f9f9;
+    padding: 40px;
+}
+.modal-left img {
+    width: 100%; height: auto;
+    margin-bottom: 20px;
+    display: block; border-radius: 12px;
+}
+
+/* 이미지 2개일 때 좌우 2열 그리드 */
+#modal-images { display: block; }
+#modal-images.two-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+#modal-images.two-images img { margin-bottom: 0; width: 100%; }
+
+/* ── 우측 정보 패널 ── */
+.modal-right {
+    width: 35%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 60px 40px;
+    border-left: 1px solid #eee;
+    background: #ffffff;
+}
+.modal-info-top      { margin-bottom: 40px; }
+.modal-author-row    { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.modal-info-top .modal-author { font-size: 1rem; color: #888; margin-bottom: 0; }
+.modal-info-top .modal-title  { font-size: 3rem; font-family: var(--sans-font); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+.modal-info-bottom   { flex: 1; min-height: 80px; overflow-y: auto; padding-top: 15px; border-top: 1px solid #eee; }
+.modal-info-bottom .modal-desc { font-size: 1rem; line-height: 1.7; color: #444; word-break: keep-all; }
+
+/* ── 좋아요 버튼 ── */
+.insta-like-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: #f7f7f7; border: 1px solid #e5e5e5;
+    padding: 6px 14px; border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-ios);
+    user-select: none;
+}
+.insta-like-btn:hover { background: #f0f0f0; transform: scale(1.05); }
+.heart-icon { width: 20px; height: 20px; fill: none; stroke: #666666; stroke-width: 2; transition: fill 0.25s ease, stroke 0.25s ease, transform 0.2s ease; }
+.like-count { font-size: 0.88rem; font-weight: 700; color: #333333; }
+
+.insta-like-btn.liked                  { background: rgba(255,56,92,0.08); border-color: rgba(255,56,92,0.3); }
+.insta-like-btn.liked .heart-icon      { fill: #ff385c; stroke: #ff385c; }
+.insta-like-btn.liked .like-count      { color: #ff385c; }
+
+@keyframes heart-pop-anim {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.35) rotate(-10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+.insta-like-btn.pop-anim .heart-icon { animation: heart-pop-anim 0.32s ease-in-out; }
+
+/* ── 방명록 (Guestbook) ── */
+.modal-guestbook-section { margin-top: 1.2rem; padding-top: 1.2rem; border-top: 1px solid #eeeeee; display: flex; flex-direction: column; gap: 0.8rem; }
+.guestbook-header        { display: flex; justify-content: space-between; align-items: center; }
+.guestbook-title         { font-size: 0.95rem; font-weight: 700; color: #111111; margin: 0; }
+.guestbook-list          { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-right: 4px; }
+.guestbook-item          { background: #f8f8f8; padding: 8px 12px; border-radius: 6px; font-size: 0.84rem; border: 1px solid #eeeeee; }
+.guestbook-item-header   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.guestbook-author        { font-weight: 700; color: #111111; font-size: 0.82rem; }
+.guestbook-date          { font-size: 0.72rem; color: #888888; }
+.guestbook-item-body     { color: #333333; line-height: 1.45; word-break: break-word; }
+.guestbook-empty         { font-size: 0.82rem; color: #999999; text-align: center; padding: 10px 0; }
+.guestbook-form          { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+.guestbook-input-row     { display: flex; gap: 6px; }
+#guestbook-name-input    { flex: 1; padding: 7px 10px; border: 1px solid #dddddd; border-radius: 4px; font-size: 0.82rem; outline: none; transition: border-color 0.2s; }
+#guestbook-name-input:focus { border-color: rgb(244,186,0); }
+.guestbook-submit-btn    { background-color: rgb(244,186,0); color: #111111; border: none; padding: 7px 14px; border-radius: 4px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s ease, transform 0.15s ease; }
+.guestbook-submit-btn:hover { background-color: #e0ab00; transform: scale(1.02); }
+#guestbook-msg-input     { width: 100%; padding: 7px 10px; border: 1px solid #dddddd; border-radius: 4px; font-size: 0.82rem; resize: none; outline: none; font-family: inherit; transition: border-color 0.2s; }
+#guestbook-msg-input:focus { border-color: rgb(244,186,0); }
+
+/* ── 닫기 버튼 ── */
+.close-btn {
+    position: absolute; top: 30px; right: 30px;
+    background: rgba(0,0,0,0.05); border: none;
+    width: 44px; height: 44px; border-radius: 50%;
+    font-size: 1.5rem; cursor: pointer; z-index: 2001; color: #000;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s;
+}

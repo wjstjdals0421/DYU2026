@@ -473,7 +473,6 @@ body.loading-state header.hero-fade-element {
     transform: scale(1.05);
 }
 
-/* 모든 이미지 썸네일 모서리 굴곡 완전 제거 */
 .project-thumb, 
 .project-thumb img, 
 .designer-preview-box, 
@@ -554,8 +553,16 @@ body.loading-state header.hero-fade-element {
 /* 작품이 2개인 경우 두 줄로 표시 */
 .designer-item .project-title-group {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0;
+}
+
+/* 두 번째 제목 앞에 슬래시 구분자 */
+.designer-item .project-title + .project-title::before {
+    content: '\00a0\00a0/\00a0\00a0';
+    font-weight: 400;
+    color: #aaaaaa;
 }
 
 .designer-item .project-title {
@@ -681,6 +688,20 @@ body.loading-state header.hero-fade-element {
     margin-bottom: 20px;
     display: block;
     border-radius: 12px;
+}
+
+/* 이미지가 2개일 때 데스크탑에서 좌우 2열 배치 */
+#modal-images {
+    display: block;
+}
+#modal-images.two-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+#modal-images.two-images img {
+    margin-bottom: 0;
+    width: 100%;
 }
 .modal-right {
     width: 35%;
@@ -1484,7 +1505,7 @@ body.archive-body {
     width: 100%;
     aspect-ratio: 16 / 9;
     background-color: #dcdcdc;
-    border-radius: 0 !important; /* 모서리 라운딩 제거 */
+    border-radius: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1515,16 +1536,34 @@ body.archive-body {
     display: block;
 }
 
+/* 아 놀고싶당 */
 .about-details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5rem;
+    gap: 2rem;
     align-items: start;
+}
+
+/* 어바웃 전체 너비 이미지 스택 (about_1, about_2) */
+.about-image-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto 3rem auto;
+}
+
+.about-full-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
 }
 
 .about-intro-text {
     text-align: center; /* 중앙 정렬 (요청사항) */
-    max-width: 680px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
