@@ -44,6 +44,13 @@ body, a, button, input, select {
     transform: scale(0.75) rotate(-12deg);
 }
 
+/* 데스크톱(> 768px) 커스텀 유닛 커서 사용 시 기본 OS 마우스/손가락 포인터 중복 노출 100% 완전 차단 (요청사항) */
+@media (min-width: 769px) {
+    html, body, a, button, input, textarea, select, label, .logo, .nav-links li a, .designer-item, .gallery-card, .archive-card, .video-container-box, .play-icon-btn, .close-btn, .insta-like-btn, [onclick], [role="button"] {
+        cursor: none !important;
+    }
+}
+
 /* ========================================================
    1. 디자인 시스템 변수 (Design System Tokens)
    ======================================================== */
