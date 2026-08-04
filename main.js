@@ -102,10 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const runner = Runner.create();
         Runner.run(runner, engine);
 
-        // 천장(상단), 바닥(하단) 및 좌우 벽 무한 경계 생성 (투명 바운더리) (요청사항)
+        // 상단 헤더 메뉴바 바로 아래쪽에 맞춘 천장(상단), 바닥(하단) 및 좌우 벽 무한 경계 생성 (요청사항)
+        const headerHeight = (width <= 768) ? 58 : 72;
         const wallOptions = { isStatic: true, render: { visible: false } };
         const ground = Bodies.rectangle(width / 2, height + 40, width * 2, 80, wallOptions);
-        const topWall = Bodies.rectangle(width / 2, -40, width * 2, 80, wallOptions); // 천장 벽 추가!
+        const topWall = Bodies.rectangle(width / 2, headerHeight - 40, width * 2, 80, wallOptions); // 상단 헤더 바로 아래쪽 천장 경계!
         const leftWall = Bodies.rectangle(-40, height / 2, 80, height * 2, wallOptions);
         const rightWall = Bodies.rectangle(width + 40, height / 2, 80, height * 2, wallOptions);
 
@@ -257,11 +258,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const hitboxW = bodyW * 0.95;
             const hitboxH = bodyH * 0.95;
 
-            // 화면 상단 15% ~ 85% 위치 시작점
+            // 화면 상단 15% ~ 85% 위치 시작점 (상단 옐로우 헤더바 바로 아래에서 떨어짐)
             const minX = width * 0.15;
             const maxX = width * 0.85;
             const spawnX = minX + Math.random() * (maxX - minX);
-            const spawnY = -120 - (Math.random() * 60);
+            const currentHeaderH = (width <= 768) ? 58 : 72;
+            const spawnY = currentHeaderH + 15 + (Math.random() * 20);
 
             const block = Bodies.rectangle(spawnX, spawnY, hitboxW, hitboxH, {
                 restitution: 0.25, // 반발력 (통통 튀어 오르는 정도)
@@ -395,9 +397,10 @@ document.addEventListener('DOMContentLoaded', () => {
             render.options.width = newW;
             render.options.height = newH;
 
-            // 1. 바닥, 천장 및 좌우 벽 위치 재설정
+            // 1. 바닥, 천장(헤더 아래) 및 좌우 벽 위치 재설정
+            const currentHeaderHeight = (newW <= 768) ? 58 : 72;
             Matter.Body.setPosition(ground, { x: newW / 2, y: newH + 40 });
-            Matter.Body.setPosition(topWall, { x: newW / 2, y: -40 });
+            Matter.Body.setPosition(topWall, { x: newW / 2, y: currentHeaderHeight - 40 });
             Matter.Body.setPosition(leftWall, { x: -40, y: newH / 2 });
             Matter.Body.setPosition(rightWall, { x: newW + 40, y: newH / 2 });
 
@@ -412,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const margin = 50;
                     const targetX = (lastWidth > 0) ? (body.position.x * scaleRatio) : body.position.x;
                     const clampedX = Math.max(margin, Math.min(newW - margin, targetX));
-                    const clampedY = Math.max(50, Math.min(newH - 65, body.position.y));
+                    const clampedY = Math.max(currentHeaderHeight + 35, Math.min(newH - 65, body.position.y));
 
                     Matter.Body.setPosition(body, { x: clampedX, y: clampedY });
                     Matter.Body.setVelocity(body, { x: body.velocity.x * 0.2, y: body.velocity.y * 0.2 });
