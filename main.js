@@ -465,13 +465,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // iOS 13+ 권한 및 일반 스마트폰 브라우저 devicemotion 모션 센서 등록
             if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-                document.addEventListener('touchstart', function requestPermissionOnTouch() {
+                window.addEventListener('click', function requestPermissionOnClick() {
                     DeviceMotionEvent.requestPermission().then(permissionState => {
                         if (permissionState === 'granted') {
                             window.addEventListener('devicemotion', handleDeviceMotion);
                         }
                     }).catch(console.error);
-                    document.removeEventListener('touchstart', requestPermissionOnTouch);
+                    window.removeEventListener('click', requestPermissionOnClick);
                 }, { once: true });
             } else {
                 window.addEventListener('devicemotion', handleDeviceMotion);

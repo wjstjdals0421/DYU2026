@@ -1214,6 +1214,11 @@ body.archive-body {
 
 /* 모바일 (스마트폰 최적화: <= 768px) */
 @media (max-width: 768px) {
+    #physics-canvas {
+        pointer-events: none !important; /* 모바일 터치 차단 전면 해제 (스크롤 100% 활성화) (요청사항) */
+        touch-action: auto !important;
+    }
+
     :root {
         --site-margin: 24px;
         --grid-gutter: 16px;
