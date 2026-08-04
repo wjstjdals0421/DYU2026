@@ -1728,39 +1728,198 @@ body.archive-body footer.site-footer {
 /* ========================================================
    8. 나만의 커스텀 스티커 방명록 생성기 스타일링 (요청사항)
    ======================================================== */
-.create-sticker-btn {
+/* 플로팅 액션 그룹 (우측 하단 + 버튼 & 임시 스티커 초기화 버튼) */
+.sticker-action-float-group {
     position: fixed;
     bottom: 28px;
-    left: 28px;
+    right: 28px;
     z-index: 100;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+}
+
+.create-sticker-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: rgb(244, 186, 0);
     color: #111111;
     border: none;
-    padding: 12px 20px;
-    border-radius: 30px;
-    font-family: var(--sans-font);
-    font-size: 0.95rem;
-    font-weight: 700;
+    padding: 0;
     box-shadow: 0 8px 24px rgba(244, 186, 0, 0.45);
     cursor: pointer;
     transition: transform 0.25s var(--ease-ios), box-shadow 0.25s var(--ease-ios);
 }
 
 .create-sticker-btn:hover {
-    transform: translateY(-4px) scale(1.04);
-    box-shadow: 0 12px 30px rgba(244, 186, 0, 0.6);
+    transform: translateY(-4px) scale(1.1);
+    box-shadow: 0 12px 30px rgba(244, 186, 0, 0.65);
 }
 
-.create-sticker-btn svg {
-    transition: transform 0.3s ease;
+.clear-stickers-btn {
+    background-color: #111111;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-family: var(--sans-font);
+    font-size: 0.88rem;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: transform 0.25s var(--ease-ios), background-color 0.2s ease;
 }
 
-.create-sticker-btn:hover svg {
-    transform: rotate(90deg);
+.clear-stickers-btn:hover {
+    background-color: #d93838;
+    transform: translateY(-3px);
 }
+
+/* 스티커 대형 창작 모달 팝업 스튜디오 스타일링 */
+.sticker-modal-container.large-studio-modal {
+    max-width: 880px;
+    padding: 32px;
+}
+
+.sticker-modal-studio-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* 중앙 배치된 캔버스 미리보기 스테이지 & 하단 버튼 행 (요청사항) */
+.studio-center-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+
+.sticker-canvas-stage.large-stage.centered-stage {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+    background-color: #f7f7f7;
+    border: 2.5px dashed #dddddd;
+    border-radius: 24px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+}
+
+.stage-control-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 460px;
+}
+
+.stage-control-action-row .tool-action-btn {
+    padding: 11px 18px;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.stage-control-action-row .sticker-add-btn {
+    padding: 11px 22px;
+    font-size: 0.92rem;
+    flex: 1.2;
+}
+
+/* 각 카테고리별 독립 섹션 블록 스타일링 (요청사항: 탭 제거 후 각각 제목 분리) */
+.studio-bottom-nav-section {
+    background: #f9f9f9;
+    border-radius: 20px;
+    border: 1px solid #eeeeee;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.studio-section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px dashed #e5e5e5;
+}
+
+.studio-section-block:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.section-block-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #111111;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: -0.01em;
+}
+
+.section-title-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.color-picker-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #222222;
+}
+
+/* 라운딩진 둥근 색상 전용 박스 스와치 (텍스트 제거 및 깔끔한 솔리드 컬러 필) (요청사항) */
+.rounded-box-palette {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.color-box-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 2px solid #e2e2e2;
+    padding: 3px;
+    cursor: pointer;
+    transition: all 0.2s var(--ease-ios);
+}
+
+.color-box-btn:hover {
+    transform: translateY(-3px) scale(1.08);
+    border-color: rgb(244, 186, 0);
+}
+
+.color-box-btn.selected {
+    border-color: rgb(244, 186, 0);
+    box-shadow: 0 0 0 3px rgba(244, 186, 0, 0.45);
+    transform: scale(1.1);
+}
+
+.color-box-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    display: block;
+}
+
+.mono-fill { background: linear-gradient(135deg, #111111, #666666); }
+.yellow-fill { background: rgb(244, 186, 0); }
+.red-fill { background: #ff385c; }
+.blue-fill { background: #2f80ed; }
+.green-fill { background: #27ae60; }
+.original-fill { background: linear-gradient(135deg, #ff385c, #2f80ed, #27ae60); }
 
 /* 스티커 창작 모달 오버레이 */
 .sticker-modal-overlay {
@@ -1871,6 +2030,7 @@ body.archive-body footer.site-footer {
     height: 100%;
     object-fit: contain;
     pointer-events: none;
+    filter: grayscale(100%) contrast(1.15); /* 기본 흑백 모노톤 세팅 */
 }
 
 .sticker-emoji-layer {
@@ -1887,22 +2047,104 @@ body.archive-body footer.site-footer {
     height: 65px;
     cursor: grab;
     touch-action: none;
-    border: 2px transparent dashed;
-    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
 }
 
 .stage-emoji-item:active {
     cursor: grabbing;
 }
 
-.stage-emoji-item.active {
-    border-color: rgb(244, 186, 0);
-    box-shadow: 0 0 0 3px rgba(244, 186, 0, 0.35);
+/* 포토샵 Free Transform (Ctrl + T) 프레임 스타일링 (요청사항) */
+.ps-transform-frame {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border: 1.8px dashed transparent;
+    pointer-events: none;
+    transition: border-color 0.2s ease;
 }
+
+.stage-emoji-item.active .ps-transform-frame {
+    border-color: #2f80ed;
+    pointer-events: auto;
+}
+
+/* 기본 핸들 베이스 (비활성 시 숨김) */
+.ps-handle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    pointer-events: auto;
+    user-select: none;
+    transition: transform 0.15s ease;
+}
+.stage-emoji-item.active .ps-handle {
+    display: flex;
+}
+
+/* 좌측 상단: 흰색 십자 화살표 — 크기 조율 */
+.ps-handle-tl {
+    top: -14px;
+    left: -14px;
+    width: 30px;
+    height: 30px;
+    background: #ffffff;
+    border: 2px solid #cccccc;
+    cursor: nwse-resize;
+}
+.ps-handle-tl:hover { transform: scale(1.15); }
+
+/* 상단 중앙: 빨간 X — 삭제 */
+.ps-handle-tc {
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e72b3e;
+    border: 2px solid #c0172a;
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 900;
+    line-height: 1;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+}
+.ps-handle-tc:hover { transform: translateX(-50%) scale(1.15); }
+
+/* 우측 상단: 파란색 — 회전 전용 */
+.ps-handle-tr {
+    top: -12px;
+    right: -12px;
+    background: #2962ff;
+    border: 2px solid #1a47c9;
+    color: #ffffff;
+    cursor: grab;
+    width: 26px;
+    height: 26px;
+}
+.ps-handle-tr:hover { transform: scale(1.2); }
+.ps-handle-tr:active { cursor: grabbing; }
+
+/* 우측 하단 (미사용 — 필요 시 활용) */
+.ps-handle-br {
+    bottom: -12px;
+    right: -12px;
+    background: rgb(244,186,0);
+    border: 2px solid #c9980a;
+    cursor: nwse-resize;
+    display: none !important;
+}
+.ps-handle-bl { bottom: -9px; left: -9px; }
 
 .stage-emoji-item img {
     width: 100%;
@@ -1956,57 +2198,150 @@ body.archive-body footer.site-footer {
     border-radius: 10px;
 }
 
-/* 얼굴 & 이모지 그리드 */
-.face-picker-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
-    max-height: 110px;
-    overflow-y: auto;
-    padding: 2px;
+/* 얼굴 템플릿: 명확히 표시되는 12px 좌우 스크롤바 (요청사항) */
+.face-picker-grid.horizontal-scroll-picker {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 14px !important;
+    overflow-x: scroll !important; /* 좌우 스크롤바 항상 노출 강제 */
+    overflow-y: hidden !important;
+    scroll-behavior: smooth;
+    padding: 6px 4px 14px 4px !important;
+    margin-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    scrollbar-width: auto !important;
+    scrollbar-color: rgb(244, 186, 0) #e0e0e0 !important;
 }
 
-.face-thumb-item, .emoji-thumb-item {
-    aspect-ratio: 1 / 1;
-    background: #ffffff;
-    border: 2px solid #eaeaea;
-    border-radius: 10px;
-    cursor: pointer;
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar {
+    height: 12px !important;
+    display: block !important;
+}
+
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track {
+    background: #e0e0e0 !important;
+    border-radius: 8px !important;
+}
+
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb {
+    background: rgb(244, 186, 0) !important;
+    border-radius: 8px !important;
+    border: 2px solid #e0e0e0 !important;
+    cursor: pointer !important;
+}
+
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover {
+    background: #d4a000 !important;
+}
+
+/* 표정 요소: 5종 정렬 행 (스크롤 완전 제거) (요청사항) */
+.emoji-picker-grid.no-scroll-picker {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 14px !important;
+    overflow: visible !important;
+    padding: 6px 4px !important;
+    width: 100%;
+}
+
+.emoji-picker-grid.no-scroll-picker::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* 모든 썸네일 카드의 크기 (68px x 68px) 및 패딩/모양 100% 동일 통일 */
+.face-thumb-item,
+.emoji-thumb-item {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+    aspect-ratio: 1 / 1 !important;
+    flex-shrink: 0 !important;
+    border-radius: 14px !important;
+    border: 2px solid #eaeaea !important;
+    background: #ffffff !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s var(--ease-ios) !important;
+}
+
+.face-thumb-item:hover,
+.emoji-thumb-item:hover {
+    border-color: rgb(244, 186, 0) !important;
+    transform: translateY(-2px) scale(1.06) !important;
+}
+
+.face-thumb-item.selected,
+.emoji-thumb-item.selected {
+    border-color: rgb(244, 186, 0) !important;
+    background: rgba(244, 186, 0, 0.15) !important;
+    box-shadow: 0 0 0 3px rgb(244, 186, 0) !important;
+}
+
+.face-thumb-item img,
+.emoji-thumb-item img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    filter: grayscale(100%) contrast(1.15) !important; /* 모노톤 흑백 처리 */
+}
+
+/* 색상 필터 스와치 팔레트 스타일링 */
+.color-picker-palette {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.color-swatch-btn {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 4px;
+    gap: 6px;
+    background: #ffffff;
+    border: 1.5px solid #e0e0e0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    cursor: pointer;
     transition: all 0.2s var(--ease-ios);
 }
 
-.face-thumb-item:hover, .emoji-thumb-item:hover {
+.color-swatch-btn:hover {
     border-color: rgb(244, 186, 0);
-    transform: scale(1.08);
+    transform: translateY(-2px);
 }
 
-.face-thumb-item.selected {
+.color-swatch-btn.selected {
     border-color: rgb(244, 186, 0);
-    background: rgba(244, 186, 0, 0.15);
+    background: rgba(244, 186, 0, 0.12);
     box-shadow: 0 0 0 2px rgb(244, 186, 0);
 }
 
-.face-thumb-item img, .emoji-thumb-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+.swatch-preview {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,0.15);
 }
 
-.emoji-picker-grid {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-}
+.mono-preview { background: linear-gradient(135deg, #111, #888); }
+.yellow-preview { background: rgb(244, 186, 0); }
+.red-preview { background: #ff385c; }
+.blue-preview { background: #2f80ed; }
+.green-preview { background: #27ae60; }
+.original-preview { background: linear-gradient(135deg, #ff385c, #2f80ed, #27ae60); }
 
-.emoji-picker-grid .emoji-thumb-item {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
+.swatch-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #333333;
 }
 
 /* 세부 조작 슬라이더 */
@@ -2129,6 +2464,153 @@ body.archive-body footer.site-footer {
 .sticker-toast-notification.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+/* 개발자 전용 스티커 관리 버튼 및 모달 스타일링 (요청사항) */
+.manage-stickers-btn {
+    background: #111111;
+    color: rgb(244, 186, 0);
+    border: 1.5px solid rgb(244, 186, 0);
+    border-radius: 30px;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transition: all 0.25s var(--ease-ios);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.manage-stickers-btn:hover {
+    background: rgb(244, 186, 0);
+    color: #111111;
+    transform: translateY(-2px);
+}
+
+.manager-modal {
+    max-width: 540px !important;
+    width: 90% !important;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 26px !important;
+}
+
+.manager-action-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #444444;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.clear-all-danger-btn {
+    background: #fff1f3 !important;
+    color: #e02849 !important;
+    border: 1px solid #ffccd5 !important;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-all-danger-btn:hover {
+    background: #e02849 !important;
+    color: #ffffff !important;
+}
+
+.manager-sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+    gap: 12px;
+    max-height: 360px;
+    overflow-y: auto;
+    padding: 2px;
+}
+
+.manager-sticker-card {
+    background: #ffffff;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.manager-sticker-card:hover {
+    border-color: #cccccc;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.manager-card-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    background: #fcfcfc;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.manager-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.manager-card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.manager-card-num {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #666666;
+}
+
+.manager-delete-single-btn {
+    width: 100%;
+    background: #f7f7f7;
+    color: #e02849;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.manager-delete-single-btn:hover {
+    background: #e02849;
+    color: #ffffff;
+    border-color: #e02849;
+}
+
+.manager-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 36px 16px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #999999;
 }
 
 @media (max-width: 768px) {

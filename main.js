@@ -304,8 +304,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            block.isCustomSticker = true; // 사용자 방명록 커스텀 스티커 플래그
+            block.customStickerDataUrl = imgDataUrl;
+
             Matter.Body.setAngularVelocity(block, (Math.random() - 0.5) * 0.08);
             Composite.add(engine.world, block);
+        };
+
+        // 메인 화면 개별 커스텀 스티커 삭제 전역 함수 (요청사항)
+        window.removeSingleCustomStickerBlock = function (targetDataUrl) {
+            const savedStickers = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
+            const updatedStickers = savedStickers.filter(url => url !== targetDataUrl);
+            localStorage.setItem('gsdd_custom_stickers', JSON.stringify(updatedStickers));
+
+            const allBodies = Composite.allBodies(engine.world);
+            const targetBody = allBodies.find(body => body.isCustomSticker && body.customStickerDataUrl === targetDataUrl);
+            if (targetBody) {
+                Composite.remove(engine.world, targetBody);
+            }
+        };
+
+        // 메인 화면 커스텀 스티커 전체 삭제 및 초기화 전역 함수 (요청사항)
+        window.removeAllCustomStickerBlocks = function () {
+            localStorage.removeItem('gsdd_custom_stickers');
+            const allBodies = Composite.allBodies(engine.world);
+            allBodies.forEach(body => {
+                if (body.isCustomSticker) {
+                    Composite.remove(engine.world, body);
+                }
+            });
         };
 
         // 저장된 방문자 커스텀 스티커 불러오기

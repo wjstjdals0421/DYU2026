@@ -140,73 +140,98 @@
         </main>
     </div>
 
-    <!-- 메인 화면 좌측 하단 스티커 방명록 생성 (+) 플로팅 버튼 (요청사항) -->
-    <button id="create-sticker-btn" class="create-sticker-btn hero-fade-element" title="나만의 스티커 방명록 만들기">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#111111" stroke-width="2.8" stroke-linecap="round">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        <span class="sticker-btn-label">스티커 만들기</span>
-    </button>
+    <!-- 메인 화면 우측 하단 스티커 방명록 생성 (+) & 개발자 트리거로 등장하는 관리 버튼 (요청사항) -->
+    <div class="sticker-action-float-group">
+        <button id="manage-stickers-btn" class="manage-stickers-btn hero-fade-element dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
+            <span>스티커 관리</span>
+        </button>
+        <button id="create-sticker-btn" class="create-sticker-btn hero-fade-element" title="나만의 스티커 방명록" aria-label="나만의 스티커 방명록 만들기">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#111111" stroke-width="3" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+    </div>
 
-    <!-- 커스텀 스티커 방명록 창작 모달 팝업 (요청사항) -->
+    <!-- 개발자 전용 커스텀 스티커 관리 모달 팝업 (심플 UI, 개별 삭제 지원) (요청사항) -->
+    <div id="sticker-manager-overlay" class="sticker-modal-overlay">
+        <div class="sticker-modal-container manager-modal">
+            <button class="sticker-close-btn" id="sticker-manager-close">&times;</button>
+            <div class="sticker-modal-header">
+                <h3>방명록 스티커 관리</h3>
+                <p>생성된 스티커를 개별 또는 전체 삭제할 수 있습니다.</p>
+            </div>
+            <div class="manager-modal-body">
+                <div class="manager-action-top">
+                    <span id="manager-sticker-count">총 0개</span>
+                    <button type="button" class="tool-action-btn clear-all-danger-btn" id="manager-clear-all-btn">전체 삭제</button>
+                </div>
+                <div class="manager-sticker-grid" id="manager-sticker-grid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 커스텀 스티커 방명록 창작 모달 팝업 (대형 미리보기 + 하단 가로 메뉴바) (요청사항) -->
     <div id="sticker-modal-overlay" class="sticker-modal-overlay">
-        <div class="sticker-modal-container">
+        <div class="sticker-modal-container large-studio-modal">
             <button class="sticker-close-btn" id="sticker-modal-close">&times;</button>
             <div class="sticker-modal-header">
-                <h3>🎨 나만의 스티커 방명록 만들기</h3>
-                <p>얼굴 템플릿을 고르고 이모지(최대 5개)를 배치·드래그·회전·크기 조작하여 스티커를 만들어 보세요!</p>
+                <h3>나만의 스티커 방명록</h3>
             </div>
-            <div class="sticker-modal-body">
-                <!-- 좌측: 캔버스 실시간 편집 작업공간 -->
-                <div class="sticker-workspace-panel">
-                    <div class="sticker-canvas-stage" id="sticker-canvas-stage">
+            
+            <div class="sticker-modal-studio-body">
+                <!-- 상단: 중앙 배치된 대형 340px 미리보기 스테이지 & 컨트롤 버튼 행 (요청사항) -->
+                <div class="studio-center-section">
+                    <!-- 중앙배치 대형 캔버스 미리보기 스테이지 (340px x 340px) -->
+                    <div class="sticker-canvas-stage large-stage centered-stage" id="sticker-canvas-stage">
                         <img id="sticker-base-face" src="./unit/face/face_1.png" alt="Base Face" />
                         <div id="sticker-emoji-layer" class="sticker-emoji-layer"></div>
                     </div>
-                    <div class="sticker-stage-hint">💡 이모지를 직접 드래그하여 이동하고 아래 도구로 크기/회전을 조작하세요!</div>
+
+                    <!-- 스테이지 바로 하단 컨트롤 버튼 조합 행 (전체 초기화 / 스티커 추가) (요청사항) -->
+                    <div class="stage-control-action-row">
+                        <button type="button" class="tool-action-btn clear-btn" id="emoji-clear-all-btn" title="모든 이모지 초기화">전체 초기화</button>
+                        <button type="button" class="sticker-add-btn" id="sticker-add-btn">스티커 추가</button>
+                    </div>
                 </div>
 
-                <!-- 우측: 도구 및 이모지 피커 패널 -->
-                <div class="sticker-tools-panel">
-                    <!-- 1. 얼굴 템플릿 선택 -->
-                    <div class="sticker-tool-group">
-                        <label class="tool-group-label">1. 얼굴 베이스 선택 (face_1 ~ 12)</label>
-                        <div class="face-picker-grid" id="face-picker-grid"></div>
+                <!-- 하단: 각 섹션별 구분을 가진 독립 패널 (얼굴 템플릿 / 표정 요소 / 개별 색상) (요청사항) -->
+                <div class="studio-bottom-nav-section">
+                    <!-- 1. 얼굴 템플릿 섹션 (제목 표시 & 하단 가로 스크롤 슬라이드) (요청사항) -->
+                    <div class="studio-section-block">
+                        <label class="section-block-title">얼굴 템플릿</label>
+                        <div class="face-picker-grid horizontal-scroll-picker" id="face-picker-grid"></div>
                     </div>
 
-                    <!-- 2. 이모지 선택 (최대 5개) -->
-                    <div class="sticker-tool-group">
-                        <div class="tool-group-header">
-                            <label class="tool-group-label">2. 이모지 요소 추가</label>
+                    <!-- 2. 표정 요소 섹션 (스크롤 없는 5종 정렬 행) (요청사항) -->
+                    <div class="studio-section-block">
+                        <div class="section-title-header">
+                            <label class="section-block-title">표정 요소</label>
                             <span class="emoji-count-badge" id="emoji-count-badge">0 / 5</span>
                         </div>
-                        <div class="emoji-picker-grid" id="emoji-picker-grid"></div>
+                        <div class="emoji-picker-grid no-scroll-picker" id="emoji-picker-grid"></div>
                     </div>
 
-                    <!-- 3. 선택된 이모지 세부 조작 -->
-                    <div class="sticker-tool-group active-item-tools" id="active-item-tools">
-                        <label class="tool-group-label">3. 이모지 세부 조작 (<span id="active-item-name">-</span>)</label>
-                        <div class="control-sliders-row">
-                            <div class="slider-item">
-                                <span>크기</span>
-                                <input type="range" id="emoji-scale-slider" min="0.4" max="2.2" step="0.05" value="1.0">
-                            </div>
-                            <div class="slider-item">
-                                <span>회전</span>
-                                <input type="range" id="emoji-rotate-slider" min="0" max="360" step="5" value="0">
-                            </div>
+                    <!-- 3. 개별 색상 선택 섹션 (5종 라운딩 전용 색상 박스) (요청사항: 6번째 오리지널 제거 및 5종 세팅) -->
+                    <div class="studio-section-block bottom-color-block">
+                        <label class="section-block-title">개별 색상 선택 (<span id="color-target-name">얼굴 베이스</span>)</label>
+                        <div class="color-picker-palette rounded-box-palette" id="color-picker-palette">
+                            <button type="button" class="color-box-btn selected" data-color="mono" title="흑백 모노톤 (기본)">
+                                <span class="color-box-fill mono-fill"></span>
+                            </button>
+                            <button type="button" class="color-box-btn" data-color="yellow" title="시그니처 옐로우">
+                                <span class="color-box-fill yellow-fill"></span>
+                            </button>
+                            <button type="button" class="color-box-btn" data-color="red" title="레드">
+                                <span class="color-box-fill red-fill"></span>
+                            </button>
+                            <button type="button" class="color-box-btn" data-color="blue" title="블루">
+                                <span class="color-box-fill blue-fill"></span>
+                            </button>
+                            <button type="button" class="color-box-btn" data-color="green" title="그린">
+                                <span class="color-box-fill green-fill"></span>
+                            </button>
                         </div>
-                        <div class="control-btns-row">
-                            <button type="button" class="tool-action-btn delete-btn" id="emoji-delete-btn">🗑️ 이모지 삭제</button>
-                            <button type="button" class="tool-action-btn clear-btn" id="emoji-clear-all-btn">🔄 이모지 모두 초기화</button>
-                        </div>
-                    </div>
-
-                    <!-- 하단 액션 버튼 -->
-                    <div class="sticker-submit-row">
-                        <button type="button" class="sticker-cancel-btn" id="sticker-cancel-btn">취소</button>
-                        <button type="button" class="sticker-add-btn" id="sticker-add-btn">🚀 메인화면에 스티커 추가!</button>
                     </div>
                 </div>
             </div>
