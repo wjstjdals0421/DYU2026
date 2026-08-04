@@ -281,6 +281,47 @@ document.addEventListener('DOMContentLoaded', () => {
             Composite.add(engine.world, block);
         }
 
+        // ========================================================
+        // 스티커 방명록 생성기 커스텀 블록 투하 전역 함수 (요청사항)
+        // ========================================================
+        window.spawnCustomStickerBlock = function (imgDataUrl) {
+            const baseScale = (window.innerWidth <= 768) ? 0.42 : 0.68;
+            const size = 180 * baseScale;
+            const spawnX = (width * 0.2) + Math.random() * (width * 0.6);
+            const spawnY = -100 - Math.random() * 40;
+
+            const block = Bodies.rectangle(spawnX, spawnY, size * 0.95, size * 0.95, {
+                restitution: 0.3,
+                friction: 0.8,
+                density: 0.003,
+                angle: (Math.random() - 0.5) * 0.6,
+                render: {
+                    sprite: {
+                        texture: imgDataUrl,
+                        xScale: size / 300,
+                        yScale: size / 300
+                    }
+                }
+            });
+
+            Matter.Body.setAngularVelocity(block, (Math.random() - 0.5) * 0.08);
+            Composite.add(engine.world, block);
+        };
+
+        // 저장된 방문자 커스텀 스티커 불러오기
+        function loadSavedUserStickers() {
+            try {
+                const savedStickers = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
+                savedStickers.forEach((dataUrl, idx) => {
+                    setTimeout(() => {
+                        window.spawnCustomStickerBlock(dataUrl);
+                    }, 1200 + (idx * 250));
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
         // 이전 접속 기록 및 브라우저 뒤로가기(Back Button / BFCache) 검증 (요청사항)
         const isBackNavigation = sessionStorage.getItem('gsdd_hero_visited') === 'true';
 
@@ -321,6 +362,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearInterval(interval);
                 }
             }, 160);
+
+            // 18종 기본 유닛 낙하 후 저장된 사용자 방명록 스티커도 이어서 낙하
+            setTimeout(() => {
+                loadSavedUserStickers();
+            }, 800);
 
             // 뒤로가기가 아닌 최초 접속 시에만 3초 후 페이드인 애니메이션 타이머 작동
             if (!isBackNavigation) {
