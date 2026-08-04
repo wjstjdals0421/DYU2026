@@ -1219,6 +1219,10 @@ body.archive-body {
         touch-action: auto !important;
     }
 
+    #custom-unit-cursor {
+        display: none !important; /* 모바일 환경 커서 잔상 100% 완전 제거 (요청사항) */
+    }
+
     :root {
         --site-margin: 24px;
         --grid-gutter: 16px;

@@ -5,6 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 0. 마우스 포인터 유닛 이미지 변경 & 클릭 시 1~12번 유닛 순차 변경 (요청사항)
     // ========================================================
     function initCustomUnitCursor() {
+        // 모바일 기기(<= 768px 또는 터치 디바이스)에서는 커서 잔상 완전 비활성화 (요청사항)
+        if (window.innerWidth <= 768 || ('ontouchstart' in window && window.navigator.maxTouchPoints > 0)) {
+            const existingCursor = document.getElementById('custom-unit-cursor');
+            if (existingCursor) existingCursor.style.display = 'none';
+            return;
+        }
+
         let cursor = document.getElementById('custom-unit-cursor');
         if (!cursor) {
             cursor = document.createElement('div');
