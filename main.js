@@ -123,8 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
             mouse.element.removeEventListener('wheel', mouse.mousewheel);
 
             // 모바일 환경 유닛이 없는 빈 흰색 공간 터치 스크롤 100% 허용 (요청사항)
+            let isHoldingBlock = false;
+
             mouse.element.removeEventListener('touchmove', mouse.touchmove);
             mouse.element.removeEventListener('touchstart', mouse.touchstart);
+            mouse.element.removeEventListener('touchend', mouse.touchend);
 
             mouse.element.addEventListener('touchstart', (e) => {
                 const touch = e.touches && e.touches[0];
@@ -140,19 +143,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 const hitBody = Matter.Query.point(bodies, touchPoint)[0];
 
                 if (hitBody) {
+                    isHoldingBlock = true;
                     mouse.touchstart(e);
                 } else {
+                    isHoldingBlock = false;
                     mouseConstraint.constraint.body = null;
                 }
             }, { passive: true });
 
             mouse.element.addEventListener('touchmove', (e) => {
-                if (mouseConstraint.body) {
+                if (isHoldingBlock && mouseConstraint.body) {
                     mouse.touchmove(e);
                     if (e.cancelable) e.preventDefault();
+                } else {
+                    isHoldingBlock = false;
+                    mouseConstraint.constraint.body = null;
                 }
-                // 블록을 드래그하고 있지 않은 빈 공간은 모바일 웹페이지 수직 스크롤 전하 전달
-            }, { passive: false });
+            }, { passive: true });
+
+            mouse.element.addEventListener('touchend', (e) => {
+                isHoldingBlock = false;
+                mouse.touchend(e);
+            }, { passive: true });
         }
 
         // 캔버스 영역 위에서 휠 조작 시 메인 페이지 스크롤이 자연스럽게 내려가도록 전달
