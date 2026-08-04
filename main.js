@@ -102,16 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const runner = Runner.create();
         Runner.run(runner, engine);
 
-        // 상단 헤더 메뉴바 바로 아래쪽에 맞춘 천장(상단), 바닥(하단) 및 좌우 벽 무한 경계 생성 (요청사항)
-        let topWallActive = false;
-        const headerHeight = (width <= 768) ? 58 : 72;
+        // 바닥 및 좌우 벽 무한 경계 생성 (투명 바운더리)
         const wallOptions = { isStatic: true, render: { visible: false } };
         const ground = Bodies.rectangle(width / 2, height + 40, width * 2, 80, wallOptions);
-        const topWall = Bodies.rectangle(width / 2, -1000, width * 2, 80, wallOptions); // 초기 낙하 단계에서는 천장 열어둠!
         const leftWall = Bodies.rectangle(-40, height / 2, 80, height * 2, wallOptions);
         const rightWall = Bodies.rectangle(width + 40, height / 2, 80, height * 2, wallOptions);
 
-        Composite.add(engine.world, [ground, topWall, leftWall, rightWall]);
+        Composite.add(engine.world, [ground, leftWall, rightWall]);
 
         // 마우스 드래그 / 던지기 인터랙션 추가
         const mouse = Mouse.create(render.canvas);
@@ -311,14 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 18개 유닛 낙하 완료 후 (3.2초 뒤) 헤더 아래쪽 천장 경계벽(topWall) 활성화 함수 (요청사항)
-        function activateTopCeilingWall() {
-            if (topWallActive) return;
-            topWallActive = true;
-            const currentHeaderH = (window.innerWidth <= 768) ? 58 : 72;
-            Matter.Body.setPosition(topWall, { x: window.innerWidth / 2, y: currentHeaderH - 40 });
-        }
-
         // 블록 낙하 시퀀스 (160ms 간격으로 18개 유닛 각각 1개씩 순차 낙하)
         function startDroppingProcess() {
             const spawnQueue = generateAllUnitsOnceQueue(loadedUnits.length); // 18종 각각 1개씩
@@ -330,8 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     count++;
                 } else {
                     clearInterval(interval);
-                    // 18개 유닛 모두 화면 상단 밖에서 떨어진 직후 천장 경계 활성화!
-                    setTimeout(activateTopCeilingWall, 300);
                 }
             }, 160);
 
@@ -339,10 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isBackNavigation) {
                 setTimeout(() => {
                     revealMainPageContents();
-                    activateTopCeilingWall();
                 }, 3000);
-            } else {
-                activateTopCeilingWall();
             }
         }
 
