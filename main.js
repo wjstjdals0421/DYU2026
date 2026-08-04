@@ -116,11 +116,43 @@ document.addEventListener('DOMContentLoaded', () => {
         Composite.add(engine.world, mouseConstraint);
         render.mouse = mouse;
 
-        // Matter.js 캔버스 휠 스크롤 차단 해제 (브라우저 페이지 수직 스크롤 100% 허용)
+        // Matter.js 캔버스 휠 & 모바일 터치 스크롤 차단 해제 (요청사항)
         if (mouse.element) {
             mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
             mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
             mouse.element.removeEventListener('wheel', mouse.mousewheel);
+
+            // 모바일 환경 유닛이 없는 빈 흰색 공간 터치 스크롤 100% 허용 (요청사항)
+            mouse.element.removeEventListener('touchmove', mouse.touchmove);
+            mouse.element.removeEventListener('touchstart', mouse.touchstart);
+
+            mouse.element.addEventListener('touchstart', (e) => {
+                const touch = e.touches && e.touches[0];
+                if (!touch) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const touchPoint = { 
+                    x: touch.clientX - rect.left, 
+                    y: touch.clientY - rect.top 
+                };
+
+                const bodies = Composite.allBodies(engine.world).filter(b => !b.isStatic);
+                const hitBody = Matter.Query.point(bodies, touchPoint)[0];
+
+                if (hitBody) {
+                    mouse.touchstart(e);
+                } else {
+                    mouseConstraint.constraint.body = null;
+                }
+            }, { passive: true });
+
+            mouse.element.addEventListener('touchmove', (e) => {
+                if (mouseConstraint.body) {
+                    mouse.touchmove(e);
+                    if (e.cancelable) e.preventDefault();
+                }
+                // 블록을 드래그하고 있지 않은 빈 공간은 모바일 웹페이지 수직 스크롤 전하 전달
+            }, { passive: false });
         }
 
         // 캔버스 영역 위에서 휠 조작 시 메인 페이지 스크롤이 자연스럽게 내려가도록 전달
