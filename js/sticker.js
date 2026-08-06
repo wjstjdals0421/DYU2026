@@ -62,9 +62,10 @@
         clearAllBtn = document.getElementById('emoji-clear-all-btn');
         customColorPicker = document.getElementById('sticker-custom-color-picker');
 
-        // 0. 메뉴바 탭 전환 리스너
+        // 0. 메뉴바 탭 전환 리스너 (메시지 탭일 때 컬러바 숨김)
         const tabBtns = document.querySelectorAll('.studio-tab-menu .tab-menu-btn');
         const tabPanels = document.querySelectorAll('.studio-tab-panel');
+        const midColorBar = document.querySelector('.studio-mid-color-bar');
 
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -75,6 +76,11 @@
                 btn.classList.add('active');
                 const targetPanel = document.getElementById(targetTabId);
                 if (targetPanel) targetPanel.classList.add('active');
+
+                // 방명록 메시지 탭에서는 컬러바 숨김
+                if (midColorBar) {
+                    midColorBar.style.display = (targetTabId === 'message-tab') ? 'none' : '';
+                }
             });
         });
 
@@ -363,22 +369,33 @@
     }
 
     function hexToFilterCSS(hex) {
-        // Hex 값을 바탕으로 부드러운 Muted HSL 변환
-        let c = hex.replace('#', '');
-        if (c.length === 3) c = c.split('').map(x => x + x).join('');
-        const num = parseInt(c, 16);
-        const r = (num >> 16) & 255;
-        const g = (num >> 8) & 255;
-        const b = num & 255;
+        // rgb() 형식과 #hex 형식 모두 파싱
+        let r = 0, g = 0, b = 0;
+        const rgbMatch = hex.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+        if (rgbMatch) {
+            r = parseInt(rgbMatch[1]);
+            g = parseInt(rgbMatch[2]);
+            b = parseInt(rgbMatch[3]);
+        } else {
+            let c = hex.replace('#', '');
+            if (c.length === 3) c = c.split('').map(x => x + x).join('');
+            const num = parseInt(c, 16);
+            if (!isNaN(num)) {
+                r = (num >> 16) & 255;
+                g = (num >> 8) & 255;
+                b = num & 255;
+            }
+        }
 
-        const max = Math.max(r, g, b) / 255;
-        const min = Math.min(r, g, b) / 255;
+        const rn = r / 255, gn = g / 255, bn = b / 255;
+        const max = Math.max(rn, gn, bn);
+        const min = Math.min(rn, gn, bn);
         let h = 0;
         const d = max - min;
         if (d !== 0) {
-            if (max === r / 255) h = ((g - b) / 255 / d) % 6;
-            else if (max === g / 255) h = (b - r) / 255 / d + 2;
-            else h = (r - g) / 255 / d + 4;
+            if (max === rn) h = ((gn - bn) / d) % 6;
+            else if (max === gn) h = (bn - rn) / d + 2;
+            else h = (rn - gn) / d + 4;
             h = Math.round(h * 60);
             if (h < 0) h += 360;
         }
