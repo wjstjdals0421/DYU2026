@@ -45,10 +45,28 @@ body, a, button, input, select {
 }
 
 /* 데스크톱(> 768px) 커스텀 유닛 커서 사용 시 기본 OS 마우스/손가락 포인터 중복 노출 100% 완전 차단 (요청사항) */
-@media (min-width: 769px) {
-    html, body, a, button, input, textarea, select, label, .logo, .nav-links li a, .designer-item, .gallery-card, .archive-card, .video-container-box, .play-icon-btn, .close-btn, .insta-like-btn, [onclick], [role="button"] {
-        cursor: none !important;
+/* ========================================================
+   side-nav(70px fixed)가 모든 화면 크기에서 존재하므로
+   body 전체에 padding-left: 70px 적용
+   ======================================================== */
+body, #main-wrapper {
+    padding-left: 70px;
+}
+
+/* full-width 요소: body padding 상쇄 */
+#hero-section,
+.archive-page-container {
+    margin-left: -70px;
+    width: calc(100% + 70px);
+}
+
+/* 모바일에서 스티커 버튼 여백 축소 */
+@media (max-width: 768px) {
+    .hero-sticker-btn-wrapper {
+        right: 16px !important;
+        bottom: 16px !important;
     }
+}
 }
 
 /* ========================================================
@@ -2820,10 +2838,28 @@ nav.side-nav {
     stroke: rgb(244, 186, 0);
 }
 
-@media (min-width: 769px) {
-    body, #main-wrapper {
-        padding-left: 70px !important;
+/* ========================================================
+   side-nav(70px fixed)가 모든 화면 크기에서 존재하므로
+   body 전체에 padding-left: 70px 적용
+   ======================================================== */
+body, #main-wrapper {
+    padding-left: 70px;
+}
+
+/* full-width 요소: body padding 상쇄 */
+#hero-section,
+.archive-page-container {
+    margin-left: -70px;
+    width: calc(100% + 70px);
+}
+
+/* 모바일에서 스티커 버튼 여백 축소 */
+@media (max-width: 768px) {
+    .hero-sticker-btn-wrapper {
+        right: 16px !important;
+        bottom: 16px !important;
     }
+}
 
     /* \uc544\uce74\uc774\ubeê\uc2ac\ub77c\uc774\ub354 \ub4f1 \ud480\ub108\ube44 \ucf58\ud150\uce20\ub294 body padding\uc744 \uc0c1\uc1c4\ud558\uc5ec \ud654\uba74 \uc911\uc559 \uc815\ub82c \uc720\uc9c0 */
     .archive-page-container {
