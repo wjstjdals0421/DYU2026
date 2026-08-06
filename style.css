@@ -2829,11 +2829,6 @@ nav.side-nav {
 
 @media (min-width: 769px) {
     body, #main-wrapper {
-        padding-left: 0 !important;
-    }
-
-    /* 사이드 nav(70px fixed) 만큼 메인 콘텐츠 영역을 밀어냄 — 좌우 대칭 패딩 유지 */
-    #main-content {
         padding-left: 70px !important;
     }
 }
