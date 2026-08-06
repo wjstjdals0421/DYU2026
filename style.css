@@ -253,13 +253,6 @@ html, body {
     overflow: hidden;
 }
 
-/* 데스크톱에서 사이드 nav padding 보정: hero는 풀너비 캔버스이므로 -70px 마진으로 되돌림 */
-@media (min-width: 769px) {
-    #hero-section {
-        margin-left: -70px;
-        width: calc(100% + 70px);
-    }
-}
 
 /* 2D 물리 엔진 중력 블록 스태킹 캔버스 */
 #physics-canvas {
@@ -2831,6 +2824,12 @@ nav.side-nav {
     body, #main-wrapper {
         padding-left: 70px !important;
     }
+
+    /* \uc544\uce74\uc774\ubeê\uc2ac\ub77c\uc774\ub354 \ub4f1 \ud480\ub108\ube44 \ucf58\ud150\uce20\ub294 body padding\uc744 \uc0c1\uc1c4\ud558\uc5ec \ud654\uba74 \uc911\uc559 \uc815\ub82c \uc720\uc9c0 */
+    .archive-page-container {
+        margin-left: -70px !important;
+        width: calc(100% + 70px) !important;
+    }
 }
 
 /* About 간격 피드백 반영 */
@@ -3007,6 +3006,9 @@ nav.side-nav {
     align-items: center !important;
     gap: 12px !important;
     pointer-events: auto !important;
+    /* hero-fade-element 클래스 opacity:0 덮어쓰기 — 버튼은 항상 표시 */
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 #create-sticker-btn,
