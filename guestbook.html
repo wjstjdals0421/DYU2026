@@ -92,6 +92,16 @@
                     <span id="guestbook-total-count">총 0개의 방명록 메시지</span>
                 </div>
 
+                <!-- 우측 하단 고정 사각형 방명록 제작 & 관리 버튼 -->
+                <div class="hero-sticker-btn-wrapper">
+                    <button id="manage-stickers-btn" class="manage-stickers-btn hero-fade-element dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
+                        <span class="btn-label-text">스티커 관리</span>
+                    </button>
+                    <button id="create-sticker-btn" class="create-sticker-btn hero-fade-element text-button" title="방명록 스티커 만들기" aria-label="방명록 스티커 만들기">
+                        <span class="btn-label-text">방명록 스티커 남기기</span>
+                    </button>
+                </div>
+
                 <div id="guestbook-grid" class="guestbook-grid-container">
                     <!-- JS로 방명록 스티커 카드들이 동적으로 생성됩니다 -->
                 </div>
@@ -199,6 +209,7 @@
         </div>
     </div>
 
+    <script src="./js/poly-decomp.min.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/sticker.js"></script>
     <script src="./js/guestbook.js"></script>

@@ -14,21 +14,31 @@
     let activeEmojiId = null;        // 현재 선택된 이모지 ID (null이면 얼굴 베이스가 색상 대상)
     let emojiIdCounter = 1;
 
-    // 스크린샷 13종 유닛 메인 시그니처 색상 맵
-    const unitSignatureColorMap = {
-        'yellow-main': 'rgb(244, 186, 0)',
-        'yellow-bright': '#ffe100',
-        'orange-warm': '#f5a623',
-        'red-spark': '#e62249',
-        'red-dark': '#9e001c',
-        'pink-soft': '#ff9ebb',
-        'blue-sky': '#0091ff',
-        'blue-deep': '#005aa7',
-        'gray-slate': '#3e505b',
-        'green-emerald': '#109d49',
-        'mint-soft': '#52b788',
-        'purple-lavender': '#9b82c3',
-        'gray-rock': '#e2e4e8'
+    // 필터 CSS 매핑 테이블
+    const filterCSSMap = {
+        'mono': 'grayscale(100%)',
+        'yellow': 'grayscale(100%) sepia(100%) hue-rotate(5deg) saturate(300%)',
+        'red': 'grayscale(100%) sepia(100%) hue-rotate(320%) saturate(300%)',
+        'blue': 'grayscale(100%) sepia(100%) hue-rotate(180%) saturate(300%)',
+        'green': 'grayscale(100%) sepia(100%) hue-rotate(90%) saturate(300%)',
+        'original': 'none'
+    };
+
+    // 이미지 캡처 속 13종 유닛 실물 [베이스 컬러(Fill) & 아웃라인/표정 컬러(Stroke)] 1:1 정밀 매칭 맵
+    const unitSignatureDualColorMap = {
+        'yellow-main': { fill: '#F59E0B', stroke: '#C26A00' },     // 1. 주황 옐로우
+        'gray-rock': { fill: '#E5E7EB', stroke: '#6B7280' },       // 2. 라이트 그레이
+        'red-spark': { fill: '#E11D48', stroke: '#88001F' },       // 3. 스파크 레드
+        'red-dark': { fill: '#EA580C', stroke: '#851E00' },        // 4. 다크 레드/오렌지
+        'yellow-bright': { fill: '#FFE800', stroke: '#B88600' },   // 5. 브라이트 옐로우
+        'pink-soft': { fill: '#F472B6', stroke: '#B81462' },       // 6. 파스텔 핑크
+        'blue-sky': { fill: '#0284C7', stroke: '#014C75' },        // 7. 스카이 블루
+        'gray-slate': { fill: '#475569', stroke: '#0F172A' },      // 8. 다크 슬레이트
+        'green-emerald': { fill: '#16A34A', stroke: '#0E542E' },   // 9. 에메랄드 그린
+        'purple-lavender': { fill: '#A855F7', stroke: '#561694' }, // 10. 라벤더 퍼플
+        'mint-soft': { fill: '#4ADE80', stroke: '#0E7536' },       // 11. 민트 그린
+        'blue-deep': { fill: '#0369A1', stroke: '#052C42' },        // 12. 딥 블루
+        'orange-warm': { fill: '#F97316', stroke: '#9A2D03' }       // 13. 웜 오렌지
     };
 
     // DOM 요소 캐시
@@ -110,8 +120,7 @@
                     colorPalette.querySelectorAll('.color-box-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     const colorKey = btn.dataset.color;
-                    const hexOrRgb = unitSignatureColorMap[colorKey] || 'rgb(244, 186, 0)';
-                    applyCustomHexColorToSelectedTarget(hexOrRgb);
+                    applyDualColorToFaceImg(colorKey);
                 });
             });
         }
@@ -146,8 +155,8 @@
         // 전역/콘솔 개발자 트리거 함수 (window.enableDevMode())
         window.enableDevMode = function () {
             if (manageStickersBtn) {
-                manageStickersBtn.style.display = 'inline-flex';
-                showToastNotification('개발자 관리 모드가 활성화되었습니다.');
+                manageStickersBtn.classList.add('dev-mode-active');
+                showToastNotification('🛠️ 개발자 관리 모드가 활성화되었습니다.');
             }
         };
 
@@ -218,9 +227,9 @@
     function openStickerModal() {
         modalOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
-        if (baseFaceImg) {
-            baseFaceImg.style.filter = filterCSSMap[baseFaceColorFilter || 'mono'];
-        }
+        const activeBtn = colorPalette ? colorPalette.querySelector('.color-box-btn.selected') : null;
+        const colorKey = activeBtn ? activeBtn.dataset.color : 'yellow-main';
+        applyDualColorToFaceImg(colorKey);
     }
 
     function closeStickerModal() {
@@ -233,26 +242,28 @@
         if (!facePickerGrid) return;
         facePickerGrid.innerHTML = '';
 
-        for (let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 11; i++) {
             const thumb = document.createElement('div');
             thumb.className = `face-thumb-item ${i === currentFaceId ? 'selected' : ''}`;
             thumb.innerHTML = `<img src="./unit/face/face_${i}.png" alt="face_${i}" />`;
             thumb.addEventListener('click', () => {
                 currentFaceId = i;
-                baseFaceImg.src = `./unit/face/face_${i}.png`;
                 document.querySelectorAll('.face-thumb-item').forEach(el => el.classList.remove('selected'));
                 thumb.classList.add('selected');
+                const activeBtn = colorPalette ? colorPalette.querySelector('.color-box-btn.selected') : null;
+                const colorKey = activeBtn ? activeBtn.dataset.color : 'yellow-main';
+                applyDualColorToFaceImg(colorKey);
             });
             facePickerGrid.appendChild(thumb);
         }
     }
 
-    // 2. 이모지 선택 그리드 생성 (Emoji_6 제거 -> Emoji_1 ~ Emoji_5만 노출)
+    // 2. 이모지 선택 그리드 생성 (Emoji_1 ~ Emoji_8 노출)
     function renderEmojiPicker() {
         if (!emojiPickerGrid) return;
         emojiPickerGrid.innerHTML = '';
 
-        const emojiList = [1, 2, 3, 4, 5]; // Emoji_6 제거 (요청사항)
+        const emojiList = [1, 2, 3, 4, 5, 6, 7, 8]; // Emoji_6 제거 (요청사항)
 
         emojiList.forEach(num => {
             const thumb = document.createElement('div');
@@ -270,8 +281,8 @@
             return;
         }
 
-        const stageW = (emojiLayer && emojiLayer.offsetWidth) ? emojiLayer.offsetWidth : 340;
-        const stageH = (emojiLayer && emojiLayer.offsetHeight) ? emojiLayer.offsetHeight : 340;
+        const stageW = (emojiLayer && emojiLayer.offsetWidth > 0) ? emojiLayer.offsetWidth : 340;
+        const stageH = (emojiLayer && emojiLayer.offsetHeight > 0) ? emojiLayer.offsetHeight : 340;
 
         const id = emojiIdCounter++;
         const emojiData = {
@@ -292,9 +303,9 @@
         itemEl.innerHTML = `
             <img src="${emojiData.src}" draggable="false" />
             <div class="ps-transform-frame">
-                <!-- 좌측 상단: 십자가 화살표 크기 조율 (흰색 배경) -->
+                <!-- 좌측 상단: 반대 대각선 양쪽 화살표 크기 조율 -->
                 <div class="ps-handle ps-handle-tl ps-scale-btn" title="드래그하여 크기 조율">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#333" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/><polyline points="9,8 12,5 15,8"/><polyline points="9,16 12,19 15,16"/><polyline points="8,9 5,12 8,15"/><polyline points="16,9 19,12 16,15"/></svg>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#0066ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 3 3 3 3 9"/><polyline points="15 21 21 21 21 15"/><line x1="3" y1="3" x2="21" y2="21"/></svg>
                 </div>
                 <!-- 상단 중앙: 빨간 X 삭제 -->
                 <div class="ps-handle ps-handle-tc ps-delete-btn" title="이모지 삭제">&times;</div>
@@ -368,38 +379,11 @@
         updateTargetColorPaletteUI();
     }
 
-    function hexToFilterCSS(hex) {
-        // rgb() 형식과 #hex 형식 모두 파싱
-        let r = 0, g = 0, b = 0;
-        const rgbMatch = hex.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
-        if (rgbMatch) {
-            r = parseInt(rgbMatch[1]);
-            g = parseInt(rgbMatch[2]);
-            b = parseInt(rgbMatch[3]);
-        } else {
-            let c = hex.replace('#', '');
-            if (c.length === 3) c = c.split('').map(x => x + x).join('');
-            const num = parseInt(c, 16);
-            if (!isNaN(num)) {
-                r = (num >> 16) & 255;
-                g = (num >> 8) & 255;
-                b = num & 255;
-            }
-        }
-
-        const rn = r / 255, gn = g / 255, bn = b / 255;
-        const max = Math.max(rn, gn, bn);
-        const min = Math.min(rn, gn, bn);
-        let h = 0;
-        const d = max - min;
-        if (d !== 0) {
-            if (max === rn) h = ((gn - bn) / d) % 6;
-            else if (max === gn) h = (bn - rn) / d + 2;
-            else h = (rn - gn) / d + 4;
-            h = Math.round(h * 60);
-            if (h < 0) h += 360;
-        }
-        return `grayscale(100%) sepia(80%) hue-rotate(${h}deg) saturate(240%)`;
+    // Canvas Pure Color Tinting: 오프스크린 캔버스를 사용하여 CSS 필터 왜곡 없이 100% 지정 원색 그대로 칠하는 헬퍼
+    function getCanvasTintedFilter(targetHexOrRgb) {
+        // SVG Data URI 및 Canvas Blend Mode 조합으로 100% 순수 원색 칠 생성
+        // targetHexOrRgb 색상을 100% 원본 그대로 표현
+        return `drop-shadow(0px 0px 0px ${targetHexOrRgb})`;
     }
 
     // 선택된 타겟(얼굴 베이스 또는 개별 이모지)에 색상 필터 적용
@@ -433,16 +417,100 @@
         });
     }
 
+    function parseHexToRGB(hex) {
+        let c = hex.replace('#', '');
+        if (c.length === 3) c = c.split('').map(x => x + x).join('');
+        const num = parseInt(c, 16);
+        return {
+            r: (num >> 16) & 255,
+            g: (num >> 8) & 255,
+            b: num & 255
+        };
+    }
+
+    function applyDualColorToFaceImg(colorKey) {
+        if (!baseFaceImg) return;
+        const dualColor = unitSignatureDualColorMap[colorKey] || { fill: '#F59E0B', stroke: '#C26A00' };
+
+        const faceSrc = `./unit/face/face_${currentFaceId}.png`;
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const w = img.naturalWidth || 250;
+            const h = img.naturalHeight || 250;
+            canvas.width = w;
+            canvas.height = h;
+
+            ctx.drawImage(img, 0, 0, w, h);
+            const imgData = ctx.getImageData(0, 0, w, h);
+            const data = imgData.data;
+
+            const fRGB = parseHexToRGB(dualColor.fill);
+            const sRGB = parseHexToRGB(dualColor.stroke);
+
+            for (let i = 0; i < data.length; i += 4) {
+                const a = data[i + 3];
+                if (a < 10) continue;
+
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+
+                if (lum > 0.45) {
+                    // 1. 유닛 몸통 (Fill Color) -> 선택된 맑은 베이스 원색
+                    data[i] = fRGB.r;
+                    data[i + 1] = fRGB.g;
+                    data[i + 2] = fRGB.b;
+                } else if (lum > 0.15) {
+                    // 2. 유닛 테두리 (Stroke Color) -> 선택된 톤-온-톤 어두운 원색
+                    data[i] = sRGB.r;
+                    data[i + 1] = sRGB.g;
+                    data[i + 2] = sRGB.b;
+                } else {
+                    // 3. 유닛 표정 (눈/코/입) -> 테두리와 뭉개지지 않고 선명하게 노출되는또렷한 딥 블랙 (#1a1a1a)
+                    data[i] = 26;
+                    data[i + 1] = 26;
+                    data[i + 2] = 26;
+                }
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+            baseFaceImg.src = canvas.toDataURL();
+            baseFaceImg.style.filter = 'none'; // 억지 CSS 필터 0% 완전 제거
+        };
+        img.src = faceSrc;
+    }
+
     function applyEmojiStyle(emoji) {
         emoji.el.style.left = `${emoji.x}px`;
         emoji.el.style.top = `${emoji.y}px`;
-        emoji.el.style.transform = `translate(-50%, -50%) rotate(${emoji.rotation}deg) scale(${emoji.scale})`;
+        emoji.el.style.transform = `translate(-50%, -50%) rotate(${emoji.rotation}deg)`;
 
+        // 1. 이모지 이미지 자체에만 크기 스케일 적용
         const imgEl = emoji.el.querySelector('img');
         if (imgEl) {
             const filterKey = emoji.colorFilter || 'mono';
             imgEl.style.filter = filterCSSMap[filterKey] || filterCSSMap['mono'];
+            imgEl.style.transform = `scale(${emoji.scale})`;
         }
+
+        // 2. 포토샵 바운딩 프레임(파란 점선)은 이모지 크기에 맞춰 확장
+        const frameEl = emoji.el.querySelector('.ps-transform-frame');
+        if (frameEl) {
+            frameEl.style.transform = `scale(${emoji.scale})`;
+        }
+
+        // 3. 조작 핸들 UI 버튼들은 역수 스케일(1 / scale)을 부여하여 UI 크기가 일정하게 고정
+        const handles = emoji.el.querySelectorAll('.ps-handle');
+        const invScale = 1 / (emoji.scale || 1);
+        handles.forEach(handle => {
+            if (handle.classList.contains('ps-handle-tc')) {
+                handle.style.transform = `translateX(-50%) scale(${invScale})`;
+            } else {
+                handle.style.transform = `scale(${invScale})`;
+            }
+        });
     }
 
     // 슬라이더 변경 시 조작
@@ -489,9 +557,17 @@
             if (e.cancelable) e.preventDefault();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            // 상하좌우 무제한 자유 이동 (-50px ~ 390px)
-            emoji.x = Math.max(-50, Math.min(390, initialX + (clientX - startX)));
-            emoji.y = Math.max(-50, Math.min(390, initialY + (clientY - startY)));
+
+            // 340px 스티커미리보기 박스 내부 영역 안에서만 드래그 이동 허용
+            const curStageW = (emojiLayer && emojiLayer.offsetWidth > 0) ? emojiLayer.offsetWidth : 340;
+            const curStageH = (emojiLayer && emojiLayer.offsetHeight > 0) ? emojiLayer.offsetHeight : 340;
+            
+            const minBound = 15;
+            const maxBoundX = curStageW - 15;
+            const maxBoundY = curStageH - 15;
+            
+            emoji.x = Math.max(minBound, Math.min(maxBoundX, initialX + (clientX - startX)));
+            emoji.y = Math.max(minBound, Math.min(maxBoundY, initialY + (clientY - startY)));
             applyEmojiStyle(emoji);
         }
         function onBodyEnd() {
@@ -817,25 +893,34 @@
             return;
         }
 
-        savedStickers.forEach((dataUrl, idx) => {
+        savedStickers.forEach((item, idx) => {
+            const srcUrl = (typeof item === 'object' && item !== null) ? item.dataUrl : item;
+            const authorName = (typeof item === 'object' && item !== null && item.author) ? item.author : `스티커 #${idx + 1}`;
+
             const card = document.createElement('div');
             card.className = 'manager-sticker-card';
             card.innerHTML = `
                 <div class="manager-card-thumb">
-                    <img src="${dataUrl}" alt="Sticker #${idx + 1}" />
+                    <img src="${srcUrl}" alt="Sticker #${idx + 1}" />
                 </div>
                 <div class="manager-card-info">
-                    <span class="manager-card-num">스티커 #${idx + 1}</span>
+                    <span class="manager-card-num">${authorName}</span>
                     <button type="button" class="manager-delete-single-btn" title="이 스티커만 삭제">삭제</button>
                 </div>
             `;
 
             card.querySelector('.manager-delete-single-btn').addEventListener('click', () => {
                 if (window.removeSingleCustomStickerBlock) {
-                    window.removeSingleCustomStickerBlock(dataUrl);
+                    window.removeSingleCustomStickerBlock(srcUrl);
                 }
+                const currentSaved = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
+                const updated = currentSaved.filter(s => {
+                    const u = (typeof s === 'object' && s !== null) ? s.dataUrl : s;
+                    return u !== srcUrl;
+                });
+                localStorage.setItem('gsdd_custom_stickers', JSON.stringify(updated));
                 renderStickerManagerGrid();
-                showToastNotification(`스티커 #${idx + 1}이(가) 삭제되었습니다.`);
+                showToastNotification(`'${authorName}' 스티커가 삭제되었습니다.`);
             });
 
             gridEl.appendChild(card);

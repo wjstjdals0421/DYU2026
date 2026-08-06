@@ -15,16 +15,6 @@ body, a, button, input, select {
     cursor: none !important;
 }
 
-/* 비디오 플레이어(유튜브 iframe) 영역 위에서는 브라우저 표준 마우스 커서 100% 작동 */
-.main-video-section,
-.main-video-section *,
-.video-container-box,
-.video-container-box *,
-#about-youtube-player {
-    cursor: auto !important;
-    pointer-events: auto !important;
-}
-
 /* 마우스 커서 유닛 이미지 커스텀 & 클릭 효과 */
 #custom-unit-cursor {
     position: fixed;
@@ -224,16 +214,19 @@ nav {
    3. 메인 풀페이지 스크롤 & 히어로 섹션 (Index Page)
    ======================================================== */
 html, body {
-    height: 100%;
+    min-height: 100%;
+    height: auto !important;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto !important;
 }
 
 #main-content {
-    height: 100vh;
+    min-height: 100vh;
+    height: auto !important;
     width: 100%;
-    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-    will-change: transform;
+    position: relative;
 }
 
 .full-section {
@@ -248,36 +241,36 @@ html, body {
 }
 
 #hero-section {
-    position: relative !important;
-    height: 100vh !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    max-width: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    background-color: #ffffff !important;
-    overflow: hidden !important;
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    margin-left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    overflow: hidden;
 }
 
-@media (max-width: 768px) {
+/* 데스크톱에서 사이드 nav padding 보정: hero는 풀너비 캔버스이므로 -70px 마진으로 되돌림 */
+@media (min-width: 769px) {
     #hero-section {
-        width: 100% !important;
-        margin-left: 0 !important;
+        margin-left: -70px;
+        width: calc(100% + 70px);
     }
 }
 
 /* 2D 물리 엔진 중력 블록 스태킹 캔버스 */
 #physics-canvas {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    z-index: 1 !important;
-    pointer-events: auto !important;
-    touch-action: pan-y !important; /* 모바일 브라우저 수직 터치 스크롤 허용 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+    touch-action: pan-y !important;
 }
 
 .hero-graphic {
@@ -416,14 +409,36 @@ body.loading-state header.hero-fade-element {
 /* ========================================================
    4. 메인 컨테이너 및 갤러리/디자이너 레이아웃
    ======================================================== */
-.container, .work-container, .about-container, .about-section-block, .main-video-section, .guestbook-board-section {
-    max-width: calc(1200px + (var(--site-margin) * 2)) !important;
+/* 전역 컨테이너 규격: 최대 1200px, 좌우 대칭 패딩 */
+.container, .work-container, .about-container, .guestbook-board-section {
+    max-width: 1200px !important;
     width: 100% !important;
-    padding-left: var(--site-margin) !important;  /* 좌우 패딩 100% 동일 대칭 값 */
-    padding-right: var(--site-margin) !important; /* 좌우 패딩 100% 동일 대칭 값 */
     margin-left: auto !important;
     margin-right: auto !important;
-    box-sizing: border-box !important;
+    padding-left: var(--site-margin);
+    padding-right: var(--site-margin);
+    box-sizing: border-box;
+}
+
+/* about-section-block 자체가 1200px 컨테이너 역할 */
+.about-section-block {
+    max-width: 1200px !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: var(--site-margin);
+    padding-right: var(--site-margin);
+    box-sizing: border-box;
+}
+
+/* about-section-block 내부 자식 div는 부모 패딩을 그대로 사용 — 이중 패딩 방지 */
+.about-section-block .main-video-section {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .work-container {
@@ -990,169 +1005,68 @@ body.archive-body {
 }
 
 .archive-page-container {
-    width: 100% !important;
-    height: 100vh !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    position: relative !important;
-    overflow: hidden !important;
-    background-color: #ffffff !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    height: calc(100vh - 80px);
+    margin-top: 80px;
+    padding-bottom: 140px; /* 푸터 높이만큼 바닥 공간 보장 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .archive-slider-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1400px !important;
-    height: min(700px, calc(100vh - 180px)) !important;
+    max-width: 1400px;
+    height: min(560px, calc(100vh - 300px));
     display: flex;
     justify-content: center;
     align-items: center;
-    perspective: 1200px;
-    transform-style: preserve-3d;
 }
 
 .archive-card {
     position: absolute;
     top: 50%;
     left: 50%;
-    height: min(640px, calc(100vh - 220px)) !important;
-    width: calc(min(640px, calc(100vh - 220px)) * 0.7) !important; /* 높이 700px에 맞춘 세로 포스터 정비율 (1:1.43) */
+    width: min(430px, 70vw);
+    height: min(540px, calc(100vh - 320px));
     background-color: #ffffff;
-    border-radius: 0 !important; /* 모서리 라운딩 완전 제거 직각 사각형 */
-    border: none !important;    /* 아웃라인/테두리선 완전 제거 */
-    outline: none !important;
-    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.18) !important; /* 흰색 배경 포스터 경계 구분을 위한 또렷한 3D 그림자 */
+    border-radius: 16px;
+    border: 1.5px solid #eaeaea;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     display: flex;
-    overflow: hidden;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     user-select: none;
-    will-change: transform, opacity;
-    transition: transform 0.5s var(--ease-ios), opacity 0.5s var(--ease-ios), box-shadow 0.5s var(--ease-ios) !important;
+    transition: transform 0.5s var(--ease-ios), opacity 0.5s var(--ease-ios), box-shadow 0.5s var(--ease-ios), border-color 0.5s var(--ease-ios);
 }
 
 .archive-card:hover {
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.22) !important;
+    box-shadow: 0 28px 65px rgba(0, 0, 0, 0.12);
 }
 
 .archive-card.focused {
-    border: none !important;
-    outline: none !important;
-    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38), 0 8px 20px rgba(0, 0, 0, 0.24) !important;
-}
-
-.archive-card-poster {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.archive-card-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.5s var(--ease-ios);
-}
-
-.archive-card:hover .archive-card-poster img {
-    transform: scale(1.05);
-}
-
-.archive-card-base-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 36px 24px 20px 24px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.4) 65%, transparent 100%);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    color: #ffffff;
-    z-index: 2;
-    transition: opacity 0.3s ease;
+    border-color: #d0d0d0;
+    box-shadow: 0 32px 70px rgba(0, 0, 0, 0.14);
 }
 
 .archive-card-year {
     font-family: var(--sans-font);
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #ffffff;
+    font-size: 3.6rem;
+    font-weight: 500;
+    color: #dedede;
     letter-spacing: -0.01em;
-    line-height: 1;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    transition: color 0.4s ease;
 }
 
-.archive-card-theme-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: rgb(244, 186, 0);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* 마우스 호버 시 카드 전체를 덮는 세련된 전시 서문/설명 팝업 오버레이 */
-.archive-card-hover-desc {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.65); /* 투명도를 맑게 보정하여 포스터 비주얼 보존 */
-    backdrop-filter: blur(4px);      /* 블러를 12px -> 4px로 아주 은은하게 축소 */
-    -webkit-backdrop-filter: blur(4px);
-    padding: 28px 24px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 10;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
-}
-
-.archive-card:hover .archive-card-hover-desc {
-    opacity: 1;
-    visibility: visible;
-}
-
-.hover-desc-inner {
-    max-height: 100%;
-    overflow-y: auto;
-    text-align: left;
-    padding-right: 4px;
-}
-
-.hover-year-tag {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: rgb(244, 186, 0);
-    margin-bottom: 6px;
-    display: block;
-    letter-spacing: 0.05em;
-}
-
-.hover-theme-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #ffffff;
-    margin: 0 0 14px 0;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-}
-
-.hover-desc-text {
-    font-size: 0.86rem;
-    line-height: 1.72;
-    color: #ffffff;
-    word-break: keep-all;
-    margin: 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+.archive-card.focused .archive-card-year {
+    color: #c4c4c4;
 }
 
 /* Archive 하단 컨트롤 바 (화살표 버튼 간격 확정) */
@@ -1355,14 +1269,12 @@ body.archive-body {
         padding-bottom: 3rem !important;
     }
 
-body.archive-body footer.site-footer {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    margin: 0 !important;
-    z-index: 10 !important;
-}
+    body.archive-body footer.site-footer {
+        position: relative !important;
+        bottom: auto !important;
+        margin-top: 2rem !important;
+        z-index: 100 !important;
+    }
 }
 
 .mobile-br {
@@ -1568,25 +1480,37 @@ body.archive-body footer.site-footer {
     padding: 0 var(--site-margin);
 }
 
-.video-container-box {
+/* about-section-block 안에 있을 때는 부모가 이미 컨테이너 역할 — 자체 패딩 제거 */
+.about-section-block .main-video-section {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    max-width: none;
     width: 100%;
-    max-width: 1200px !important;
-    margin: 0 auto;
-    aspect-ratio: 16 / 9;
-    background-color: #dcdcdc;
-    border-radius: 0 !important; /* 모서리 라운딩 제거 */
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
-    transition: transform 0.4s var(--ease-ios), box-shadow 0.4s var(--ease-ios);
 }
 
-.video-container-box:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.09);
+.video-container-box {
+    width: 100% !important;
+    height: 0 !important;
+    padding-bottom: 56.25% !important; /* 16:9 비율 높이 100% 완벽 보장 */
+    position: relative !important;
+    background-color: #000000 !important;
+    margin: 0 auto !important;
+    overflow: hidden !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.video-container-box iframe {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .play-icon-btn {
@@ -1668,21 +1592,27 @@ body.archive-body footer.site-footer {
     align-items: start;
 }
 
-/* 어바웃 전체 너비 이미지 스택 (about_1, about_2) */
+/* 어바웃 이미지 스택 — about-section-block padding을 벗어나 1200px 전체 너비 꽉 차게 */
 .about-image-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-    max-width: 1200px;
-    margin: 2rem auto 3rem auto;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    width: calc(100% + var(--site-margin) * 2) !important;
+    margin-left: calc(-1 * var(--site-margin)) !important;
+    margin-right: calc(-1 * var(--site-margin)) !important;
+    margin-top: 2rem !important;
+    margin-bottom: 3rem !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .about-full-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 0;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    border-radius: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .about-intro-text {
@@ -1770,9 +1700,9 @@ body.archive-body footer.site-footer {
    ======================================================== */
 footer.site-footer {
     position: relative !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    padding: 0.95rem var(--site-margin) !important;
+    width: calc(100% + 70px) !important;
+    margin-left: -70px !important;
+    padding: 0.95rem var(--site-margin) 0.95rem calc(var(--site-margin) + 70px) !important;
     background-color: rgb(244, 186, 0) !important;
     color: #111111;
     margin-top: 5rem;
@@ -1791,7 +1721,7 @@ footer.site-footer {
 }
 
 .footer-inner-container {
-    max-width: 1200px !important; /* 순수 내부 콘텐츠 폭 1200px */
+    max-width: 1200px !important;
     margin-left: auto !important;
     margin-right: auto !important;
     display: flex;
@@ -1953,147 +1883,66 @@ body.archive-body footer.site-footer {
     transform: translateY(-3px);
 }
 
-/* 스티커 대형 창작 모달 팝업 스튜디오 스타일링 */
+/* 스티커 대형 창작 모달 팝업 스튜디오 스타일링 (한 화면 One-Screen 정밀 피팅) */
 .sticker-modal-container.large-studio-modal {
-    max-width: 880px;
-    padding: 32px;
+    max-width: 600px !important;
+    width: 90% !important;
+    max-height: 90vh !important;
+    height: auto !important;
+    padding: 24px 28px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important;
 }
 
 .sticker-modal-studio-body {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
 }
 
-/* 중앙 배치된 캔버스 미리보기 스테이지 & 하단 버튼 행 (요청사항) */
+/* 중앙 배치된 캔버스 미리보기 스테이지 (200px 콤팩트 정밀 피팅) */
 .studio-center-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
     width: 100%;
 }
 
 .sticker-canvas-stage.large-stage.centered-stage {
-    width: 500px;
-    height: 500px;
-    margin: 0 auto;
-    background-color: #f7f7f7;
-    border: 2.5px dashed #dddddd;
-    border-radius: 24px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+    width: 340px !important;
+    height: 340px !important;
+    margin: 0 auto 12px auto !important;
+    background-color: #ffffff;
+    border: 2px dashed #cccccc;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    position: relative !important;
+    overflow: visible !important; /* 조작 UI 핸들이 박스 밖으로 삐쳐나와도 잘리지 않도록 보장 */
 }
 
 .stage-control-action-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     width: 100%;
-    max-width: 460px;
+    max-width: 320px;
 }
 
 .stage-control-action-row .tool-action-btn {
-    padding: 11px 18px;
-    font-size: 0.88rem;
+    padding: 8px 14px;
+    font-size: 0.84rem;
     font-weight: 700;
 }
 
 .stage-control-action-row .sticker-add-btn {
-    padding: 11px 22px;
-    font-size: 0.92rem;
+    padding: 9px 18px;
+    font-size: 0.88rem;
     flex: 1.2;
 }
-
-/* 각 카테고리별 독립 섹션 블록 스타일링 (요청사항: 탭 제거 후 각각 제목 분리) */
-.studio-bottom-nav-section {
-    background: #f9f9f9;
-    border-radius: 20px;
-    border: 1px solid #eeeeee;
-    padding: 20px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.studio-section-block {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-bottom: 16px;
-    border-bottom: 1.5px dashed #e5e5e5;
-}
-
-.studio-section-block:last-child {
-    padding-bottom: 0;
-    border-bottom: none;
-}
-
-.section-block-title {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: #111111;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    letter-spacing: -0.01em;
-}
-
-.section-title-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.color-picker-label {
-    font-size: 0.88rem;
-    font-weight: 700;
-    color: #222222;
-}
-
-/* 라운딩진 둥근 색상 전용 박스 스와치 (텍스트 제거 및 깔끔한 솔리드 컬러 필) (요청사항) */
-.rounded-box-palette {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.color-box-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
-    background: #ffffff;
-    border: 2px solid #e2e2e2;
-    padding: 3px;
-    cursor: pointer;
-    transition: all 0.2s var(--ease-ios);
-}
-
-.color-box-btn:hover {
-    transform: translateY(-3px) scale(1.08);
-    border-color: rgb(244, 186, 0);
-}
-
-.color-box-btn.selected {
-    border-color: rgb(244, 186, 0);
-    box-shadow: 0 0 0 3px rgba(244, 186, 0, 0.45);
-    transform: scale(1.1);
-}
-
-.color-box-fill {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    display: block;
-}
-
-.mono-fill { background: linear-gradient(135deg, #111111, #666666); }
-.yellow-fill { background: rgb(244, 186, 0); }
-.red-fill { background: #ff385c; }
-.blue-fill { background: #2f80ed; }
-.green-fill { background: #27ae60; }
-.original-fill { background: linear-gradient(135deg, #ff385c, #2f80ed, #27ae60); }
 
 /* 스티커 창작 모달 오버레이 */
 .sticker-modal-overlay {
@@ -2200,9 +2049,13 @@ body.archive-body footer.site-footer {
 }
 
 #sticker-base-face {
-    width: 100%;
-    height: 100%;
+    width: 250px !important;
+    height: 250px !important;
     object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     pointer-events: none;
     filter: grayscale(100%) contrast(1.15); /* 기본 흑백 모노톤 세팅 */
 }
@@ -2213,6 +2066,7 @@ body.archive-body footer.site-footer {
     left: 0;
     width: 100%;
     height: 100%;
+    overflow: visible !important;
 }
 
 .stage-emoji-item {
@@ -2225,27 +2079,28 @@ body.archive-body footer.site-footer {
     align-items: center;
     justify-content: center;
     user-select: none;
+    pointer-events: auto !important;
 }
 
 .stage-emoji-item:active {
     cursor: grabbing;
 }
 
-/* 포토샵 Free Transform (Ctrl + T) 프레임 스타일링 (요청사항) */
+/* 포토샵 Free Transform (Ctrl + T) 파란색 점선 프레임 스타일링 (요청사항) */
 .ps-transform-frame {
     position: absolute;
     top: -4px;
     left: -4px;
     right: -4px;
     bottom: -4px;
-    border: 1.8px dashed transparent;
+    border: 1.5px dashed transparent;
     pointer-events: none;
     transition: border-color 0.2s ease;
+    box-sizing: border-box;
 }
 
 .stage-emoji-item.active .ps-transform-frame {
-    border-color: #2f80ed;
-    pointer-events: auto;
+    border-color: #0066ff; /* 파란색 점선 테두리 */
 }
 
 /* 기본 핸들 베이스 (비활성 시 숨김) */
@@ -2260,53 +2115,53 @@ body.archive-body footer.site-footer {
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
     pointer-events: auto;
     user-select: none;
-    transition: transform 0.15s ease;
+    transition: filter 0.15s ease;
 }
 .stage-emoji-item.active .ps-handle {
     display: flex;
 }
 
-/* 좌측 상단: 흰색 십자 화살표 — 크기 조율 */
+/* 좌측 상단: 대각선 양쪽 화살표 — 크기 조율 */
 .ps-handle-tl {
-    top: -14px;
-    left: -14px;
-    width: 30px;
-    height: 30px;
+    top: -12px;
+    left: -12px;
+    width: 26px;
+    height: 26px;
     background: #ffffff;
-    border: 2px solid #cccccc;
+    border: 2px solid #0066ff;
     cursor: nwse-resize;
 }
-.ps-handle-tl:hover { transform: scale(1.15); }
+.ps-handle-tl:hover { filter: brightness(1.1); }
 
 /* 상단 중앙: 빨간 X — 삭제 */
 .ps-handle-tc {
-    top: -36px;
+    top: -28px;
     left: 50%;
     transform: translateX(-50%);
     background: #e72b3e;
-    border: 2px solid #c0172a;
+    border: 2px solid #ffffff;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 900;
     line-height: 1;
     cursor: pointer;
-    width: 28px;
-    height: 28px;
+    width: 22px;
+    height: 22px;
 }
-.ps-handle-tc:hover { transform: translateX(-50%) scale(1.15); }
+.ps-handle-tc:hover { filter: brightness(1.15); }
 
 /* 우측 상단: 파란색 — 회전 전용 */
 .ps-handle-tr {
     top: -12px;
     right: -12px;
-    background: #2962ff;
-    border: 2px solid #1a47c9;
+    background: #0066ff;
+    border: 2px solid #ffffff;
     color: #ffffff;
     cursor: grab;
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
 }
-.ps-handle-tr:hover { transform: scale(1.2); }
+.ps-handle-tr:hover { filter: brightness(1.15); }
 .ps-handle-tr:active { cursor: grabbing; }
 
 /* 우측 하단 (미사용 — 필요 시 활용) */
@@ -2377,46 +2232,36 @@ body.archive-body footer.site-footer {
     display: flex !important;
     flex-direction: row !important;
     gap: 14px !important;
-    overflow-x: auto !important;
+    overflow-x: scroll !important; /* 좌우 스크롤바 항상 노출 강제 */
     overflow-y: hidden !important;
     scroll-behavior: smooth;
-    padding: 6px 4px 12px 4px !important;
-    margin-bottom: 4px !important;
+    padding: 6px 4px 14px 4px !important;
+    margin-bottom: 6px !important;
     -webkit-overflow-scrolling: touch;
     width: 100%;
     scrollbar-width: auto !important;
-    scrollbar-color: rgb(244, 186, 0) transparent !important;
+    scrollbar-color: rgb(244, 186, 0) #e0e0e0 !important;
 }
 
-/* 스크롤바 화살표 버튼 완전 제거 */
-.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-button {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-}
-
-/* 스크롤바 높이 (이전 두께 10px 원복) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar {
-    height: 10px !important;
+    height: 12px !important;
     display: block !important;
 }
 
-/* 회색 박스 트랙 완전 제거 (투명화) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track {
-    background: transparent !important;
-    border: none !important;
+    background: #e0e0e0 !important;
+    border-radius: 8px !important;
 }
 
-/* 주황색 스크롤 핸들 (이전 두께 원복 & 도통함) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb {
     background: rgb(244, 186, 0) !important;
-    border-radius: 10px !important;
-    border: none !important;
+    border-radius: 8px !important;
+    border: 2px solid #e0e0e0 !important;
     cursor: pointer !important;
 }
 
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover {
-    background: #e5ac00 !important;
+    background: #d4a000 !important;
 }
 
 /* 표정 요소: 5종 정렬 행 (스크롤 완전 제거) (요청사항) */
@@ -2837,16 +2682,13 @@ header, header.side-nav-header {
     padding: 0 !important;
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
     overflow: visible !important;
-    backface-visibility: hidden !important;
-    will-change: transform !important;
-    transform: translateZ(0) !important;
-    transition: width 0.35s var(--ease-ios) !important;
+    transition: all 0.35s var(--ease-ios) !important;
 }
 
 .side-nav-logo {
     width: 70px;
     height: 220px;
-    background: rgb(244, 186, 0) !important; /* 로고 박스 일관된 주황/옐로우 배경 */
+    background: rgb(244, 186, 0);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2856,7 +2698,7 @@ header, header.side-nav-header {
     border-bottom: none !important;
     flex-shrink: 0;
     padding: 15px 0;
-    transition: background-color 0.25s ease;
+    transition: background-color 0.2s ease;
 }
 
 .vertical-logo-text {
@@ -2865,9 +2707,9 @@ header, header.side-nav-header {
     font-weight: 800;
     font-size: 1.02rem;
     letter-spacing: 0.02em;
-    color: #111111 !important; /* 로고 텍스트 검은색 타이포 */
+    color: #111111;
     white-space: nowrap;
-    transition: transform 0.25s var(--ease-ios), color 0.25s ease;
+    transition: transform 0.25s var(--ease-ios);
 }
 
 .side-nav-logo:hover .vertical-logo-text {
@@ -2988,26 +2830,17 @@ nav.side-nav {
 @media (min-width: 769px) {
     body, #main-wrapper {
         padding-left: 0 !important;
-        margin: 0 !important;
     }
 
-    /* main 본문 구역만 세로 네비바 70px 비켜서도록 정직하게 오프셋 부여 */
-    main, #main-content, .guestbook-main-container, .archive-page-container {
+    /* 사이드 nav(70px fixed) 만큼 메인 콘텐츠 영역을 밀어냄 — 좌우 대칭 패딩 유지 */
+    #main-content {
         padding-left: 70px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    #hero-section,
-    footer.site-footer {
-        width: calc(100% + 70px) !important;
-        margin-left: -70px !important;
     }
 }
 
-/* About 간격 피드백 반영 (상단 패딩 288px -> 144px 반으로 축소) */
+/* About 간격 피드백 반영 */
 .about-section-block {
-    padding-top: 9rem !important;
+    padding-top: 4rem !important;
 }
 .about-intro-grid {
     margin-bottom: 0.5rem !important;
@@ -3172,18 +3005,23 @@ nav.side-nav {
    12. 메인 히어로 캔버스 우측 하단 고정 사각형 방명록 스티커 만들기 버튼 (피드백 반영)
    ======================================================== */
 .hero-sticker-btn-wrapper {
-    position: absolute !important;
+    position: fixed !important;
     right: 40px !important;
     bottom: 40px !important;
-    z-index: 99 !important;
+    z-index: 999 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
     pointer-events: auto !important;
 }
 
 #create-sticker-btn,
-.create-sticker-btn {
-    position: absolute !important;
-    right: 0 !important;
-    bottom: 0 !important;
+.create-sticker-btn,
+#manage-stickers-btn,
+.manage-stickers-btn {
+    position: relative !important;
+    right: auto !important;
+    bottom: auto !important;
     z-index: 99 !important;
     display: inline-flex !important;
     align-items: center !important;
@@ -3192,18 +3030,35 @@ nav.side-nav {
     height: auto !important;
     white-space: nowrap !important; /* 폰트가 박스 밖으로 절대로 삐쳐나가지 않도록 방지 */
     word-break: keep-all !important;
-    padding: 16px 30px !important;
-    background-color: rgb(244, 186, 0) !important;
-    color: #111111 !important;
-    border: none !important; /* 테두리/아웃라인 완전 제거 */
+    padding: 16px 28px !important;
+    border: none !important;
     outline: none !important;
     border-radius: 0px !important; /* 완전 직각 사각형 적용 */
-    font-size: 1.08rem !important;
+    font-size: 1.05rem !important;
     font-weight: 800 !important;
     letter-spacing: -0.01em !important;
     cursor: pointer !important;
-    box-shadow: none !important; /* 그림자 완전 제거 */
+    box-shadow: none !important;
     transition: transform 0.2s var(--ease-ios), background-color 0.2s ease, color 0.2s ease !important;
+}
+
+#create-sticker-btn,
+.create-sticker-btn {
+    background-color: rgb(244, 186, 0) !important;
+    color: #111111 !important;
+}
+
+#manage-stickers-btn,
+.manage-stickers-btn {
+    display: none !important; /* 기본 상태: dev 키 입력 전까지 완전 비노출 */
+    background-color: #111111 !important;
+    color: rgb(244, 186, 0) !important;
+    border: 2px solid rgb(244, 186, 0) !important;
+}
+
+#manage-stickers-btn.dev-mode-active,
+.manage-stickers-btn.dev-mode-active {
+    display: inline-flex !important;
 }
 
 .create-sticker-btn .btn-label-text {
@@ -3230,87 +3085,8 @@ nav.side-nav {
 }
 
 /* ========================================================
-   글로벌 페이지 트랜지션 로딩 오버레이 (Page Transition Loader)
-   ======================================================== */
-#global-page-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #111111;
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
-    pointer-events: all;
-}
-
-#global-page-loader.loaded {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.loader-spinner {
-    width: 44px;
-    height: 44px;
-    border: 3.5px solid rgba(244, 186, 0, 0.2);
-    border-top: 3.5px solid rgb(244, 186, 0);
-    border-radius: 50%;
-    animation: loaderSpin 0.75s linear infinite;
-}
-
-.loader-text {
-    font-family: var(--sans-font);
-    font-size: 0.92rem;
-    font-weight: 700;
-    color: rgb(244, 186, 0);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-@keyframes loaderSpin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* ========================================================
-   비디오 영역 마우스 호버(Hover) 들썩임 모션만 차단 (부드러운 스크롤 등장은 100% 유지)
-   ======================================================== */
-.video-container-box:hover {
-    transform: translateY(0) !important;
-    box-shadow: none !important;
-}
-
-/* ========================================================
    스티커 방명록 스튜디오 한 화면(One-Screen) 정밀 피팅 & 왼쪽 정렬 라인 탭 메뉴
    ======================================================== */
-.sticker-modal-container.large-studio-modal {
-    max-width: 620px !important;
-    width: 90% !important;
-    max-height: 90vh !important;
-    height: auto !important;
-    padding: 24px 28px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    box-sizing: border-box !important;
-    overflow-y: auto !important; /* 잘림 현상 100% 원천 방지 */
-}
-
-/* 스티커 미리보기 스테이지 아담한 콤팩트 정밀 사이즈 (200px) */
-.sticker-canvas-stage.centered-stage {
-    width: 200px !important;
-    height: 200px !important;
-    margin: 0 auto 10px auto !important;
-    border-radius: 16px !important;
-}
-
 .studio-tab-menu {
     display: flex;
     align-items: center;
@@ -3322,7 +3098,7 @@ nav.side-nav {
     padding-left: 4px !important;
 }
 
-/* 메뉴와 선택 패널 사이 상시 노출되는 미니 파스텔 컬러 바 (배경 박스 및 테두리 100% 제거) */
+/* 메뉴와 선택 패널 사이 상시 노출되는 미니 파스텔 컬러 바 */
 .studio-mid-color-bar {
     width: 100%;
     margin: 0.25rem 0 0.35rem 0;
@@ -3333,7 +3109,7 @@ nav.side-nav {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    gap: 7px;
+    gap: 8px;
     padding: 0;
     background: transparent !important;
     border-radius: 0 !important;
@@ -3410,42 +3186,51 @@ nav.side-nav {
     opacity: 1;
 }
 
-.color-picker-palette.rounded-box-palette {
+/* 유닛 얼굴(Shape) 및 이모지 피커 그리드 수평 스크롤 */
+.face-picker-grid,
+.emoji-picker-grid {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 4px;
+}
+
+.face-thumb-item,
+.emoji-thumb-item {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: #f5f5f5;
+    border: 2px solid #e5e5e5;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px;
-    background: #fafafa;
-    border-radius: 14px;
-    border: 1px solid #eaeaea;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
 }
 
-.color-box-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2.5px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-    cursor: pointer !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.face-thumb-item img,
+.emoji-thumb-item img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
 }
 
-.color-box-btn:hover {
-    transform: scale(1.2);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+.face-thumb-item:hover,
+.emoji-thumb-item:hover {
+    border-color: rgb(244, 186, 0);
+    transform: translateY(-2px);
 }
 
-.color-box-btn.selected {
-    outline: 3px solid #111;
-    outline-offset: 2.5px;
-    transform: scale(1.12);
+.face-thumb-item.selected {
+    border-color: rgb(244, 186, 0);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(244, 186, 0, 0.3);
 }
 
-/* ========================================================
-   방명록 메시지 탭 — 이름 & 메시지 입력 UI
-   ======================================================== */
+/* 방명록 메시지 탭 입력 스타일 */
 #message-tab .sticker-user-info-inputs {
     padding: 8px 0;
     display: flex;
@@ -3478,7 +3263,212 @@ nav.side-nav {
     font-size: 0.84rem;
 }
 
-.studio-text-input.message-input {
-    resize: none;
-    min-height: 52px;
+/* ========================================================
+   13. 아카이브 3D 카드 슬라이더 입체 궤적 및 비율 완벽 보정
+   ======================================================== */
+.archive-page-container {
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.archive-slider-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 750px;
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.archive-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 480px;
+    height: 700px;
+    background: #ffffff;
+    border-radius: 0;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.5s ease, box-shadow 0.3s ease;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.archive-card-poster {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.archive-card-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.archive-card-base-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-sizing: border-box;
+}
+
+.archive-card-year {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.archive-card-theme-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+/* ========================================================
+   14. 어바웃(About) 섹션 텍스트 & 레이아웃 선명화 100% 보장
+   ======================================================== */
+.about-container,
+.about-section-block,
+#about,
+.about-details-grid,
+.about-details-info,
+.about-concept-text,
+.about-credits-group {
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #111111 !important;
+}
+
+.about-details-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2.5rem !important;
+}
+
+@media (max-width: 1024px) {
+    .about-details-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.about-main-title {
+    color: #111111 !important;
+    font-size: 3.6rem !important;
+    font-weight: 800 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.about-concept-text p {
+    color: #222222 !important;
+    font-size: 1.05rem !important;
+    line-height: 1.8 !important;
+    margin-bottom: 0.5rem !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.credit-label {
+    color: #111111 !important;
+    font-weight: 800 !important;
+    display: inline-block !important;
+}
+
+.credit-names {
+    color: #444444 !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
+}
+
+.reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+    transition: opacity 0.6s var(--ease-ios), transform 0.6s var(--ease-ios);
+}
+
+/* 아카이브 카드 마우스 호버 시 떠오르는 상세 설명 오버레이 (100% 완벽 복원) */
+.archive-card-hover-desc {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(17, 17, 17, 0.93);
+    color: #ffffff;
+    padding: 32px 28px;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s var(--ease-ios), visibility 0.35s ease;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.archive-card:hover .archive-card-hover-desc,
+.archive-card.focused:hover .archive-card-hover-desc {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.hover-desc-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.hover-year-tag {
+    display: inline-block;
+    background: rgb(244, 186, 0);
+    color: #111111;
+    font-size: 0.9rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    width: fit-content;
+}
+
+.hover-theme-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0;
+    color: #ffffff;
+}
+
+.hover-desc-text {
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: #dddddd;
+    margin: 0;
+    word-break: keep-all;
+    max-height: 260px;
+    overflow-y: auto;
 }

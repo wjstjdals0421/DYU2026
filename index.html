@@ -88,46 +88,43 @@
                 <!-- 2D 물리 엔진 캔버스 -->
                 <canvas id="physics-canvas"></canvas>
 
-                <!-- 메인 히어로 우측 하단 고정 사각형 방명록 제작 버튼 -->
+                <!-- 메인 히어로 우측 하단 고정 사각형 방명록 제작 & 관리 버튼 -->
                 <div class="hero-sticker-btn-wrapper">
+                    <button id="manage-stickers-btn" class="manage-stickers-btn hero-fade-element dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
+                        <span class="btn-label-text">스티커 관리</span>
+                    </button>
                     <button id="create-sticker-btn" class="create-sticker-btn hero-fade-element text-button" title="방명록 스티커 만들기" aria-label="방명록 스티커 만들기">
                         <span class="btn-label-text">방명록 스티커 만들기</span>
                     </button>
                 </div>
             </section>
 
-            <!-- 2. 어바웃 섹션 (1부: 대표 컨셉 타이틀 & 설명) -->
-            <section class="about-section-block">
-                <div class="about-intro-grid reveal">
-                    <div class="about-intro-text">
-                        <h2 class="about-main-title">Finding Balance In ___</h2>
-                        <div class="about-concept-text">
-                            <p>&lsquo;Finding Balance In ___&rsquo;은 삶의 다양한 영역에서 자신만의 균형을 찾아가는 과정을 의미합니다.</p>
-                            <p>지난 4년, 우리는 수없이 흔들리고 무너지는 시간 속에서 과제와 작업, 일상과 관계, 그리고 마음속에서 자신만의 단단한 축을 세우는 법을 훈련해 왔습니다.</p>
-                            <p>그렇게 스스로 버텨내며 찾아낸 각자의 균형, 그 집요한 균형잡기의 결과를 선보입니다.</p>
-                        </div>
+            <!-- 2. 어바웃 섹션 (통합: 대표 타이틀, 기획 소개, 전시 비디오, 이미지 스택, 크레딧) -->
+            <section id="about" class="about-section-block" style="padding-top: 5rem;">
+                <div class="about-intro-text reveal-on-scroll is-visible" style="text-align: center; margin-bottom: 2.5rem;">
+                    <h2 class="about-main-title" style="font-size: 3.6rem; font-weight: 800; color: #111111; margin-bottom: 1.5rem;">Finding Balance In ___</h2>
+                    <div class="about-concept-text" style="max-width: 800px; margin: 0 auto 2.5rem auto;">
+                        <p>&lsquo;Finding Balance In ___&rsquo;은 삶의 다양한 영역에서 자신만의 균형을 찾아가는 과정을 의미합니다.</p>
+                        <p>지난 4년, 우리는 수없이 흔들리고 무너지는 시간 속에서 과제와 작업, 일상과 관계, 그리고 마음속에서 자신만의 단단한 축을 세우는 법을 훈련해 왔습니다.</p>
+                        <p>그렇게 스스로 버텨내며 찾아낸 각자의 균형, 그 집요한 균형잡기의 결과를 선보입니다.</p>
                     </div>
                 </div>
-            </section>
 
-            <!-- 3. 메인 전시 소개 비디오 영상 영역 (유튜브 연동) -->
-            <section class="main-video-section reveal">
-                <div class="video-container-box">
-                    <iframe id="about-youtube-player"
-                            src="https://www.youtube.com/embed/9ZfN87gSjvI?enablejsapi=1&autoplay=0&mute=0&controls=1&rel=0&playsinline=1"
-                            title="Finding Balance In ___ 전시 소개 영상"
-                            style="width: 100%; height: 100%; border: 0;"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                    </iframe>
+                <!-- 메인 전시 소개 비디오 영상 영역 (유튜브 연동) -->
+                <div class="main-video-section reveal-on-scroll is-visible" style="margin-top: 1rem; margin-bottom: 3rem;">
+                    <div class="video-container-box">
+                        <iframe id="about-youtube-player"
+                                src="https://www.youtube.com/embed/9ZfN87gSjvI?enablejsapi=1&autoplay=0&mute=0&controls=1&rel=0&playsinline=1"
+                                title="Finding Balance In ___ 전시 소개 영상"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
                 </div>
-            </section>
 
-            <!-- 4. 어바웃 섹션 (2부: 이미지 스택 & 수직 포스터 & 상세 소개 및 졸준위 크레딧) -->
-            <section class="about-section-block" style="padding-top: 0;">
                 <!-- 어바웃 이미지 1, 2 — 1200px 꽉 차게 위아래 배치 -->
-                <div class="about-image-stack reveal delay-1">
+                <div class="about-image-stack reveal-on-scroll is-visible">
                     <img src="./about/img/about_1.png" alt="About Image 1" class="about-full-img">
                     <img src="./about/img/about_2.png" alt="About Image 2" class="about-full-img">
                 </div>
@@ -209,10 +206,6 @@
         </main>
     </div>
 
-    <!-- 개발자 관리 모드 전용 버튼 (비밀키 입력 시 활성화) -->
-    <button id="manage-stickers-btn" class="manage-stickers-btn hero-fade-element dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
-        <span>스티커 관리</span>
-    </button>
 
     <!-- 개발자 전용 커스텀 스티커 관리 모달 팝업 -->
     <div id="sticker-manager-overlay" class="sticker-modal-overlay">
@@ -307,6 +300,7 @@
         </div>
     </div>
 
+    <script src="./js/poly-decomp.min.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/sticker.js"></script>
 </body>

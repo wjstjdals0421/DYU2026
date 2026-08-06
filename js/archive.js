@@ -112,9 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.style.zIndex = '30';
                 card.classList.add('focused');
             } else {
-                // 좌우로 원근 배치되는 3D 카드들
+                // 좌우로 원근 배치되는 3D 카드들 (700px 대형 규격 480px 간격 피팅)
                 const direction = offset > 0 ? 1 : -1;
-                const shiftX = offset * 380; // 카드가 시원하게 확 넓어진 가로 간격 (380px)
+                const shiftX = offset * 480;
                 const rotateY = direction * -12; // 3D 회전각
                 const scaleVal = Math.max(0.72, 1 - (absOffset * 0.1));
                 const opacityVal = Math.max(0.2, 1 - (absOffset * 0.3));
