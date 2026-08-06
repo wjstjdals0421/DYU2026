@@ -7,34 +7,76 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <header>
-        <div class="logo" onclick="location.href='../index.html'">Finding Balance<br class="mobile-br"> In ___</div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="../index.html#about" class="nav-link-about">About</a></li>
-                <li><a href="./gallery.html?view=project" id="nav-project">Works</a></li>
-                <li><a href="./gallery.html?view=designer" id="nav-designer">Designers</a></li>
-                <li><a href="../archive.html">Archive</a></li>
+    <!-- 화면 왼쪽 고정 세로형 내비게이션 바 (Side Vertical Nav) -->
+    <header class="side-nav-header">
+        <a href="../index.html" class="side-nav-logo" title="Finding Balance In ___ 홈으로 이동">
+            <span class="vertical-logo-text">Finding Balance In ___</span>
+        </a>
+        <nav class="side-nav">
+            <ul class="side-nav-list">
+                <li class="side-nav-item item-about">
+                    <a href="../index.html#about" class="side-nav-link nav-link-about" aria-label="About 페이지 이동">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </div>
+                        <span class="nav-label-text">About</span>
+                    </a>
+                </li>
+                <li class="side-nav-item item-guestbook">
+                    <a href="../guestbook.html" class="side-nav-link" aria-label="Guestbook 방명록 페이지 이동">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="nav-label-text">Guestbook</span>
+                    </a>
+                </li>
+                <li class="side-nav-item item-works">
+                    <a href="./gallery.html?view=project" class="side-nav-link" id="nav-project" aria-label="Works 작품 갤러리 이동">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                        </div>
+                        <span class="nav-label-text">Works</span>
+                    </a>
+                </li>
+                <li class="side-nav-item item-designers">
+                    <a href="./gallery.html?view=designer" class="side-nav-link" id="nav-designer" aria-label="Designers 참가 디자이너 목록 이동">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <span class="nav-label-text">Designers</span>
+                    </a>
+                </li>
+                <li class="side-nav-item item-archive">
+                    <a href="../archive.html" class="side-nav-link" aria-label="Archive 아카이브 전시 기록 이동">
+                        <div class="nav-icon-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="21 8 21 21 3 21 3 8"></polyline>
+                                <rect x="1" y="3" width="22" height="5"></rect>
+                                <line x1="10" y1="12" x2="14" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span class="nav-label-text">Archive</span>
+                    </a>
+                </li>
             </ul>
         </nav>
-        <button class="hamburger-btn" id="hamburger-btn" aria-label="메뉴 열기">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
     </header>
-
-    <!-- 모바일 드롭다운 세로 내비게이션 메뉴 -->
-    <div class="mobile-menu-overlay" id="mobile-menu-overlay">
-        <ul class="mobile-nav-links">
-            <li><a href="../index.html#about" class="nav-link-about">About</a></li>
-            <li><a href="./gallery.html?view=project">Works</a></li>
-            <li><a href="./gallery.html?view=designer">Designers</a></li>
-            <li><a href="../archive.html">Archive</a></li>
-        </ul>
-    </div>
 
     <main class="work-container">
         <!-- 전공 서브 탭 (All, Visual, Space) - Works & Designers 공통 적용 -->
@@ -62,7 +104,7 @@
         </div>
     </div>
 
-    <script src="../main.js"></script>
+    <script src="../js/main.js"></script>
     <script type="module" src="./gallery.js"></script>
 </body>
 </html>

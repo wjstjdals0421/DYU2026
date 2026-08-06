@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finding Balance In ___</title>
+    <title>Guestbook — Finding Balance In ___</title>
     <link rel="stylesheet" href="./style.css">
     <link rel="icon" type="image/png" href="./unit/unit_1.png">
-    <!-- Matter.js 2D Physics Engine (블록 낙하 중력 연동) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 </head>
-<body class="loading-state">
+<body class="guestbook-page-body">
     <div id="main-wrapper">
         <!-- 화면 왼쪽 고정 세로형 내비게이션 바 (Side Vertical Nav) -->
         <header class="side-nav-header">
@@ -19,7 +17,7 @@
             <nav class="side-nav">
                 <ul class="side-nav-list">
                     <li class="side-nav-item item-about">
-                        <a href="#about" class="side-nav-link nav-link-about" aria-label="About 페이지 이동">
+                        <a href="./index.html#about" class="side-nav-link nav-link-about" aria-label="About 페이지 이동">
                             <div class="nav-icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                     <circle cx="12" cy="12" r="10"></circle>
@@ -31,7 +29,7 @@
                         </a>
                     </li>
                     <li class="side-nav-item item-guestbook">
-                        <a href="./guestbook.html" class="side-nav-link" aria-label="Guestbook 방명록 페이지 이동">
+                        <a href="./guestbook.html" class="side-nav-link active" aria-label="Guestbook 방명록 페이지 이동">
                             <div class="nav-icon-box">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -82,109 +80,24 @@
             </nav>
         </header>
 
-        <main id="main-content">
-            <!-- 1. 초기 메인 히어로 섹션 (Finding Balance In ___ 2D 유닛 블록 물리 히어로) -->
-            <section id="hero-section" class="full-section">
-                <!-- 2D 물리 엔진 캔버스 -->
-                <canvas id="physics-canvas"></canvas>
+        <main class="guestbook-main-container">
+            <!-- 방명록 스티커 카드 모음 그리드 보드 컨테이너 -->
+            <section class="guestbook-board-section container">
+                <div class="guestbook-header-container reveal active">
+                    <h1 class="guestbook-main-title">방명록</h1>
+                    <p class="guestbook-sub-desc">전시를 관람하신 후 따뜻한 응원의 메시지와 나만의 캐릭터 스티커를 남겨주세요!</p>
+                </div>
 
-                <!-- 메인 히어로 우측 하단 고정 사각형 방명록 제작 버튼 -->
-                <div class="hero-sticker-btn-wrapper">
-                    <button id="create-sticker-btn" class="create-sticker-btn hero-fade-element text-button" title="방명록 스티커 만들기" aria-label="방명록 스티커 만들기">
-                        <span class="btn-label-text">방명록 스티커 만들기</span>
-                    </button>
+                <div class="guestbook-stats-bar">
+                    <span id="guestbook-total-count">총 0개의 방명록 메시지</span>
+                </div>
+
+                <div id="guestbook-grid" class="guestbook-grid-container">
+                    <!-- JS로 방명록 스티커 카드들이 동적으로 생성됩니다 -->
                 </div>
             </section>
 
-            <!-- 2. 어바웃 섹션 (1부: 대표 컨셉 타이틀 & 설명) -->
-            <section class="about-section-block">
-                <div class="about-intro-grid reveal">
-                    <div class="about-intro-text">
-                        <h2 class="about-main-title">Finding Balance In ___</h2>
-                        <div class="about-concept-text">
-                            <p>&lsquo;Finding Balance In ___&rsquo;은 삶의 다양한 영역에서 자신만의 균형을 찾아가는 과정을 의미합니다.</p>
-                            <p>지난 4년, 우리는 수없이 흔들리고 무너지는 시간 속에서 과제와 작업, 일상과 관계, 그리고 마음속에서 자신만의 단단한 축을 세우는 법을 훈련해 왔습니다.</p>
-                            <p>그렇게 스스로 버텨내며 찾아낸 각자의 균형, 그 집요한 균형잡기의 결과를 선보입니다.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. 메인 전시 소개 비디오 영상 영역 (유튜브 연동) -->
-            <section class="main-video-section reveal">
-                <div class="video-container-box">
-                    <iframe id="about-youtube-player"
-                            src="https://www.youtube.com/embed/9ZfN87gSjvI?enablejsapi=1&autoplay=0&mute=0&controls=1&rel=0&playsinline=1"
-                            title="Finding Balance In ___ 전시 소개 영상"
-                            style="width: 100%; height: 100%; border: 0;"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                    </iframe>
-                </div>
-            </section>
-
-            <!-- 4. 어바웃 섹션 (2부: 이미지 스택 & 수직 포스터 & 상세 소개 및 졸준위 크레딧) -->
-            <section class="about-section-block" style="padding-top: 0;">
-                <!-- 어바웃 이미지 1, 2 — 1200px 꽉 차게 위아래 배치 -->
-                <div class="about-image-stack reveal delay-1">
-                    <img src="./about/img/about_1.png" alt="About Image 1" class="about-full-img">
-                    <img src="./about/img/about_2.png" alt="About Image 2" class="about-full-img">
-                </div>
-
-                <div class="about-details-grid reveal delay-1">
-                    <!-- 텍스트 먼저(왼쪽), 포스터 나중(오른쪽) -->
-                    <div class="about-details-info">
-                        <div class="about-concept-text">
-                            <p>흔들리고 기울어 지기도 했던 지난 4년간의 과정 속에서</p>
-                            <p>느낀 다양한 감정들이 중심을 잡고 내면에 단단한 균형을 잡았습니다.</p>
-                            <p>자신에게 맞는 중심과 균형을 찾아나가는 과정 속 감정들을</p>
-                            <p>아슬아슬하게 세워져 있는 모습으로 나타냈습니다.</p>
-                        </div>
-
-                        <!-- 위원회 및 조직 구성 정보 -->
-                        <div class="about-credits-group">
-                            <div class="credit-item-block">
-                                <span class="credit-label">지도 교수</span>
-                                <span class="credit-names">김형재 &nbsp; 이재환 &nbsp; 김유빈 &nbsp; 이태현</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">졸업준비위원장</span>
-                                <span class="credit-names">시각디자인 박연지 &nbsp; 공간디자인 차무영</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">졸업준비부위원장</span>
-                                <span class="credit-names">시각디자인 임정은 &nbsp; 공간디자인 조혜령</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">아이덴티티</span>
-                                <span class="credit-names">김소은 &nbsp; 김가연 &nbsp; 주성은</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">웹사이트</span>
-                                <span class="credit-names">강선진 &nbsp; 강주현 &nbsp; 전성민</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">전시</span>
-                                <span class="credit-names">오진우 &nbsp; 김예인 &nbsp; 최민호 &nbsp; 김승민 &nbsp; 박현수</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">회계</span>
-                                <span class="credit-names">전민정 &nbsp; 나미현</span>
-                            </div>
-                            <div class="credit-item-block">
-                                <span class="credit-label">홍보</span>
-                                <span class="credit-names">고나연 &nbsp; 강민지 &nbsp; 공은희 &nbsp; 편민지 &nbsp; 정원지</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="about-poster-vertical">
-                        <img src="./gallery/img/main_poster.png" alt="GSDD 2026 졸업전시 메인 포스터">
-                    </div>
-                </div>
-            </section>
-
-            <!-- 푸터 바 (시안 이미지 레이아웃 반영) -->
+            <!-- 사이트 푸터 -->
             <footer class="site-footer">
                 <div class="footer-inner-container">
                     <div class="footer-left-info">
@@ -209,28 +122,7 @@
         </main>
     </div>
 
-    <!-- 개발자 관리 모드 전용 버튼 (비밀키 입력 시 활성화) -->
-    <button id="manage-stickers-btn" class="manage-stickers-btn hero-fade-element dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
-        <span>스티커 관리</span>
-    </button>
 
-    <!-- 개발자 전용 커스텀 스티커 관리 모달 팝업 -->
-    <div id="sticker-manager-overlay" class="sticker-modal-overlay">
-        <div class="sticker-modal-container manager-modal">
-            <button class="sticker-close-btn" id="sticker-manager-close">&times;</button>
-            <div class="sticker-modal-header">
-                <h3>방명록 스티커 관리</h3>
-                <p>생성된 스티커를 개별 또는 전체 삭제할 수 있습니다.</p>
-            </div>
-            <div class="manager-modal-body">
-                <div class="manager-action-top">
-                    <span id="manager-sticker-count">총 0개</span>
-                    <button type="button" class="tool-action-btn clear-all-danger-btn" id="manager-clear-all-btn">전체 삭제</button>
-                </div>
-                <div class="manager-sticker-grid" id="manager-sticker-grid"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- 커스텀 스티커 방명록 창작 모달 팝업 -->
     <div id="sticker-modal-overlay" class="sticker-modal-overlay">
@@ -238,7 +130,7 @@
             <button class="sticker-close-btn" id="sticker-modal-close">&times;</button>
             <div class="sticker-modal-header">
                 <h3>나만의 스티커 방명록</h3>
-                <p>유닛 모양(얼굴)과 표정, 대표 컬러를 메뉴바에서 선택하고 메시지를 적어보세요!</p>
+                <p>얼굴 템플릿과 표정 요소를 선택하고 나만의 메시지를 적어보세요!</p>
             </div>
             
             <div class="sticker-modal-studio-body">
@@ -309,5 +201,6 @@
 
     <script src="./js/main.js"></script>
     <script src="./js/sticker.js"></script>
+    <script src="./js/guestbook.js"></script>
 </body>
 </html>

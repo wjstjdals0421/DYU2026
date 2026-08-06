@@ -35,6 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mousemove', (e) => {
             cursor.style.left = `${e.clientX}px`;
             cursor.style.top = `${e.clientY}px`;
+            
+            // 영상 플레이어(유튜브 iframe) 영역 위에 커서가 올라간 경우 커스텀 커서를 숨기고 표준 포인터 허용
+            const videoElem = document.querySelector('.main-video-section');
+            if (videoElem) {
+                const rect = videoElem.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    cursor.style.opacity = '0';
+                    return;
+                }
+            }
+
             if (cursor.style.opacity !== '1') {
                 cursor.style.opacity = '1';
             }
@@ -85,13 +96,14 @@ document.addEventListener('DOMContentLoaded', () => {
             gravity: { x: 0, y: 1.1 }
         });
 
-        // 캔버스 렌더러 설정
+        // 캔버스 렌더러 설정 (High DPI pixelRatio 지원으로 화질 선명도 최적화)
         const render = Render.create({
             canvas: canvas,
             engine: engine,
             options: {
                 width: width,
                 height: height,
+                pixelRatio: Math.min(window.devicePixelRatio || 1, 2),
                 background: '#ffffff', // 흰색 빈 화면 바탕
                 wireframes: false,
                 showAngleIndicator: false
@@ -110,12 +122,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Composite.add(engine.world, [ground, leftWall, rightWall]);
 
-        // 마우스 드래그 / 던지기 인터랙션 추가
+        // 우측 하단 방명록 스티커 만들기 버튼 고정 충돌 바운더리 바디 추가 (유닛이 부딪히도록 설정)
+        const createStickerBtnEl = document.getElementById('create-sticker-btn');
+        let stickerBtnBody = null;
+
+        function updateStickerBtnPhysicsBody() {
+            if (!createStickerBtnEl || !heroSection) return;
+            const rect = createStickerBtnEl.getBoundingClientRect();
+            const heroRect = heroSection.getBoundingClientRect();
+
+            if (rect.width === 0 || rect.height === 0) return;
+
+            const btnWidth = rect.width;
+            const btnHeight = rect.height;
+            const btnX = (rect.left - heroRect.left) + (btnWidth / 2);
+            const btnY = (rect.top - heroRect.top) + (btnHeight / 2);
+
+            if (!stickerBtnBody) {
+                stickerBtnBody = Bodies.rectangle(btnX, btnY, btnWidth, btnHeight, {
+                    isStatic: true,
+                    render: { visible: false }
+                });
+                Composite.add(engine.world, stickerBtnBody);
+            } else {
+                Matter.Body.setPosition(stickerBtnBody, { x: btnX, y: btnY });
+            }
+        }
+
+        setTimeout(updateStickerBtnPhysicsBody, 150);
+        setTimeout(updateStickerBtnPhysicsBody, 600);
+
+        // 마우스 드래그 / 던지기 인터랙션 추가 (stiffness 0.02 및 damping 부여로 충돌 시 튕김 완벽 완화)
         const mouse = Mouse.create(render.canvas);
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
             constraint: {
-                stiffness: 0.2,
+                stiffness: 0.02,
+                damping: 0.1,
                 render: { visible: false }
             }
         });
@@ -182,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, { passive: true });
 
-        // F:\project\99. project\code\unit 폴더 내 unit_1.png ~ unit_18.png 로드
+        // unit_1.png ~ unit_18.png 로드
         const unitFiles = [];
         for (let i = 1; i <= 18; i++) {
             unitFiles.push(`./unit/unit_${i}.png`);
@@ -194,6 +237,27 @@ document.addEventListener('DOMContentLoaded', () => {
         unitFiles.forEach((src, idx) => {
             const img = new Image();
             img.src = src;
+            let isUnitsReady = false;
+            let isDropTriggered = false;
+
+            window.triggerDropSequence = function() {
+                if (isDropTriggered) return;
+                if (isUnitsReady) {
+                    isDropTriggered = true;
+                    startDroppingProcess();
+                } else {
+                    const checkInterval = setInterval(() => {
+                        if (isUnitsReady) {
+                            clearInterval(checkInterval);
+                            if (!isDropTriggered) {
+                                isDropTriggered = true;
+                                startDroppingProcess();
+                            }
+                        }
+                    }, 50);
+                }
+            };
+
             img.onload = () => {
                 loadedUnits[idx] = {
                     src: src,
@@ -202,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 loadedCount++;
                 if (loadedCount === unitFiles.length) {
-                    startDroppingProcess();
+                    isUnitsReady = true;
                 }
             };
             img.onerror = () => {
@@ -213,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 loadedCount++;
                 if (loadedCount === unitFiles.length) {
-                    startDroppingProcess();
+                    isUnitsReady = true;
                 }
             };
         });
@@ -263,8 +327,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const spawnY = -120 - (Math.random() * 60);
 
             const block = Bodies.rectangle(spawnX, spawnY, hitboxW, hitboxH, {
-                restitution: 0.25, // 반발력 (통통 튀어 오르는 정도)
-                friction: 0.85,    // 마찰력 (자연스럽게 쌓임)
+                chamfer: { radius: Math.min(hitboxW, hitboxH) * 0.18 }, // 모서리 곡면화로 직사각형 공중 뜸 현상 방지
+                restitution: 0.01, // 충돌 반발력 거의 0으로 낮추어 튕김 완벽 제거
+                friction: 0.95,    // 묵직하고 안정감 있게 닿도록 마찰 상향
+                frictionAir: 0.03, // 드래그/밀어낼 때 멀리 팍 튕겨나가지 않고 부드럽게 감속
                 density: 0.003,
                 angle: (Math.random() - 0.5) * 0.5,
                 render: {
@@ -291,8 +357,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const spawnY = -100 - Math.random() * 40;
 
             const block = Bodies.rectangle(spawnX, spawnY, size * 0.95, size * 0.95, {
-                restitution: 0.3,
-                friction: 0.8,
+                chamfer: { radius: size * 0.15 },
+                restitution: 0.01,
+                friction: 0.95,
+                frictionAir: 0.03,
                 density: 0.003,
                 angle: (Math.random() - 0.5) * 0.6,
                 render: {
@@ -335,14 +403,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        // 저장된 방문자 커스텀 스티커 불러오기
+        // 저장된 방문자 커스텀 스티커 불러오기 (무작위 랜덤 10개 선택해서 메인 화면에 투하)
         function loadSavedUserStickers() {
             try {
-                const savedStickers = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
-                savedStickers.forEach((dataUrl, idx) => {
+                const rawData = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
+                if (!Array.isArray(rawData) || rawData.length === 0) return;
+
+                // 스티커 객체 또는 DataUrl 추출
+                const stickerUrls = rawData.map(item => (typeof item === 'object' && item !== null ? item.dataUrl : item)).filter(Boolean);
+
+                // 무작위 셔플 (Fisher-Yates) 후 최대 10개 선택
+                const shuffled = [...stickerUrls];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                const selected10Stickers = shuffled.slice(0, 10);
+
+                selected10Stickers.forEach((dataUrl, idx) => {
                     setTimeout(() => {
                         window.spawnCustomStickerBlock(dataUrl);
-                    }, 1200 + (idx * 250));
+                    }, 1200 + (idx * 280));
                 });
             } catch (err) {
                 console.error(err);
@@ -470,11 +551,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // 1. 바닥, 천장(헤더 아래) 및 좌우 벽 위치 재설정
             const currentHeaderHeight = (newW <= 768) ? 58 : 72;
             Matter.Body.setPosition(ground, { x: newW / 2, y: newH + 40 });
-            if (topWallActive) {
-                Matter.Body.setPosition(topWall, { x: newW / 2, y: currentHeaderHeight - 40 });
-            }
             Matter.Body.setPosition(leftWall, { x: -40, y: newH / 2 });
             Matter.Body.setPosition(rightWall, { x: newW + 40, y: newH / 2 });
+            updateStickerBtnPhysicsBody();
 
             // 2. 창 크기 변경 시 모든 블록이 화면 밖으로 탈출하거나 사라지지 않도록 내부 바운딩 강제 조율
             const scaleRatio = lastWidth > 0 ? (newW / lastWidth) : 1;
@@ -623,40 +702,228 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. About 메뉴 클릭 시 메인페이지 부드러운 스크롤 이동 로직
     // ========================================================
     const scrollToAbout = () => {
+        const heroSection = document.getElementById('hero-section');
         const aboutSection = document.querySelector('.about-section-block');
-        if (aboutSection) {
-            const headerHeight = 80;
-            const targetPos = aboutSection.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        
+        if (heroSection) {
+            const targetPos = heroSection.offsetHeight;
             window.scrollTo({ top: targetPos, behavior: 'smooth' });
+        } else if (aboutSection) {
+            window.scrollTo({ top: aboutSection.offsetTop, behavior: 'smooth' });
         }
+
+        // 스크롤 안착 후 주소창의 #about 해시를 깨끗하게 제거 (이후 새로고침/로고 클릭 시 무조건 메인 y=0 시작)
+        setTimeout(() => {
+            if (window.location.hash === '#about' && history.replaceState) {
+                history.replaceState('', document.title, window.location.pathname + window.location.search);
+            }
+        }, 600);
     };
 
     const aboutLinks = document.querySelectorAll('.nav-link-about');
     aboutLinks.forEach(link => {
         link.addEventListener('click', (e) => {
-            const isIndex = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
-            if (isIndex && document.querySelector('.about-section-block')) {
+            const aboutSection = document.querySelector('.about-section-block');
+            if (aboutSection) {
                 e.preventDefault();
                 scrollToAbout();
             }
         });
     });
 
-    // URL에 #about 파라미터가 포함되어 접속한 경우 자동 스크롤
+    // 로고 클릭 시 주소창의 #about 해시 완전 제거 및 메인 최상단(y=0)으로 스크롤 이동
+    const logoLinks = document.querySelectorAll('.side-nav-logo');
+    logoLinks.forEach(logo => {
+        logo.addEventListener('click', (e) => {
+            const heroSection = document.getElementById('hero-section');
+            if (heroSection) {
+                e.preventDefault();
+                if (history.pushState) {
+                    history.pushState('', document.title, window.location.pathname + window.location.search);
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    });
+
+    // 스크롤 위치에 따른 About active 링크 동적 관리 (초기 메인 접속 시 About 선택 제거)
+    const updateActiveNavOnScroll = () => {
+        const aboutSection = document.querySelector('.about-section-block');
+        const aboutLink = document.querySelector('.side-nav-link.nav-link-about');
+        
+        if (!aboutSection || !aboutLink) return;
+        
+        const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+        const aboutTop = aboutSection.offsetTop - 150;
+        
+        if (scrollPos >= aboutTop) {
+            aboutLink.classList.add('active');
+        } else {
+            aboutLink.classList.remove('active');
+        }
+    };
+
+    window.addEventListener('scroll', updateActiveNavOnScroll);
+    updateActiveNavOnScroll();
+
+    // 브라우저 자동 스크롤 위치 복원 비활성화 & 새로고침/초기 접속 시 무조건 메인화면(y=0) 최상단 시작
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
     if (window.location.hash === '#about') {
         setTimeout(scrollToAbout, 300);
+    } else {
+        window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('load', () => {
+        if (window.location.hash !== '#about') {
+            window.scrollTo(0, 0);
+        }
+    });
+
+    // ========================================================
+    // 5. 메뉴바 링크 Hover 시 타겟 페이지 0ms 사전 로드 (Prefetching으로 이동 끊김 제거)
+    // ========================================================
+    const prefetchTargetPage = (url) => {
+        if (!url || url.startsWith('#') || url.startsWith('javascript:')) return;
+        if (document.querySelector(`link[rel="prefetch"][href="${url}"]`)) return;
+        
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = url;
+        document.head.appendChild(link);
+    };
+
+    const navItems = document.querySelectorAll('.side-nav-link, .nav-links li a, .mobile-nav-links li a');
+    // ========================================================
+    // 6. 첫 접속 / 새로고침 시 사이트 전체 자산 전역 사전 로드 (Initial Pre-cache Engine)
+    //    (이동 간 끊김을 0ms로 없애기 위해 첫 로딩 시 서브페이지 & 핵심 자산 100% 캐싱)
+    // ========================================================
+    const preCacheGlobalAssets = () => {
+        // 1. 서브페이지 HTML 구조 사전 페치 (Prefetch)
+        const subPages = ['./guestbook.html', './archive.html', './gallery/gallery.html'];
+        subPages.forEach(url => {
+            if (!document.querySelector(`link[rel="prefetch"][href="${url}"]`)) {
+                const link = document.createElement('link');
+                link.rel = 'prefetch';
+                link.href = url;
+                document.head.appendChild(link);
+            }
+        });
+
+        // 2. 아카이브 포스터 & 어바웃 핵심 이미지 사전 로딩 (Image Preload Cache)
+        const imagesToCache = [
+            './about/img/about_1.png',
+            './about/img/about_2.png',
+            './gallery/archive/2019gsdd.png',
+            './gallery/archive/2020gsdd.png',
+            './gallery/archive/2021gsdd.png',
+            './gallery/archive/2022gsdd.jpeg',
+            './gallery/archive/2023gsdd.png',
+            './gallery/archive/2024gsdd.png',
+            './gallery/archive/2025gsdd.png'
+        ];
+
+        imagesToCache.forEach(src => {
+            const img = new Image();
+            img.src = src;
+        });
+    };
+
+    // 새로고침이나 첫 접속(Session 최초 진입) 시에만 로딩창 1회 띄우고, 이후 페이지 간 이동 시에는 100% 스킵!
+    const isPreloadedInSession = sessionStorage.getItem('gsdd_preloaded') === 'true';
+    const isMainHeroPage = document.getElementById('hero-section') !== null;
+
+    if (isMainHeroPage && !isPreloadedInSession) {
+        let loader = document.getElementById('global-page-loader');
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.id = 'global-page-loader';
+            loader.innerHTML = `
+                <div class="loader-spinner"></div>
+                <span class="loader-text">Finding Balance In ___</span>
+            `;
+            document.body.prepend(loader);
+        }
+
+        // 로딩창 동안 전역 자산 pre-cache 수행
+        preCacheGlobalAssets();
+        sessionStorage.setItem('gsdd_preloaded', 'true');
+
+        const hideGlobalLoader = () => {
+            if (loader) {
+                loader.classList.add('loaded');
+            }
+            // 로딩 화면 오버레이가 완전히 걷힌 직후 유닛 블록 낙하 시퀀스 시작
+            setTimeout(() => {
+                if (typeof window.triggerDropSequence === 'function') {
+                    window.triggerDropSequence();
+                }
+            }, 250);
+        };
+
+        if (document.readyState === 'complete') {
+            setTimeout(hideGlobalLoader, 250);
+        } else {
+            window.addEventListener('load', () => setTimeout(hideGlobalLoader, 250));
+        }
+    } else {
+        // 내부 페이지 이동 시에는 로딩창 100% 비활성화 및 즉시 UI 노출
+        const existingLoader = document.getElementById('global-page-loader');
+        if (existingLoader) {
+            existingLoader.remove();
+        }
+        document.body.classList.remove('loading-state');
+
+        const fadeElements = document.querySelectorAll('.hero-fade-element');
+        fadeElements.forEach(el => el.classList.add('visible'));
+
+        if (typeof window.triggerDropSequence === 'function') {
+            window.triggerDropSequence();
+        }
     }
 
     // ========================================================
-    // 5. 메뉴바 링크 클릭 시 진동(Vibration Shake) 애니메이션 연동 (요청사항)
+    // 7. 어바웃 동영상 영역 50% 이상 보일 때 유튜브 자동 재생 (IntersectionObserver)
     // ========================================================
-    const navItems = document.querySelectorAll('.nav-links li a, .mobile-nav-links li a');
-    navItems.forEach(item => {
-        item.addEventListener('click', function () {
-            this.classList.add('nav-vibrate-active');
-            setTimeout(() => {
-                this.classList.remove('nav-vibrate-active');
-            }, 250);
+    const videoSection = document.querySelector('.main-video-section');
+    const youtubeIframe = document.getElementById('about-youtube-player');
+
+    if (videoSection && youtubeIframe) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                // 비디오 영역이 화면에 50% (0.5) 이상 노출될 때 기본 음향 10% 세팅 후 자동 재생
+                if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                    youtubeIframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: 'unMute',
+                        args: []
+                    }), '*');
+                    youtubeIframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: 'setVolume',
+                        args: [10]
+                    }), '*');
+                    youtubeIframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: 'playVideo',
+                        args: []
+                    }), '*');
+                } else {
+                    // 화면 밖으로 50% 미만 벗어나면 일시 정지
+                    youtubeIframe.contentWindow.postMessage(JSON.stringify({
+                        event: 'command',
+                        func: 'pauseVideo',
+                        args: []
+                    }), '*');
+                }
+            });
+        }, {
+            threshold: [0, 0.5, 1.0]
         });
-    });
+
+        observer.observe(videoSection);
+    }
 });

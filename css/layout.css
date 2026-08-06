@@ -2,56 +2,176 @@
    layout.css — 헤더, 내비게이션, 푸터, Works/Designers 그리드
    ========================================================== */
 
-/* ── 상단 헤더 ── */
-header {
+/* ── 화면 왼쪽 고정 세로형 내비게이션 바 (단색 메인 테마, 아웃라인 0, 기울기 0) ── */
+header.side-nav-header {
     position: fixed;
     top: 0; left: 0;
-    width: 100%; max-width: 100%;
-    padding: 1.2rem var(--site-margin);
+    width: 70px;
+    height: 100vh;
     background: rgb(244, 186, 0);
-    border: 0 !important;
-    border-bottom: 0 !important;
+    border: none !important;
+    border-right: none !important;
     outline: none !important;
-    box-shadow: none !important;
     z-index: 1000;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.4s var(--ease-ios);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08);
+    overflow: visible !important;
+    transition: all 0.35s var(--ease-ios);
 }
 
-.logo {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: #111;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-}
-.logo:hover { opacity: 0.75; }
-
-nav { width: auto; }
-
-.nav-links {
-    list-style: none;
+/* 맨 상단 회전 로고 타이틀 영역 ("Finding Balance In ___" 텍스트 세로 배치, 아웃라인 0) */
+.side-nav-logo {
+    width: 70px;
+    height: 220px;
+    background: rgb(244, 186, 0);
     display: flex;
-    gap: 2.2rem;
-    margin: 0; padding: 0;
-}
-.nav-links li a {
-    display: inline-block;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     text-decoration: none;
-    color: #111;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    transform-origin: left center;
-    transition: transform 0.25s var(--ease-ios), color 0.25s ease;
+    border: none !important;
+    border-bottom: none !important;
+    flex-shrink: 0;
+    padding: 15px 0;
+    transition: background-color 0.2s ease;
 }
-.nav-links li a:hover { color: #000; transform: rotate(4deg); }
-.nav-links li a.active { color: #000; font-weight: 800; }
 
-/* 클릭 진동 애니메이션 */
+.vertical-logo-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 800;
+    font-size: 1.02rem;
+    letter-spacing: 0.02em;
+    color: #111111;
+    white-space: nowrap;
+    transition: transform 0.25s var(--ease-ios);
+}
+
+.side-nav-logo:hover .vertical-logo-text {
+    transform: rotate(180deg) scale(1.05);
+}
+
+/* 세로 메뉴 리스트 */
+nav.side-nav {
+    width: 100%;
+    overflow: visible !important;
+    flex: 1;
+}
+
+.side-nav-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+    overflow: visible !important;
+}
+
+.side-nav-item {
+    position: relative;
+    width: 100%;
+    list-style: none !important;
+    overflow: visible !important;
+}
+
+/* 단색 주황/옐로우 시그니처 톤 메뉴 버튼 (아웃라인 0) */
+.side-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 64px;
+    padding: 0;
+    border-radius: 0;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    background-color: rgb(244, 186, 0);
+    color: #111111;
+    border: none !important;
+    outline: none !important;
+    transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.25s ease, color 0.25s ease, padding 0.35s ease;
+    z-index: 10;
+}
+
+/* 아이콘 박스 */
+.nav-icon-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.nav-icon-box svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2.3;
+    stroke: #111111;
+    transition: stroke 0.25s ease;
+}
+
+/* 메뉴 라벨 텍스트 (평소 완전 숨김) */
+.nav-label-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transform: translateX(-12px);
+    transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease 0.05s, transform 0.3s ease 0.05s, margin 0.35s ease;
+    pointer-events: none;
+}
+
+/* ── 마우스 호버 / focus-visible 시 우측 일직선 수평 확장 (기울기 rotate 100% 제거) ── */
+.side-nav-link:hover,
+.side-nav-link:focus-visible {
+    width: 200px;
+    justify-content: flex-start;
+    padding: 0 20px;
+    background-color: #111111;
+    color: rgb(244, 186, 0);
+    z-index: 100;
+    box-shadow: 8px 12px 35px rgba(0, 0, 0, 0.35);
+    outline: none !important;
+    border: none !important;
+    border-radius: 0 14px 14px 0;
+    transform: none !important; /* 기울기 100% 완전 삭제 */
+}
+
+.side-nav-link:hover .nav-icon-box svg,
+.side-nav-link:focus-visible .nav-icon-box svg {
+    stroke: rgb(244, 186, 0);
+}
+
+.side-nav-link:hover .nav-label-text,
+.side-nav-link:focus-visible .nav-label-text {
+    max-width: 130px;
+    opacity: 1;
+    transform: translateX(0);
+    margin-left: 14px;
+}
+
+/* 현재 페이지 선택 강조 (Active State) */
+.side-nav-link.active {
+    background-color: #111111;
+    color: rgb(244, 186, 0);
+}
+.side-nav-link.active .nav-icon-box svg {
+    stroke: rgb(244, 186, 0);
+}
+
+/* ── 메뉴 클릭 시 진동(Vibration Shake) 애니메이션 복원 ── */
 @keyframes nav-vibrate-shake {
     0%   { transform: translate(0,0) rotate(0deg); }
     15%  { transform: translate(-3px,1px) rotate(-4deg); }
@@ -61,7 +181,16 @@ nav { width: auto; }
     75%  { transform: translate(-1px,0) rotate(-1deg); }
     100% { transform: translate(0,0) rotate(0deg); }
 }
-.nav-vibrate-active { animation: nav-vibrate-shake 0.22s ease-in-out !important; }
+.nav-vibrate-active {
+    animation: nav-vibrate-shake 0.22s ease-in-out !important;
+}
+
+/* 본문 레이아웃 이동 방지 (No Layout Shift) */
+@media (min-width: 769px) {
+    body, #main-wrapper {
+        padding-left: 70px !important;
+    }
+}
 
 /* ── 햄버거 메뉴 (모바일용) ── */
 .hamburger-btn {

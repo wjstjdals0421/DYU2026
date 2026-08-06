@@ -15,6 +15,16 @@ body, a, button, input, select {
     cursor: none !important;
 }
 
+/* 비디오 플레이어(유튜브 iframe) 영역 위에서는 브라우저 표준 마우스 커서 100% 작동 */
+.main-video-section,
+.main-video-section *,
+.video-container-box,
+.video-container-box *,
+#about-youtube-player {
+    cursor: auto !important;
+    pointer-events: auto !important;
+}
+
 /* 마우스 커서 유닛 이미지 커스텀 & 클릭 효과 */
 #custom-unit-cursor {
     position: fixed;
@@ -68,11 +78,11 @@ body, a, button, input, select {
     --ease-ios: cubic-bezier(0.4, 0, 0.2, 1);
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 
-    /* PC 콘텐츠 폭 1200px 규격 (좌우 마진 60px*2 포함 max-width: 1320px) */
-    --site-max-width: 1320px;
+    /* PC 콘텐츠 폭 1200px 규격 */
+    --site-max-width: 1200px;
     --grid-columns: 12;
-    --grid-gutter: 24px;      /* 거터 24px */
-    --site-margin: 60px;      /* PC 1200px 콘텐츠에 맞춘 좌우 마진 60px */
+    --grid-gutter: 24px;
+    --site-margin: 32px;
 }
 
 body {
@@ -238,26 +248,35 @@ html, body {
 }
 
 #hero-section {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff;
-    overflow: hidden;
+    position: relative !important;
+    height: 100vh !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    max-width: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: #ffffff !important;
+    overflow: hidden !important;
+}
+
+@media (max-width: 768px) {
+    #hero-section {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
 }
 
 /* 2D 물리 엔진 중력 블록 스태킹 캔버스 */
 #physics-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: auto;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    pointer-events: auto !important;
     touch-action: pan-y !important; /* 모바일 브라우저 수직 터치 스크롤 허용 */
 }
 
@@ -397,12 +416,14 @@ body.loading-state header.hero-fade-element {
 /* ========================================================
    4. 메인 컨테이너 및 갤러리/디자이너 레이아웃
    ======================================================== */
-.container, .work-container, .about-container {
-    max-width: var(--site-max-width);
-    width: 100%;
-    margin: 0 auto;
-    padding-left: var(--site-margin);
-    padding-right: var(--site-margin);
+.container, .work-container, .about-container, .about-section-block, .main-video-section, .guestbook-board-section {
+    max-width: calc(1200px + (var(--site-margin) * 2)) !important;
+    width: 100% !important;
+    padding-left: var(--site-margin) !important;  /* 좌우 패딩 100% 동일 대칭 값 */
+    padding-right: var(--site-margin) !important; /* 좌우 패딩 100% 동일 대칭 값 */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
 }
 
 .work-container {
@@ -969,68 +990,169 @@ body.archive-body {
 }
 
 .archive-page-container {
-    width: 100%;
-    height: calc(100vh - 80px);
-    margin-top: 80px;
-    padding-bottom: 140px; /* 푸터 높이만큼 바닥 공간 보장 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    background-color: #ffffff;
-    box-sizing: border-box;
+    width: 100% !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: #ffffff !important;
+    box-sizing: border-box !important;
 }
 
 .archive-slider-wrapper {
     position: relative;
     width: 100%;
-    max-width: 1400px;
-    height: min(560px, calc(100vh - 300px));
+    max-width: 1400px !important;
+    height: min(700px, calc(100vh - 180px)) !important;
     display: flex;
     justify-content: center;
     align-items: center;
+    perspective: 1200px;
+    transform-style: preserve-3d;
 }
 
 .archive-card {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(430px, 70vw);
-    height: min(540px, calc(100vh - 320px));
+    height: min(640px, calc(100vh - 220px)) !important;
+    width: calc(min(640px, calc(100vh - 220px)) * 0.7) !important; /* 높이 700px에 맞춘 세로 포스터 정비율 (1:1.43) */
     background-color: #ffffff;
-    border-radius: 16px;
-    border: 1.5px solid #eaeaea;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+    border-radius: 0 !important; /* 모서리 라운딩 완전 제거 직각 사각형 */
+    border: none !important;    /* 아웃라인/테두리선 완전 제거 */
+    outline: none !important;
+    box-shadow: 0 16px 45px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.18) !important; /* 흰색 배경 포스터 경계 구분을 위한 또렷한 3D 그림자 */
     display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
     cursor: pointer;
     user-select: none;
-    transition: transform 0.5s var(--ease-ios), opacity 0.5s var(--ease-ios), box-shadow 0.5s var(--ease-ios), border-color 0.5s var(--ease-ios);
+    will-change: transform, opacity;
+    transition: transform 0.5s var(--ease-ios), opacity 0.5s var(--ease-ios), box-shadow 0.5s var(--ease-ios) !important;
 }
 
 .archive-card:hover {
-    box-shadow: 0 28px 65px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.22) !important;
 }
 
 .archive-card.focused {
-    border-color: #d0d0d0;
-    box-shadow: 0 32px 70px rgba(0, 0, 0, 0.14);
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38), 0 8px 20px rgba(0, 0, 0, 0.24) !important;
+}
+
+.archive-card-poster {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.archive-card-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.5s var(--ease-ios);
+}
+
+.archive-card:hover .archive-card-poster img {
+    transform: scale(1.05);
+}
+
+.archive-card-base-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 36px 24px 20px 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.4) 65%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: #ffffff;
+    z-index: 2;
+    transition: opacity 0.3s ease;
 }
 
 .archive-card-year {
     font-family: var(--sans-font);
-    font-size: 3.6rem;
-    font-weight: 500;
-    color: #dedede;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #ffffff;
     letter-spacing: -0.01em;
-    transition: color 0.4s ease;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.archive-card.focused .archive-card-year {
-    color: #c4c4c4;
+.archive-card-theme-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: rgb(244, 186, 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 마우스 호버 시 카드 전체를 덮는 세련된 전시 서문/설명 팝업 오버레이 */
+.archive-card-hover-desc {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65); /* 투명도를 맑게 보정하여 포스터 비주얼 보존 */
+    backdrop-filter: blur(4px);      /* 블러를 12px -> 4px로 아주 은은하게 축소 */
+    -webkit-backdrop-filter: blur(4px);
+    padding: 28px 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.archive-card:hover .archive-card-hover-desc {
+    opacity: 1;
+    visibility: visible;
+}
+
+.hover-desc-inner {
+    max-height: 100%;
+    overflow-y: auto;
+    text-align: left;
+    padding-right: 4px;
+}
+
+.hover-year-tag {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: rgb(244, 186, 0);
+    margin-bottom: 6px;
+    display: block;
+    letter-spacing: 0.05em;
+}
+
+.hover-theme-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 14px 0;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.hover-desc-text {
+    font-size: 0.86rem;
+    line-height: 1.72;
+    color: #ffffff;
+    word-break: keep-all;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 /* Archive 하단 컨트롤 바 (화살표 버튼 간격 확정) */
@@ -1233,12 +1355,14 @@ body.archive-body {
         padding-bottom: 3rem !important;
     }
 
-    body.archive-body footer.site-footer {
-        position: relative !important;
-        bottom: auto !important;
-        margin-top: 2rem !important;
-        z-index: 100 !important;
-    }
+body.archive-body footer.site-footer {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    z-index: 10 !important;
+}
 }
 
 .mobile-br {
@@ -1446,7 +1570,7 @@ body.archive-body {
 
 .video-container-box {
     width: 100%;
-    max-width: 1060px;
+    max-width: 1200px !important;
     margin: 0 auto;
     aspect-ratio: 16 / 9;
     background-color: #dcdcdc;
@@ -1642,13 +1766,15 @@ body.archive-body {
 }
 
 /* ========================================================
-   8. 사이트 통합 푸터 바 (시안 이미지 스타일링)
+   8. 사이트 통합 푸터 바 (좌측 세로 네비게이션 바와 0px 밀착 결합)
    ======================================================== */
 footer.site-footer {
-    width: 100%;
-    background-color: rgb(244, 186, 0); /* 사이트 푸터 배경색 rgb(244, 186, 0) 적용 (요청사항) */
+    position: relative !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 0.95rem var(--site-margin) !important;
+    background-color: rgb(244, 186, 0) !important;
     color: #111111;
-    padding: 0.95rem var(--site-margin); /* 푸터 수직 상하 높이 슬림 축소 (요청사항) */
     margin-top: 5rem;
     border: 0 !important;
     border-top: 0 !important;
@@ -1656,9 +1782,18 @@ footer.site-footer {
     box-shadow: none !important;
 }
 
+@media (max-width: 768px) {
+    footer.site-footer {
+        width: 100% !important;
+        margin-left: 0 !important;
+        padding: 0.95rem var(--site-margin) !important;
+    }
+}
+
 .footer-inner-container {
-    max-width: var(--site-max-width);
-    margin: 0 auto;
+    max-width: 1200px !important; /* 순수 내부 콘텐츠 폭 1200px */
+    margin-left: auto !important;
+    margin-right: auto !important;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2242,36 +2377,46 @@ body.archive-body footer.site-footer {
     display: flex !important;
     flex-direction: row !important;
     gap: 14px !important;
-    overflow-x: scroll !important; /* 좌우 스크롤바 항상 노출 강제 */
+    overflow-x: auto !important;
     overflow-y: hidden !important;
     scroll-behavior: smooth;
-    padding: 6px 4px 14px 4px !important;
-    margin-bottom: 6px !important;
+    padding: 6px 4px 12px 4px !important;
+    margin-bottom: 4px !important;
     -webkit-overflow-scrolling: touch;
     width: 100%;
     scrollbar-width: auto !important;
-    scrollbar-color: rgb(244, 186, 0) #e0e0e0 !important;
+    scrollbar-color: rgb(244, 186, 0) transparent !important;
 }
 
+/* 스크롤바 화살표 버튼 완전 제거 */
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-button {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+/* 스크롤바 높이 (이전 두께 10px 원복) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar {
-    height: 12px !important;
+    height: 10px !important;
     display: block !important;
 }
 
+/* 회색 박스 트랙 완전 제거 (투명화) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track {
-    background: #e0e0e0 !important;
-    border-radius: 8px !important;
+    background: transparent !important;
+    border: none !important;
 }
 
+/* 주황색 스크롤 핸들 (이전 두께 원복 & 도통함) */
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb {
     background: rgb(244, 186, 0) !important;
-    border-radius: 8px !important;
-    border: 2px solid #e0e0e0 !important;
+    border-radius: 10px !important;
+    border: none !important;
     cursor: pointer !important;
 }
 
 .face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover {
-    background: #d4a000 !important;
+    background: #e5ac00 !important;
 }
 
 /* 표정 요소: 5종 정렬 행 (스크롤 완전 제거) (요청사항) */
@@ -2669,4 +2814,631 @@ body.archive-body footer.site-footer {
         padding: 10px 16px;
         font-size: 0.88rem;
     }
+}
+
+/* ========================================================
+   2. 화면 왼쪽 고정 세로형 내비게이션 바 (Side Vertical Nav)
+   ======================================================== */
+header, header.side-nav-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 70px !important;
+    height: 100vh !important;
+    background: rgb(244, 186, 0) !important;
+    border: none !important;
+    border-right: none !important;
+    outline: none !important;
+    z-index: 1000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 0 !important;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.08) !important;
+    overflow: visible !important;
+    backface-visibility: hidden !important;
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    transition: width 0.35s var(--ease-ios) !important;
+}
+
+.side-nav-logo {
+    width: 70px;
+    height: 220px;
+    background: rgb(244, 186, 0) !important; /* 로고 박스 일관된 주황/옐로우 배경 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    border: none !important;
+    border-bottom: none !important;
+    flex-shrink: 0;
+    padding: 15px 0;
+    transition: background-color 0.25s ease;
+}
+
+.vertical-logo-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 800;
+    font-size: 1.02rem;
+    letter-spacing: 0.02em;
+    color: #111111 !important; /* 로고 텍스트 검은색 타이포 */
+    white-space: nowrap;
+    transition: transform 0.25s var(--ease-ios), color 0.25s ease;
+}
+
+.side-nav-logo:hover .vertical-logo-text {
+    transform: rotate(180deg) scale(1.05);
+}
+
+nav.side-nav {
+    width: 100%;
+    overflow: visible !important;
+    flex: 1;
+}
+
+.side-nav-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+    overflow: visible !important;
+}
+
+.side-nav-item {
+    position: relative;
+    width: 100%;
+    list-style: none !important;
+    overflow: visible !important;
+}
+
+.side-nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 64px;
+    padding: 0;
+    border-radius: 0;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    background-color: rgb(244, 186, 0);
+    color: #111111;
+    border: none !important;
+    outline: none !important;
+    transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-color 0.25s ease, color 0.25s ease, padding 0.35s ease;
+    z-index: 10;
+}
+
+.nav-icon-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.nav-icon-box svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 2.3;
+    stroke: #111111;
+    transition: stroke 0.25s ease;
+}
+
+.nav-label-text {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transform: translateX(-12px);
+    transition: max-width 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease 0.05s, transform 0.3s ease 0.05s, margin 0.35s ease;
+    pointer-events: none;
+}
+
+.side-nav-link:hover,
+.side-nav-link:focus-visible {
+    width: 200px;
+    justify-content: flex-start;
+    padding: 0 20px;
+    background-color: #111111;
+    color: rgb(244, 186, 0);
+    z-index: 100;
+    box-shadow: 8px 12px 35px rgba(0, 0, 0, 0.35);
+    outline: none !important;
+    border: none !important;
+    border-radius: 0 14px 14px 0;
+    transform: none !important;
+}
+
+.side-nav-link:hover .nav-icon-box svg,
+.side-nav-link:focus-visible .nav-icon-box svg {
+    stroke: rgb(244, 186, 0);
+}
+
+.side-nav-link:hover .nav-label-text,
+.side-nav-link:focus-visible .nav-label-text {
+    max-width: 130px;
+    opacity: 1;
+    transform: translateX(0);
+    margin-left: 14px;
+}
+
+.side-nav-link.active {
+    background-color: #111111;
+    color: rgb(244, 186, 0);
+}
+.side-nav-link.active .nav-icon-box svg {
+    stroke: rgb(244, 186, 0);
+}
+
+@media (min-width: 769px) {
+    body, #main-wrapper {
+        padding-left: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* main 본문 구역만 세로 네비바 70px 비켜서도록 정직하게 오프셋 부여 */
+    main, #main-content, .guestbook-main-container, .archive-page-container {
+        padding-left: 70px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    #hero-section,
+    footer.site-footer {
+        width: calc(100% + 70px) !important;
+        margin-left: -70px !important;
+    }
+}
+
+/* About 간격 피드백 반영 (상단 패딩 288px -> 144px 반으로 축소) */
+.about-section-block {
+    padding-top: 9rem !important;
+}
+.about-intro-grid {
+    margin-bottom: 0.5rem !important;
+}
+.about-concept-text {
+    margin-bottom: 0.5rem !important;
+}
+.main-video-section {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.75rem !important; /* 동영상 하단 여백 또 반으로 축소 (0.75rem) */
+}
+.about-image-stack,
+.about-details-grid {
+    margin-top: 0.5rem !important; /* 이미지 및 크레딧 상단 여백 또 반으로 축소 (0.5rem) */
+}
+
+/* ========================================================
+   11. 방명록 페이지(Guestbook UI) 프리미엄 레이아웃 정돈 (피드백 반영)
+   ======================================================== */
+.guestbook-page-body {
+    background-color: #ffffff;
+}
+
+.guestbook-board-section {
+    width: 100%;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 110px var(--site-margin) 80px var(--site-margin);
+}
+
+.guestbook-header-container {
+    text-align: center;
+    margin-bottom: 2.8rem;
+}
+
+.guestbook-main-title {
+    font-size: 3.4rem;
+    font-weight: 800;
+    color: #111111;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.02em;
+}
+
+.guestbook-sub-desc {
+    font-size: 1.05rem;
+    color: #666666;
+    word-break: keep-all;
+    margin: 0;
+}
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.guestbook-board-section {
+    width: 100%;
+    max-width: var(--site-max-width);
+    margin: 0 auto;
+    padding: 0 var(--site-margin) 80px var(--site-margin);
+}
+
+.guestbook-stats-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #eeeeee;
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: #111111;
+}
+
+.guestbook-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
+}
+
+.guestbook-card {
+    background: #ffffff;
+    border: 2px solid #eeeeee;
+    border-radius: 20px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s var(--ease-ios), box-shadow 0.3s ease, border-color 0.25s ease;
+}
+
+.guestbook-card:hover {
+    transform: translateY(-6px);
+    border-color: #111111;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+}
+
+.guestbook-card-thumb {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f8f8f9;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+}
+
+.guestbook-sticker-img {
+    width: 85%;
+    height: 85%;
+    object-fit: contain;
+}
+
+.guestbook-card-author {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: #111111;
+}
+
+.guestbook-card-date {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 600;
+}
+
+.guestbook-card-msg {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #333333;
+    margin: 0;
+    word-break: keep-all;
+}
+
+.guestbook-like-btn {
+    background: #f5f5f5;
+    border: 1.5px solid #dddddd;
+    border-radius: 30px;
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #444444;
+    transition: all 0.2s ease;
+}
+
+.guestbook-like-btn:hover {
+    background: #111111;
+    color: rgb(244, 186, 0);
+    border-color: #111111;
+}
+
+.guestbook-like-btn.liked {
+    background: rgba(255, 56, 92, 0.1);
+    color: #ff385c;
+    border-color: #ff385c;
+}
+
+/* ========================================================
+   12. 메인 히어로 캔버스 우측 하단 고정 사각형 방명록 스티커 만들기 버튼 (피드백 반영)
+   ======================================================== */
+.hero-sticker-btn-wrapper {
+    position: absolute !important;
+    right: 40px !important;
+    bottom: 40px !important;
+    z-index: 99 !important;
+    pointer-events: auto !important;
+}
+
+#create-sticker-btn,
+.create-sticker-btn {
+    position: absolute !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 99 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    height: auto !important;
+    white-space: nowrap !important; /* 폰트가 박스 밖으로 절대로 삐쳐나가지 않도록 방지 */
+    word-break: keep-all !important;
+    padding: 16px 30px !important;
+    background-color: rgb(244, 186, 0) !important;
+    color: #111111 !important;
+    border: none !important; /* 테두리/아웃라인 완전 제거 */
+    outline: none !important;
+    border-radius: 0px !important; /* 완전 직각 사각형 적용 */
+    font-size: 1.08rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+    cursor: pointer !important;
+    box-shadow: none !important; /* 그림자 완전 제거 */
+    transition: transform 0.2s var(--ease-ios), background-color 0.2s ease, color 0.2s ease !important;
+}
+
+.create-sticker-btn .btn-label-text {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    font-size: 1.08rem !important;
+    font-weight: 800 !important;
+    color: inherit !important;
+}
+
+#create-sticker-btn:hover,
+.create-sticker-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: none !important;
+    background-color: #111111 !important;
+    color: rgb(244, 186, 0) !important;
+}
+
+#create-sticker-btn:active,
+.create-sticker-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
+}
+
+/* ========================================================
+   글로벌 페이지 트랜지션 로딩 오버레이 (Page Transition Loader)
+   ======================================================== */
+#global-page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #111111;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+    pointer-events: all;
+}
+
+#global-page-loader.loaded {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-spinner {
+    width: 44px;
+    height: 44px;
+    border: 3.5px solid rgba(244, 186, 0, 0.2);
+    border-top: 3.5px solid rgb(244, 186, 0);
+    border-radius: 50%;
+    animation: loaderSpin 0.75s linear infinite;
+}
+
+.loader-text {
+    font-family: var(--sans-font);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: rgb(244, 186, 0);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+@keyframes loaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================================
+   비디오 영역 마우스 호버(Hover) 들썩임 모션만 차단 (부드러운 스크롤 등장은 100% 유지)
+   ======================================================== */
+.video-container-box:hover {
+    transform: translateY(0) !important;
+    box-shadow: none !important;
+}
+
+/* ========================================================
+   스티커 방명록 스튜디오 한 화면(One-Screen) 정밀 피팅 & 왼쪽 정렬 라인 탭 메뉴
+   ======================================================== */
+.sticker-modal-container.large-studio-modal {
+    max-width: 620px !important;
+    width: 90% !important;
+    max-height: 90vh !important;
+    height: auto !important;
+    padding: 24px 28px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    overflow-y: auto !important; /* 잘림 현상 100% 원천 방지 */
+}
+
+/* 스티커 미리보기 스테이지 아담한 콤팩트 정밀 사이즈 (200px) */
+.sticker-canvas-stage.centered-stage {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 0 auto 10px auto !important;
+    border-radius: 16px !important;
+}
+
+.studio-tab-menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start !important;
+    gap: 20px !important;
+    margin: 0.6rem 0 0.4rem 0 !important;
+    border-bottom: 2px solid #eaeaea !important;
+    padding-bottom: 0 !important;
+    padding-left: 4px !important;
+}
+
+/* 메뉴와 선택 패널 사이 상시 노출되는 미니 파스텔 컬러 바 (배경 박스 및 테두리 100% 제거) */
+.studio-mid-color-bar {
+    width: 100%;
+    margin: 0.25rem 0 0.35rem 0;
+}
+
+.studio-mid-color-bar .color-picker-palette.rounded-box-palette {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    padding: 0;
+    background: transparent !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.studio-mid-color-bar .color-box-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.studio-mid-color-bar .color-box-btn:hover {
+    transform: scale(1.25);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.studio-mid-color-bar .color-box-btn.selected {
+    outline: 2.5px solid #111111;
+    outline-offset: 2px;
+    transform: scale(1.15);
+}
+
+.tab-menu-btn {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2.5px solid transparent !important;
+    color: #888 !important;
+    padding: 6px 2px 8px 2px !important;
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+    border-radius: 0 !important;
+    cursor: pointer !important;
+    transition: color 0.2s ease, border-color 0.2s ease !important;
+}
+
+.tab-menu-btn:hover {
+    color: #111 !important;
+    background: transparent !important;
+}
+
+.tab-menu-btn.active {
+    background: transparent !important;
+    color: #111 !important;
+    font-weight: 800 !important;
+    border-bottom: 2.5px solid rgb(244, 186, 0) !important;
+    box-shadow: none !important;
+}
+
+.studio-tab-content-container {
+    position: relative;
+    width: 100%;
+    min-height: 120px !important;
+    max-height: 160px !important;
+    overflow-y: auto !important;
+    box-sizing: border-box;
+    padding-top: 4px;
+}
+
+.studio-tab-panel {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    width: 100%;
+}
+
+.studio-tab-panel.active {
+    display: block;
+    opacity: 1;
+}
+
+.color-picker-palette.rounded-box-palette {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    background: #fafafa;
+    border-radius: 14px;
+    border: 1px solid #eaeaea;
+}
+
+.color-box-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2.5px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    cursor: pointer !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-box-btn:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+
+.color-box-btn.selected {
+    outline: 3px solid #111;
+    outline-offset: 2.5px;
+    transform: scale(1.12);
 }

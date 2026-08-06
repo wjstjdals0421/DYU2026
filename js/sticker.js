@@ -14,20 +14,28 @@
     let activeEmojiId = null;        // 현재 선택된 이모지 ID (null이면 얼굴 베이스가 색상 대상)
     let emojiIdCounter = 1;
 
-    const filterCSSMap = {
-        'mono': 'grayscale(100%) contrast(1.15)',
-        'yellow': 'grayscale(100%) sepia(100%) hue-rotate(5deg) saturate(600%)',
-        'red': 'grayscale(100%) sepia(100%) hue-rotate(310deg) saturate(700%)',
-        'blue': 'grayscale(100%) sepia(100%) hue-rotate(170deg) saturate(600%)',
-        'green': 'grayscale(100%) sepia(100%) hue-rotate(85deg) saturate(600%)',
-        'original': 'none'
+    // 스크린샷 13종 유닛 메인 시그니처 색상 맵
+    const unitSignatureColorMap = {
+        'yellow-main': 'rgb(244, 186, 0)',
+        'yellow-bright': '#ffe100',
+        'orange-warm': '#f5a623',
+        'red-spark': '#e62249',
+        'red-dark': '#9e001c',
+        'pink-soft': '#ff9ebb',
+        'blue-sky': '#0091ff',
+        'blue-deep': '#005aa7',
+        'gray-slate': '#3e505b',
+        'green-emerald': '#109d49',
+        'mint-soft': '#52b788',
+        'purple-lavender': '#9b82c3',
+        'gray-rock': '#e2e4e8'
     };
 
     // DOM 요소 캐시
     let modalOverlay, createBtn, closeBtn, cancelBtn, addBtn;
     let facePickerGrid, emojiPickerGrid, emojiCountBadge;
     let baseFaceImg, emojiLayer, activeItemTools, activeItemName, colorTargetName;
-    let scaleSlider, rotateSlider, deleteBtn, clearAllBtn, colorPalette;
+    let scaleSlider, rotateSlider, deleteBtn, clearAllBtn, colorPalette, customColorPicker;
 
     document.addEventListener('DOMContentLoaded', initStickerCreator);
 
@@ -52,11 +60,28 @@
         rotateSlider = document.getElementById('emoji-rotate-slider');
         deleteBtn = document.getElementById('emoji-delete-btn');
         clearAllBtn = document.getElementById('emoji-clear-all-btn');
+        customColorPicker = document.getElementById('sticker-custom-color-picker');
 
-        if (!createBtn || !modalOverlay) return;
+        // 0. 메뉴바 탭 전환 리스너
+        const tabBtns = document.querySelectorAll('.studio-tab-menu .tab-menu-btn');
+        const tabPanels = document.querySelectorAll('.studio-tab-panel');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTabId = btn.dataset.tab;
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabPanels.forEach(p => p.classList.remove('active'));
+
+                btn.classList.add('active');
+                const targetPanel = document.getElementById(targetTabId);
+                if (targetPanel) targetPanel.classList.add('active');
+            });
+        });
+
+        if (!modalOverlay) return;
 
         // 이벤트 리스너 바인딩
-        createBtn.addEventListener('click', openStickerModal);
+        if (createBtn) createBtn.addEventListener('click', openStickerModal);
         if (closeBtn) closeBtn.addEventListener('click', closeStickerModal);
         if (cancelBtn) cancelBtn.addEventListener('click', closeStickerModal);
         if (addBtn) addBtn.addEventListener('click', handleStickerSubmit);
@@ -68,17 +93,28 @@
         // 1. 얼굴 피커 동적 생성 (face_1 ~ face_12)
         renderFacePicker();
 
-        // 2. 이모지 피커 동적 생성 (Emoji_1 ~ Emoji_5, 6 제거)
+        // 2. 이모지 피커 동적 생성 (Emoji_1 ~ Emoji_5)
         renderEmojiPicker();
 
-        // 3. 색상 필터 스와치 바인딩 (개별 얼굴/이모지 독립 조절)
+        // 3. 색상 필터 스와치 바인딩
         colorPalette = document.getElementById('color-picker-palette');
         if (colorPalette) {
-            colorPalette.querySelectorAll('.color-box-btn, .color-swatch-btn').forEach(btn => {
+            colorPalette.querySelectorAll('.color-box-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const chosenColor = btn.dataset.color || 'mono';
-                    applyColorToSelectedTarget(chosenColor);
+                    colorPalette.querySelectorAll('.color-box-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    const colorKey = btn.dataset.color;
+                    const hexOrRgb = unitSignatureColorMap[colorKey] || 'rgb(244, 186, 0)';
+                    applyCustomHexColorToSelectedTarget(hexOrRgb);
                 });
+            });
+        }
+
+        // 커스텀 색상 피커 연동
+        if (customColorPicker) {
+            customColorPicker.addEventListener('input', (e) => {
+                const hexColor = e.target.value;
+                applyCustomHexColorToSelectedTarget(hexColor);
             });
         }
 
@@ -307,6 +343,48 @@
         updateTargetColorPaletteUI();
     }
 
+    // 직접 입력 색상 적용 (HEX)
+    function applyCustomHexColorToSelectedTarget(hexColor) {
+        // HEX to HSL 변환 후 filter 문자열 구성
+        const filterStr = hexToFilterCSS(hexColor);
+        if (activeEmojiId === null) {
+            baseFaceColorFilter = 'custom';
+            filterCSSMap['custom'] = filterStr;
+            baseFaceImg.style.filter = filterStr;
+        } else {
+            const emoji = placedEmojis.find(item => item.id === activeEmojiId);
+            if (emoji) {
+                emoji.colorFilter = 'custom_' + emoji.id;
+                filterCSSMap['custom_' + emoji.id] = filterStr;
+                applyEmojiStyle(emoji);
+            }
+        }
+        updateTargetColorPaletteUI();
+    }
+
+    function hexToFilterCSS(hex) {
+        // Hex 값을 바탕으로 부드러운 Muted HSL 변환
+        let c = hex.replace('#', '');
+        if (c.length === 3) c = c.split('').map(x => x + x).join('');
+        const num = parseInt(c, 16);
+        const r = (num >> 16) & 255;
+        const g = (num >> 8) & 255;
+        const b = num & 255;
+
+        const max = Math.max(r, g, b) / 255;
+        const min = Math.min(r, g, b) / 255;
+        let h = 0;
+        const d = max - min;
+        if (d !== 0) {
+            if (max === r / 255) h = ((g - b) / 255 / d) % 6;
+            else if (max === g / 255) h = (b - r) / 255 / d + 2;
+            else h = (r - g) / 255 / d + 4;
+            h = Math.round(h * 60);
+            if (h < 0) h += 360;
+        }
+        return `grayscale(100%) sepia(80%) hue-rotate(${h}deg) saturate(240%)`;
+    }
+
     // 선택된 타겟(얼굴 베이스 또는 개별 이모지)에 색상 필터 적용
     function applyColorToSelectedTarget(chosenColor) {
         if (activeEmojiId === null) {
@@ -345,7 +423,8 @@
 
         const imgEl = emoji.el.querySelector('img');
         if (imgEl) {
-            imgEl.style.filter = filterCSSMap[emoji.colorFilter || 'mono'];
+            const filterKey = emoji.colorFilter || 'mono';
+            imgEl.style.filter = filterCSSMap[filterKey] || filterCSSMap['mono'];
         }
     }
 
@@ -370,7 +449,7 @@
 
         applyEmojiStyle(emoji);
 
-        // 1. 바디 드래그 이동
+        // 1. 바디 드래그 이동 (캔버스 영역 내 자유 이동, 음수/확장 허용)
         let isDragging = false;
         let startX, startY, initialX, initialY;
 
@@ -393,8 +472,9 @@
             if (e.cancelable) e.preventDefault();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            emoji.x = Math.max(10, Math.min(330, initialX + (clientX - startX)));
-            emoji.y = Math.max(10, Math.min(330, initialY + (clientY - startY)));
+            // 상하좌우 무제한 자유 이동 (-50px ~ 390px)
+            emoji.x = Math.max(-50, Math.min(390, initialX + (clientX - startX)));
+            emoji.y = Math.max(-50, Math.min(390, initialY + (clientY - startY)));
             applyEmojiStyle(emoji);
         }
         function onBodyEnd() {
@@ -640,19 +720,34 @@
     // 최종 스티커 DataURL 생성 후 저장 및 2D 물리 블록 떨어뜨리기
     function exportAndSpawnSticker(canvas) {
         const dataUrl = canvas.toDataURL('image/png');
+        const authorInput = document.getElementById('sticker-author-input');
+        const messageInput = document.getElementById('sticker-message-input');
+
+        const author = authorInput ? (authorInput.value.trim() || '익명 방문자') : '익명 방문자';
+        const message = messageInput ? messageInput.value.trim() : '';
+
+        const stickerObject = {
+            dataUrl: dataUrl,
+            author: author,
+            message: message,
+            date: new Date().toLocaleDateString()
+        };
 
         const savedStickers = JSON.parse(localStorage.getItem('gsdd_custom_stickers') || '[]');
-        savedStickers.push(dataUrl);
+        savedStickers.push(stickerObject);
         localStorage.setItem('gsdd_custom_stickers', JSON.stringify(savedStickers));
 
         if (window.spawnCustomStickerBlock) {
-            window.spawnCustomStickerBlock(dataUrl);
+            window.spawnCustomStickerBlock(dataUrl, author, message);
         }
+
+        if (authorInput) authorInput.value = '';
+        if (messageInput) messageInput.value = '';
 
         closeStickerModal();
         clearAllEmojis();
 
-        showToastNotification('나만의 스티커 방명록이 메인화면에 추가되었습니다.');
+        showToastNotification(`🎉 '${author}'님의 방명록 스티커가 등록되었습니다!`);
     }
 
     function showToastNotification(msg) {
