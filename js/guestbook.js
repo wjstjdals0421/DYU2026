@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    window.renderGuestbookBoard = renderGuestbookBoard;
     renderGuestbookBoard();
 
     // 스티커 등록 성공 후 보드 자동 갱신 리스너

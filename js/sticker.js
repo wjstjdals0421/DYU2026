@@ -14,15 +14,111 @@
     let activeEmojiId = null;        // 현재 선택된 이모지 ID (null이면 얼굴 베이스가 색상 대상)
     let emojiIdCounter = 1;
 
-    // 필터 CSS 매핑 테이블
+    // 필터 CSS 매핑 테이블 (SVG Flood 필터를 이용한 100% 원색 채색 매핑)
     const filterCSSMap = {
-        'mono': 'grayscale(100%)',
-        'yellow': 'grayscale(100%) sepia(100%) hue-rotate(5deg) saturate(300%)',
-        'red': 'grayscale(100%) sepia(100%) hue-rotate(320%) saturate(300%)',
-        'blue': 'grayscale(100%) sepia(100%) hue-rotate(180%) saturate(300%)',
-        'green': 'grayscale(100%) sepia(100%) hue-rotate(90%) saturate(300%)',
-        'original': 'none'
+        'mono': 'url(#tint-mono)',
+        'yellow-main': 'url(#tint-yellow-main)',
+        'gray-rock': 'url(#tint-gray-rock)',
+        'red-spark': 'url(#tint-red-spark)',
+        'red-dark': 'url(#tint-red-dark)',
+        'yellow-bright': 'url(#tint-yellow-bright)',
+        'pink-soft': 'url(#tint-pink-soft)',
+        'blue-sky': 'url(#tint-blue-sky)',
+        'gray-slate': 'url(#tint-gray-slate)',
+        'green-emerald': 'url(#tint-green-emerald)',
+        'purple-lavender': 'url(#tint-purple-lavender)',
+        'mint-soft': 'url(#tint-mint-soft)',
+        'blue-deep': 'url(#tint-blue-deep)',
+        'orange-warm': 'url(#tint-orange-warm)'
     };
+
+    // 이미지의 알파값을 마스킹하여 100% 지정한 원색으로 칠하는 SVG 필터 생성 헬퍼
+    function createSvgFilters() {
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("data-sticker-filters", "true");
+        svg.style.position = "absolute";
+        svg.style.width = "0";
+        svg.style.height = "0";
+        svg.style.pointerEvents = "none";
+        
+        const defs = document.createElementNS(svgNS, "defs");
+        
+        for (const [colorKey, colors] of Object.entries(unitSignatureDualColorMap)) {
+            const filter = document.createElementNS(svgNS, "filter");
+            filter.setAttribute("id", `tint-${colorKey}`);
+            
+            const feFlood = document.createElementNS(svgNS, "feFlood");
+            feFlood.setAttribute("flood-color", colors.fill);
+            feFlood.setAttribute("result", "flood");
+            
+            const feComposite = document.createElementNS(svgNS, "feComposite");
+            feComposite.setAttribute("in", "flood");
+            feComposite.setAttribute("in2", "SourceAlpha");
+            feComposite.setAttribute("operator", "in");
+            
+            filter.appendChild(feFlood);
+            filter.appendChild(feComposite);
+            defs.appendChild(filter);
+        }
+        
+        const monoFilter = document.createElementNS(svgNS, "filter");
+        monoFilter.setAttribute("id", "tint-mono");
+        const feColorMatrix = document.createElementNS(svgNS, "feColorMatrix");
+        feColorMatrix.setAttribute("type", "matrix");
+        feColorMatrix.setAttribute("values", "0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 1 0");
+        monoFilter.appendChild(feColorMatrix);
+        defs.appendChild(monoFilter);
+        
+        svg.appendChild(defs);
+        document.body.appendChild(svg);
+    }
+
+    function createCustomSvgFilter(hexColor) {
+        const svgNS = "http://www.w3.org/2000/svg";
+        const filterId = `tint-custom-${hexColor.replace('#', '')}`;
+        if (document.getElementById(filterId)) return filterId;
+        
+        let svg = document.querySelector('body > svg[data-sticker-filters]');
+        if (!svg) {
+            svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("data-sticker-filters", "true");
+            svg.style.position = "absolute";
+            svg.style.width = "0";
+            svg.style.height = "0";
+            svg.style.pointerEvents = "none";
+            document.body.appendChild(svg);
+        }
+        
+        let defs = svg.querySelector('defs');
+        if (!defs) {
+            defs = document.createElementNS(svgNS, "defs");
+            svg.appendChild(defs);
+        }
+        
+        const filter = document.createElementNS(svgNS, "filter");
+        filter.setAttribute("id", filterId);
+        
+        const feFlood = document.createElementNS(svgNS, "feFlood");
+        feFlood.setAttribute("flood-color", hexColor);
+        feFlood.setAttribute("result", "flood");
+        
+        const feComposite = document.createElementNS(svgNS, "feComposite");
+        feComposite.setAttribute("in", "flood");
+        feComposite.setAttribute("in2", "SourceAlpha");
+        feComposite.setAttribute("operator", "in");
+        
+        filter.appendChild(feFlood);
+        filter.appendChild(feComposite);
+        defs.appendChild(filter);
+        
+        return filterId;
+    }
+
+    function hexToFilterCSS(hexColor) {
+        const filterId = createCustomSvgFilter(hexColor);
+        return `url(#${filterId})`;
+    }
 
     // 이미지 캡처 속 13종 유닛 실물 [베이스 컬러(Fill) & 아웃라인/표정 컬러(Stroke)] 1:1 정밀 매칭 맵
     const unitSignatureDualColorMap = {
@@ -50,6 +146,7 @@
     document.addEventListener('DOMContentLoaded', initStickerCreator);
 
     function initStickerCreator() {
+        createSvgFilters(); // 동적 SVG 채색 필터 주입
         modalOverlay = document.getElementById('sticker-modal-overlay');
         createBtn = document.getElementById('create-sticker-btn');
         closeBtn = document.getElementById('sticker-modal-close');
@@ -87,9 +184,28 @@
                 const targetPanel = document.getElementById(targetTabId);
                 if (targetPanel) targetPanel.classList.add('active');
 
-                // 방명록 메시지 탭에서는 컬러바 숨김
+                // 방명록 메시지 탭에서는 컬러바를 완전히 숨기고(display: none), 패널 컨테이너 높이를 보정하여 여백 제거 및 높이 고정 동시 달성
+                const tabContentContainer = document.querySelector('.studio-tab-content-container');
                 if (midColorBar) {
                     midColorBar.style.display = (targetTabId === 'message-tab') ? 'none' : '';
+                }
+                if (tabContentContainer) {
+                    if (targetTabId === 'message-tab') {
+                        tabContentContainer.style.setProperty('min-height', '162px', 'important');
+                        tabContentContainer.style.setProperty('max-height', '162px', 'important');
+                    } else {
+                        tabContentContainer.style.removeProperty('min-height');
+                        tabContentContainer.style.removeProperty('max-height');
+                    }
+                }
+
+                // 탭 진입에 따른 색상 변경 타겟 자동 매칭 (표정 탭 = 최근 이모지 자동 선택, 얼굴 탭 = 얼굴 베이스 자동 선택)
+                if (targetTabId === 'expression-tab') {
+                    if (activeEmojiId === null && placedEmojis.length > 0) {
+                        selectEmoji(placedEmojis[placedEmojis.length - 1].id);
+                    }
+                } else if (targetTabId === 'face-tab') {
+                    selectEmoji(null);
                 }
             });
         });
@@ -120,7 +236,7 @@
                     colorPalette.querySelectorAll('.color-box-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     const colorKey = btn.dataset.color;
-                    applyDualColorToFaceImg(colorKey);
+                    applyColorToSelectedTarget(colorKey);
                 });
             });
         }
@@ -201,11 +317,18 @@
 
         if (managerClearAllBtn) {
             managerClearAllBtn.addEventListener('click', () => {
-                if (confirm('메인 화면에 추가된 모든 커스텀 방명록 스티커를 전체 삭제하시겠습니까?')) {
+                if (confirm('메인 화면 및 방명록에 등록된 모든 커스텀 방명록 스티커를 전체 삭제하시겠습니까?')) {
                     if (window.removeAllCustomStickerBlocks) {
                         window.removeAllCustomStickerBlocks();
                     }
+                    localStorage.removeItem('gsdd_custom_stickers');
                     renderStickerManagerGrid();
+                    
+                    // 만약 방명록 페이지라면 방명록 보드도 실시간 동기화 갱신
+                    if (typeof window.renderGuestbookBoard === 'function') {
+                        window.renderGuestbookBoard();
+                    }
+                    
                     showToastNotification('모든 스티커가 삭제되었습니다.');
                 }
             });
@@ -361,14 +484,25 @@
     }
 
     // 직접 입력 색상 적용 (HEX)
+    // 색상을 지정된 비율만큼 어둡게 만들어 테두리 색상(Stroke)으로 자동 부여하는 헬퍼
+    function darkenColor(hex, percent) {
+        let num = parseInt(hex.replace("#",""), 16),
+            amt = Math.round(2.55 * percent),
+            R = (num >> 16) - amt,
+            G = (num >> 8 & 0x00FF) - amt,
+            B = (num & 0x0000FF) - amt;
+        return "#" + (0x1000000 + (R<0?0:R>255?255:R)*0x10000 + (G<0?0:G>255?255:G)*0x100 + (B<0?0:B>255?255:B)).toString(16).slice(1);
+    }
+
+    // 직접 입력 색상 적용 (HEX)
     function applyCustomHexColorToSelectedTarget(hexColor) {
-        // HEX to HSL 변환 후 filter 문자열 구성
-        const filterStr = hexToFilterCSS(hexColor);
         if (activeEmojiId === null) {
             baseFaceColorFilter = 'custom';
-            filterCSSMap['custom'] = filterStr;
-            baseFaceImg.style.filter = filterStr;
+            const fill = hexColor;
+            const stroke = darkenColor(hexColor, 20); // 20% 어두운 톤의 톤온톤 테두리 계산
+            applyCustomColorToFaceImg(fill, stroke);
         } else {
+            const filterStr = hexToFilterCSS(hexColor);
             const emoji = placedEmojis.find(item => item.id === activeEmojiId);
             if (emoji) {
                 emoji.colorFilter = 'custom_' + emoji.id;
@@ -379,11 +513,25 @@
         updateTargetColorPaletteUI();
     }
 
-    // Canvas Pure Color Tinting: 오프스크린 캔버스를 사용하여 CSS 필터 왜곡 없이 100% 지정 원색 그대로 칠하는 헬퍼
-    function getCanvasTintedFilter(targetHexOrRgb) {
-        // SVG Data URI 및 Canvas Blend Mode 조합으로 100% 순수 원색 칠 생성
-        // targetHexOrRgb 색상을 100% 원본 그대로 표현
-        return `drop-shadow(0px 0px 0px ${targetHexOrRgb})`;
+    // 사용자 지정 커스텀 색상(HEX)을 SVG 패스 필터로 다이렉트 주입
+    function applyCustomColorToFaceImg(fill, stroke) {
+        if (!baseFaceImg) return;
+        const faceSrc = `./unit/face/face_${currentFaceId}.svg`;
+        fetch(faceSrc)
+            .then(res => res.text())
+            .then(svgText => {
+                const coloredSvg = svgText
+                    .replace(/CLASSIC_FILL/g, fill)
+                    .replace(/CLASSIC_STROKE/g, stroke);
+                
+                const blob = new Blob([coloredSvg], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                baseFaceImg.src = url;
+                baseFaceImg.style.filter = 'none';
+            })
+            .catch(err => {
+                console.error("Failed to load or color custom face SVG:", err);
+            });
     }
 
     // 선택된 타겟(얼굴 베이스 또는 개별 이모지)에 색상 필터 적용
@@ -391,7 +539,7 @@
         if (activeEmojiId === null) {
             // 1. 얼굴 베이스 색상 변경
             baseFaceColorFilter = chosenColor;
-            baseFaceImg.style.filter = filterCSSMap[chosenColor] || 'none';
+            applyDualColorToFaceImg(chosenColor);
         } else {
             // 2. 선택된 이모지 색상 변경
             const emoji = placedEmojis.find(item => item.id === activeEmojiId);
@@ -417,69 +565,27 @@
         });
     }
 
-    function parseHexToRGB(hex) {
-        let c = hex.replace('#', '');
-        if (c.length === 3) c = c.split('').map(x => x + x).join('');
-        const num = parseInt(c, 16);
-        return {
-            r: (num >> 16) & 255,
-            g: (num >> 8) & 255,
-            b: num & 255
-        };
-    }
-
+    // 100% 벡터 SVG의 내부 fill 및 stroke 속성을 직접 수정하여 렌더링 (화질 저하 및 번짐 0% 소멸)
     function applyDualColorToFaceImg(colorKey) {
         if (!baseFaceImg) return;
         const dualColor = unitSignatureDualColorMap[colorKey] || { fill: '#F59E0B', stroke: '#C26A00' };
+        const faceSrc = `./unit/face/face_${currentFaceId}.svg`;
 
-        const faceSrc = `./unit/face/face_${currentFaceId}.png`;
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const w = img.naturalWidth || 250;
-            const h = img.naturalHeight || 250;
-            canvas.width = w;
-            canvas.height = h;
-
-            ctx.drawImage(img, 0, 0, w, h);
-            const imgData = ctx.getImageData(0, 0, w, h);
-            const data = imgData.data;
-
-            const fRGB = parseHexToRGB(dualColor.fill);
-            const sRGB = parseHexToRGB(dualColor.stroke);
-
-            for (let i = 0; i < data.length; i += 4) {
-                const a = data[i + 3];
-                if (a < 10) continue;
-
-                const r = data[i], g = data[i + 1], b = data[i + 2];
-                const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
-
-                if (lum > 0.45) {
-                    // 1. 유닛 몸통 (Fill Color) -> 선택된 맑은 베이스 원색
-                    data[i] = fRGB.r;
-                    data[i + 1] = fRGB.g;
-                    data[i + 2] = fRGB.b;
-                } else if (lum > 0.15) {
-                    // 2. 유닛 테두리 (Stroke Color) -> 선택된 톤-온-톤 어두운 원색
-                    data[i] = sRGB.r;
-                    data[i + 1] = sRGB.g;
-                    data[i + 2] = sRGB.b;
-                } else {
-                    // 3. 유닛 표정 (눈/코/입) -> 테두리와 뭉개지지 않고 선명하게 노출되는또렷한 딥 블랙 (#1a1a1a)
-                    data[i] = 26;
-                    data[i + 1] = 26;
-                    data[i + 2] = 26;
-                }
-            }
-
-            ctx.putImageData(imgData, 0, 0);
-            baseFaceImg.src = canvas.toDataURL();
-            baseFaceImg.style.filter = 'none'; // 억지 CSS 필터 0% 완전 제거
-        };
-        img.src = faceSrc;
+        fetch(faceSrc)
+            .then(res => res.text())
+            .then(svgText => {
+                const coloredSvg = svgText
+                    .replace(/CLASSIC_FILL/g, dualColor.fill)
+                    .replace(/CLASSIC_STROKE/g, dualColor.stroke);
+                
+                const blob = new Blob([coloredSvg], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                baseFaceImg.src = url;
+                baseFaceImg.style.filter = 'none';
+            })
+            .catch(err => {
+                console.error("Failed to load or color face SVG:", err);
+            });
     }
 
     function applyEmojiStyle(emoji) {
@@ -732,15 +838,11 @@
         canvas.height = size;
         const ctx = canvas.getContext('2d');
 
-        const baseImg = new Image();
-        baseImg.src = `./unit/face/face_${currentFaceId}.png`;
-
         function drawAllAndExport() {
             try {
-                // 1. 얼굴 베이스 aspect-ratio 유지 후 그리기 (찌그러짐 100% 방지)
+                // 1. 얼굴 베이스 aspect-ratio 유지 후 그리기 (지연이나 흐려짐 없이 현재 화면에 보이는 이미지를 즉시 동기화)
                 ctx.save();
-                ctx.filter = filterCSSMap[baseFaceColorFilter] || 'none';
-                drawImageContain(ctx, baseImg, 0, 0, size, size);
+                drawImageContain(ctx, baseFaceImg, 0, 0, size, size);
                 ctx.restore();
 
                 if (placedEmojis.length === 0) {
@@ -802,12 +904,8 @@
             }
         }
 
-        if (baseImg.complete) {
-            drawAllAndExport();
-        } else {
-            baseImg.onload = drawAllAndExport;
-            baseImg.onerror = drawAllAndExport;
-        }
+        // baseFaceImg가 이미 완벽하게 로딩되어 있으므로 즉시 동기 실행
+        drawAllAndExport();
     }
 
     // 최종 스티커 DataURL 생성 후 저장 및 2D 물리 블록 떨어뜨리기
@@ -920,6 +1018,12 @@
                 });
                 localStorage.setItem('gsdd_custom_stickers', JSON.stringify(updated));
                 renderStickerManagerGrid();
+                
+                // 만약 방명록 페이지라면 방명록 보드도 실시간 동기화 갱신
+                if (typeof window.renderGuestbookBoard === 'function') {
+                    window.renderGuestbookBoard();
+                }
+                
                 showToastNotification(`'${authorName}' 스티커가 삭제되었습니다.`);
             });
 

@@ -1687,7 +1687,7 @@ body.archive-body {
     max-width: 1000px !important;
     margin-left: auto !important;
     margin-right: auto !important;
-    margin-top: 120px !important;
+    margin-top: 40px !important;
     margin-bottom: 3rem !important;
     visibility: visible !important;
     opacity: 1 !important;
@@ -2334,8 +2334,9 @@ body.archive-body footer.site-footer {
     border-radius: 10px;
 }
 
-/* 얼굴 템플릿: 명확히 표시되는 12px 좌우 스크롤바 (요청사항) */
-.face-picker-grid.horizontal-scroll-picker {
+/* 얼굴 템플릿 & 표정 요소: 명확히 표시되는 12px 좌우 스크롤바 */
+.face-picker-grid.horizontal-scroll-picker,
+.emoji-picker-grid.horizontal-scroll-picker {
     display: flex !important;
     flex-direction: row !important;
     gap: 14px !important;
@@ -2350,39 +2351,29 @@ body.archive-body footer.site-footer {
     scrollbar-color: rgb(244, 186, 0) #e0e0e0 !important;
 }
 
-.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar {
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar,
+.emoji-picker-grid.horizontal-scroll-picker::-webkit-scrollbar {
     height: 12px !important;
     display: block !important;
 }
 
-.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track {
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track,
+.emoji-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-track {
     background: #e0e0e0 !important;
     border-radius: 8px !important;
 }
 
-.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb {
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb,
+.emoji-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb {
     background: rgb(244, 186, 0) !important;
     border-radius: 8px !important;
     border: 2px solid #e0e0e0 !important;
     cursor: pointer !important;
 }
 
-.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover {
+.face-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover,
+.emoji-picker-grid.horizontal-scroll-picker::-webkit-scrollbar-thumb:hover {
     background: #d4a000 !important;
-}
-
-/* 표정 요소: 5종 정렬 행 (스크롤 완전 제거) (요청사항) */
-.emoji-picker-grid.no-scroll-picker {
-    display: flex !important;
-    flex-direction: row !important;
-    gap: 14px !important;
-    overflow: visible !important;
-    padding: 6px 4px !important;
-    width: 100%;
-}
-
-.emoji-picker-grid.no-scroll-picker::-webkit-scrollbar {
-    display: none !important;
 }
 
 /* 모든 썸네일 카드의 크기 (68px x 68px) 및 패딩/모양 100% 동일 통일 */
@@ -2941,7 +2932,7 @@ nav.side-nav {
 body {
     padding-left: 70px;
 }
-
+padding-top: 
 /* full-width 요소: body padding 상쇄 */
 #hero-section,
 .archive-page-container {
@@ -2965,7 +2956,7 @@ body {
 
 /* About 간격 피드백 반영 */
 .about-section-block {
-    padding-top: 4rem !important;
+    padding-top: 7rem !important;
     padding-bottom: 6rem !important;
 }
 .about-intro-grid {
@@ -2979,7 +2970,7 @@ body {
     margin-bottom: 0.75rem !important; /* 동영상 하단 여백 또 반으로 축소 (0.75rem) */
 }
 .about-image-stack {
-    margin-top: 120px !important;
+    margin-top: 30px !important;
 }
 .about-details-grid {
     margin-top: 0.5rem !important;
@@ -3491,10 +3482,16 @@ body.guestbook-page-body footer.site-footer {
 
 /* 방명록 메시지 탭 입력 스타일 */
 #message-tab .sticker-user-info-inputs {
-    padding: 8px 0;
+    padding: 12px 0 0 0 !important;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+}
+
+#message-tab .input-row-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+    width: 100% !important;
 }
 
 .studio-text-input {

@@ -95,14 +95,14 @@
                         <span class="btn-label-text">스티커 관리</span>
                     </button>
                     <button id="create-sticker-btn" class="create-sticker-btn text-button" title="방명록 스티커 만들기" aria-label="방명록 스티커 만들기">
-                        <span class="btn-label-text">방명록 스티커 만들기</span>
+                        <span class="btn-label-text">방명록</span>
                     </button>
                 </div>
             </section>
 
             <!-- 2. 어바웃 섹션 (통합: 대표 타이틀, 기획 소개, 전시 비디오, 이미지 스택, 크레딧) -->
             <section id="about" class="about-section-block" style="padding-top: 5rem;">
-                <div class="about-intro-text reveal-on-scroll is-visible" style="text-align: center; margin-bottom: 2.5rem;">
+                <div class="about-intro-text reveal-on-scroll is-visible" style="text-align: center; margin-bottom: 6rem;">
                     <h2 class="about-main-title" style="font-size: 3.6rem; font-weight: 800; color: #111111; margin-bottom: 1.5rem;">Finding Balance In ___</h2>
                     <div class="about-concept-text" style="max-width: 800px; margin: 0 auto 2.5rem auto;">
                         <p>&lsquo;Finding Balance In ___&rsquo;은 삶의 다양한 영역에서 자신만의 균형을 찾아가는 과정을 의미합니다.</p>
@@ -130,8 +130,7 @@
                     <div class="about-img-desc-text">
                         <p>&lsquo;Finding Balance In ___&rsquo;은 지난 4년간의 과정 속에서 느낀 다양한 감정들이 균형을 잡고 단단한 축을 세워</p>
                         <p>자신에게 맞는 중심과 균형을 찾아나가는 과정을 나타낸 주제입니다.</p>
-                        <p>이에 따라 다양한 감정들을 추상화한 그래픽과 표정으로 캐릭터를 만들고,</p>
-                        <p>이 캐릭터들이 아슬아슬하게 중심을 잡고 균형을 이루는 모습을 포스터로 나타냈습니다.</p>
+                        <p>이에 따라 다양한 감정들을 추상화한 그래픽과 표정으로 캐릭터를 만들었습니다.</p>
                     </div>
                     <img src="./about/img/about_2.png" alt="About Image 2" class="about-full-img">
                     <div class="about-img-desc-text">
@@ -250,7 +249,7 @@
                 <!-- 상단: 중앙 배치된 미리보기 스테이지 & 액션 버튼 -->
                 <div class="studio-center-section">
                     <div class="sticker-canvas-stage large-stage centered-stage" id="sticker-canvas-stage">
-                        <img id="sticker-base-face" src="./unit/face/face_1.png" alt="Base Face" />
+                        <img id="sticker-base-face" src="./unit/face/face_1.svg" alt="Base Face" />
                         <div id="sticker-emoji-layer" class="sticker-emoji-layer"></div>
                     </div>
 
@@ -262,12 +261,12 @@
 
                 <!-- 중앙: 커스텀 메뉴바 탭 (얼굴 모양 / 표정 / 메시지 작성) -->
                 <div class="studio-tab-menu">
-                    <button type="button" class="tab-menu-btn active" data-tab="face-tab">😃 유닛 모양</button>
-                    <button type="button" class="tab-menu-btn" data-tab="expression-tab">😊 표정</button>
-                    <button type="button" class="tab-menu-btn" data-tab="message-tab">📝 방명록 메시지</button>
+                    <button type="button" class="tab-menu-btn active" data-tab="face-tab">유닛</button>
+                    <button type="button" class="tab-menu-btn" data-tab="expression-tab">표정</button>
+                    <button type="button" class="tab-menu-btn" data-tab="message-tab">방명록 메시지</button>
                 </div>
 
-                <!-- 🎨 메뉴와 선택 패널 사이 상시 배치되는 시그니처 대표 컬러 바 -->
+                <!-- 메뉴와 선택 패널 사이 상시 배치되는 시그니처 대표 컬러 바 -->
                 <div class="studio-mid-color-bar">
                     <div class="color-picker-palette rounded-box-palette" id="color-picker-palette">
                         <button type="button" class="color-box-btn selected" data-color="yellow-main" style="background-color: rgb(244, 186, 0);" title="시그니처 주황 옐로우"></button>
@@ -295,7 +294,7 @@
 
                     <!-- 2. 표정 요소 선택 탭 -->
                     <div class="studio-tab-panel" id="expression-tab">
-                        <div class="emoji-picker-grid no-scroll-picker" id="emoji-picker-grid"></div>
+                        <div class="emoji-picker-grid horizontal-scroll-picker" id="emoji-picker-grid"></div>
                     </div>
 
                     <!-- 3. 방명록 작성 탭 -->

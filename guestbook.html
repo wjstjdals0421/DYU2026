@@ -90,6 +90,7 @@
 
                 <div class="guestbook-stats-bar">
                     <span id="guestbook-total-count">총 0개의 방명록 메시지</span>
+                    <button type="button" class="sticker-btn manage-stickers-btn" id="manage-stickers-btn" style="display: none;">스티커 관리</button>
                 </div>
 
 
@@ -139,7 +140,7 @@
                 <!-- 상단: 중앙 배치된 미리보기 스테이지 & 액션 버튼 -->
                 <div class="studio-center-section">
                     <div class="sticker-canvas-stage large-stage centered-stage" id="sticker-canvas-stage">
-                        <img id="sticker-base-face" src="./unit/face/face_1.png" alt="Base Face" />
+                        <img id="sticker-base-face" src="./unit/face/face_1.svg" alt="Base Face" />
                         <div id="sticker-emoji-layer" class="sticker-emoji-layer"></div>
                     </div>
 
@@ -184,7 +185,7 @@
 
                     <!-- 2. 표정 요소 선택 탭 -->
                     <div class="studio-tab-panel" id="expression-tab">
-                        <div class="emoji-picker-grid no-scroll-picker" id="emoji-picker-grid"></div>
+                        <div class="emoji-picker-grid horizontal-scroll-picker" id="emoji-picker-grid"></div>
                     </div>
 
                     <!-- 3. 방명록 작성 탭 -->
@@ -197,6 +198,24 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 개발자 전용 커스텀 스티커 관리 모달 팝업 -->
+    <div id="sticker-manager-overlay" class="sticker-modal-overlay">
+        <div class="sticker-modal-container manager-modal">
+            <button class="sticker-close-btn" id="sticker-manager-close">&times;</button>
+            <div class="sticker-modal-header">
+                <h3>방명록 스티커 관리</h3>
+                <p>생성된 스티커를 개별 또는 전체 삭제할 수 있습니다.</p>
+            </div>
+            <div class="manager-modal-body">
+                <div class="manager-action-top">
+                    <span id="manager-sticker-count">총 0개</span>
+                    <button type="button" class="tool-action-btn clear-all-danger-btn" id="manager-clear-all-btn">전체 삭제</button>
+                </div>
+                <div class="manager-sticker-grid" id="manager-sticker-grid"></div>
             </div>
         </div>
     </div>

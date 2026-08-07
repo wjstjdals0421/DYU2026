@@ -79,27 +79,42 @@ document.addEventListener('DOMContentLoaded', () => {
               Common = Matter.Common,
               Events = Matter.Events;
 
-        // Matter.js fromVertices 전용 poly-decomp 무적 래퍼 (A.removeCollinearPoints TypeError 100% 완전 소멸)
+        // Matter.js fromVertices 전용 poly-decomp 무적 래퍼 (A.removeCollinearPoints TypeError 및 makeCCW winding order 100% 완전 소멸)
         const origDecomp = window.decomp || (typeof decomp !== 'undefined' ? decomp : {});
         const safeDecomp = {
-            decomp: (origDecomp.decomp || (origDecomp.Polygon ? origDecomp.Polygon.decomp : null) || function(poly) { return [poly]; }),
-            quickDecomp: (origDecomp.quickDecomp || (origDecomp.Polygon ? origDecomp.Polygon.quickDecomp : null) || function(poly) { return [poly]; }),
-            isDegen: (origDecomp.isDegen || (origDecomp.Polygon ? origDecomp.Polygon.isDegen : null) || function() { return false; }),
-            makeCCW: (origDecomp.makeCCW || (origDecomp.Polygon ? origDecomp.Polygon.makeCCW : null) || function(poly) { return true; }),
-            removeCollinearPoints: (origDecomp.removeCollinearPoints || (origDecomp.Polygon ? origDecomp.Polygon.removeCollinearPoints : null) || function(poly) { return poly; })
+            decomp: origDecomp.decomp || (origDecomp.Polygon ? origDecomp.Polygon.decomp : null) || function(poly) { return [poly]; },
+            quickDecomp: origDecomp.quickDecomp || (origDecomp.Polygon ? origDecomp.Polygon.quickDecomp : null) || function(poly) { return [poly]; },
+            isDegen: function(vertices) {
+                if (typeof origDecomp.isDegen === 'function') return origDecomp.isDegen(vertices);
+                return vertices.length < 3;
+            },
+            makeCCW: function(vertices) {
+                if (typeof origDecomp.makeCCW === 'function') return origDecomp.makeCCW(vertices);
+                if (Matter.Vertices && typeof Matter.Vertices.clockwise === 'function') {
+                    if (Matter.Vertices.clockwise(vertices)) {
+                        vertices.reverse();
+                        return true;
+                    }
+                }
+                return false;
+            },
+            removeCollinearPoints: function(vertices, threshold) {
+                if (typeof origDecomp.removeCollinearPoints === 'function') return origDecomp.removeCollinearPoints(vertices, threshold);
+                return vertices;
+            }
         };
         window.decomp = safeDecomp;
         if (Common && typeof Common.setDecomp === 'function') {
             Common.setDecomp(safeDecomp);
         }
-
+ 
         const width = heroSection.clientWidth || window.innerWidth;
         const height = heroSection.clientHeight || window.innerHeight;
-
+ 
         const engine = Engine.create({
             gravity: { x: 0, y: 1.1 }
         });
-
+ 
         const render = Render.create({
             canvas: canvas,
             engine: engine,
@@ -112,24 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 showAngleIndicator: false
             }
         });
-
+ 
         Render.run(render);
         const runner = Runner.create();
         Runner.run(runner, engine);
-
+ 
         // 눈으로 직접 대조 디버깅 (H키 누르면 핫핑크 윤곽선 토글)
         let isHitboxVisible = false;
-
+ 
         Events.on(render, 'afterRender', () => {
             if (!isHitboxVisible) return;
             const ctx = render.context;
             if (!ctx) return;
             const bodies = Composite.allBodies(engine.world);
-
+ 
             ctx.save();
             bodies.forEach(body => {
                 if (!body || body.isStatic) return;
-
+ 
                 const drawPartVertices = (verts) => {
                     if (!verts || verts.length === 0) return;
                     ctx.beginPath();
@@ -142,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.strokeStyle = '#ff0055';
                     ctx.stroke();
                 };
-
+ 
                 if (body.parts && body.parts.length > 1) {
                     for (let p = 1; p < body.parts.length; p++) {
                         drawPartVertices(body.parts[p].vertices);
@@ -153,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             ctx.restore();
         });
-
+ 
         window.addEventListener('keydown', (e) => {
             const activeEl = document.activeElement;
             if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable)) {
@@ -163,14 +178,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 isHitboxVisible = !isHitboxVisible;
             }
         });
-
+ 
         const wallOptions = { isStatic: true, render: { visible: false } };
         const ground = Bodies.rectangle(width / 2, height + 40, width * 2, 80, wallOptions);
-        const navOffset = (window.innerWidth > 768) ? 70 : 0;
+        const navOffset = 0; // 캔버스가 이미 사이드바 우측에 있으므로 오프셋 0으로 처리 (보이지 않는 벽 버그 해결)
         const leftWall = Bodies.rectangle(navOffset - 40, height / 2, 80, height * 2, wallOptions);
         const rightWall = Bodies.rectangle(width + 40, height / 2, 80, height * 2, wallOptions);
-
+ 
         Composite.add(engine.world, [ground, leftWall, rightWall]);
+
+        window.addEventListener('resize', () => {
+            const newW = heroSection.clientWidth || window.innerWidth;
+            const newH = heroSection.clientHeight || window.innerHeight;
+
+            if (newW <= 0 || newH <= 0) return;
+
+            render.canvas.width = newW;
+            render.canvas.height = newH;
+            render.options.width = newW;
+            render.options.height = newH;
+
+            const currentNavOffset = 0;
+            Matter.Body.setPosition(ground, { x: newW / 2, y: newH + 40 });
+            Matter.Body.setPosition(leftWall, { x: currentNavOffset - 40, y: newH / 2 });
+            Matter.Body.setPosition(rightWall, { x: newW + 40, y: newH / 2 });
+        });
 
         const mouse = Mouse.create(render.canvas);
         const mouseConstraint = MouseConstraint.create(engine, {
@@ -467,7 +499,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hitboxW = bodyW * 0.88;
             const hitboxH = bodyH * 0.88;
 
-            const navOffset = (window.innerWidth > 768) ? 70 : 0;
+            const navOffset = 0;
             const availableW = Math.max(window.innerWidth - navOffset, 320);
             const minX = navOffset + (availableW * 0.12);
             const maxX = navOffset + (availableW * 0.88);
@@ -481,16 +513,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (Matter.Vertices && typeof Matter.Vertices.scale === 'function') {
                         Matter.Vertices.scale(cloned, finalSpriteScale, finalSpriteScale, { x: 0, y: 0 });
                     }
+                    
+                    // 정합성이 깨지지 않도록 정밀한 외곽 볼록 껍질(Convex Hull)을 계산
+                    let hull = Matter.Vertices.hull(cloned);
+                    
                     if (Matter.Vertices && typeof Matter.Vertices.centre === 'function') {
-                        Matter.Vertices.centre(cloned);
+                        Matter.Vertices.centre(hull);
                     }
+                    
+                    // CCW 반시계 방향 winding 보정
                     if (Matter.Vertices && typeof Matter.Vertices.clockwise === 'function') {
-                        if (!Matter.Vertices.clockwise(cloned)) {
-                            cloned.reverse();
+                        if (Matter.Vertices.clockwise(hull)) {
+                            hull.reverse();
                         }
                     }
-
-                    block = Bodies.fromVertices(spawnX, spawnY, [cloned], {
+                    
+                    block = Bodies.fromVertices(spawnX, spawnY, [hull], {
                         restitution: 0.005,
                         friction: 0.95,
                         frictionAir: 0.03,
@@ -505,12 +543,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                 } catch (e) {
-                    console.warn('fromVertices fallback to hull:', e);
-                    const hullVerts = Matter.Vertices.hull(unit.vertices.map(v => ({ x: v.x, y: v.y })));
-                    Matter.Vertices.scale(hullVerts, finalSpriteScale, finalSpriteScale, { x: 0, y: 0 });
-                    Matter.Vertices.centre(hullVerts);
-
-                    block = Bodies.fromVertices(spawnX, spawnY, [hullVerts], {
+                    console.warn('Convex hull physics creation failed, fallback to rectangle:', e);
+                    block = Bodies.rectangle(spawnX, spawnY, hitboxW, hitboxH, {
+                        chamfer: { radius: Math.min(hitboxW, hitboxH) * 0.20 },
                         restitution: 0.005,
                         friction: 0.95,
                         frictionAir: 0.03,
@@ -543,6 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
+            console.log(`[Physics] Spawned block: idx=${unitIdx}, spawnX=${spawnX.toFixed(1)}, spawnY=${spawnY.toFixed(1)}, pos=(${block.position.x.toFixed(1)}, ${block.position.y.toFixed(1)})`);
             Matter.Body.setAngularVelocity(block, (Math.random() - 0.5) * 0.06);
             Composite.add(engine.world, block);
         }
@@ -552,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const tempImg = new Image();
             tempImg.onload = function () {
-                const navOffset = (window.innerWidth > 768) ? 70 : 0;
+                const navOffset = 0;
                 const availableW = width - navOffset;
                 const minX = navOffset + (availableW * 0.10);
                 const maxX = navOffset + (availableW * 0.90);
@@ -591,6 +627,62 @@ document.addEventListener('DOMContentLoaded', () => {
             tempImg.src = imgDataUrl;
         };
 
+        window.removeSingleCustomStickerBlock = function (imgDataUrl) {
+            const bodies = Composite.allBodies(engine.world);
+            const target = bodies.find(body => {
+                return body.render && body.render.sprite && body.render.sprite.texture === imgDataUrl;
+            });
+            if (target) {
+                Composite.remove(engine.world, target);
+            }
+        };
+
+        window.removeAllCustomStickerBlocks = function () {
+            const bodies = Composite.allBodies(engine.world);
+            bodies.forEach(body => {
+                if (body.render && body.render.sprite && body.render.sprite.texture && (body.render.sprite.texture.startsWith('data:image/') || body.render.sprite.texture.includes('face_'))) {
+                    Composite.remove(engine.world, body);
+                }
+            });
+        };
+
+        function dropSavedCustomStickers() {
+            try {
+                const rawStickers = localStorage.getItem('gsdd_custom_stickers');
+                if (!rawStickers) return;
+                
+                let savedList = JSON.parse(rawStickers);
+                if (!Array.isArray(savedList) || savedList.length === 0) return;
+                
+                // 랜덤으로 순서 섞기 (Fisher-Yates Shuffle)
+                const shuffled = [...savedList];
+                for (let i = shuffled.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+                
+                // 최대 10개만 선정 (요청사항)
+                const targetList = shuffled.slice(0, 10);
+                
+                // 300ms 간격으로 순차적 낙하
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < targetList.length) {
+                        const item = targetList[index];
+                        const dataUrl = (typeof item === 'object' && item !== null) ? item.dataUrl : item;
+                        if (dataUrl && typeof window.spawnCustomStickerBlock === 'function') {
+                            window.spawnCustomStickerBlock(dataUrl);
+                        }
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 300);
+            } catch (err) {
+                console.error("Failed to drop saved custom stickers:", err);
+            }
+        }
+
         function startDroppingProcess() {
             let dropQueue = generateAllUnitsOnceQueue(loadedUnits.length);
             
@@ -600,6 +692,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     spawnSingleBlock(nextUnitIdx);
                 } else {
                     clearInterval(dropInterval);
+                    // 18개 기본 유닛 낙하 완료 후 저장된 방명록 스티커 중 랜덤 10개 낙하 트리거
+                    dropSavedCustomStickers();
                 }
             }, 300);
         }
