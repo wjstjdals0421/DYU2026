@@ -14,38 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 기본 샘플 방명록 데이터 (초기 방문 시 노출용)
-    const defaultSampleGuestbook = [
-        {
-            author: "박연지 (졸준위원장)",
-            message: "4년 동안 같이 고생해준 우리 팀원들 모두 너무 고맙고 사랑해요! 졸업전시 화이팅 🎉",
-            date: "2026. 08. 01",
-            likes: 24,
-            unitFace: "./unit/face/face_1.png"
-        },
-        {
-            author: "차무영",
-            message: "Finding Balance In ___ 멋진 균형을 찾아낸 우리 모두 졸업 축하합니다!",
-            date: "2026. 08. 02",
-            likes: 18,
-            unitFace: "./unit/face/face_3.png"
-        },
-        {
-            author: "강선진",
-            message: "졸업전시 웹사이트 오픈! 다들 수고 많으셨습니다 👏",
-            date: "2026. 08. 03",
-            likes: 32,
-            unitFace: "./unit/face/face_5.png"
-        },
-        {
-            author: "김소은",
-            message: "아이덴티티 그래픽 유닛 너무 예뻐요! 끝까지 다들 파이팅!",
-            date: "2026. 08. 04",
-            likes: 15,
-            unitFace: "./unit/face/face_8.png"
-        }
-    ];
-
     function renderGuestbookBoard() {
         if (!gridContainer) return;
         gridContainer.innerHTML = '';
@@ -62,38 +30,59 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 전체 방명록 합치기 (사용자가 만든 스티커 + 기본 샘플)
+        // 사용자가 직접 만든 스티커 목록 (최신순)
         const allItems = [];
 
-        // 1. 사용자 생성 스티커 (최신순)
         userStickers.reverse().forEach((item, idx) => {
             if (typeof item === 'string') {
                 allItems.push({
                     dataUrl: item,
                     author: `방문자 ${idx + 1}`,
                     message: "졸업을 진심으로 축하합니다! 🎉",
-                    date: "2026. 08. 06",
-                    likes: Math.floor(Math.random() * 10) + 1
+                    date: new Date().toLocaleDateString()
                 });
             } else if (typeof item === 'object' && item !== null) {
                 allItems.push({
                     dataUrl: item.dataUrl,
                     author: item.author || "익명 방문자",
                     message: item.message || "졸업 축하드립니다!",
-                    date: item.date || "2026. 08. 06",
-                    likes: item.likes || Math.floor(Math.random() * 10) + 1
+                    date: item.date || new Date().toLocaleDateString()
                 });
             }
-        });
-
-        // 2. 기본 샘플 추가
-        defaultSampleGuestbook.forEach(sample => {
-            allItems.push(sample);
         });
 
         if (totalCountEl) {
             totalCountEl.textContent = `총 ${allItems.length}개의 방명록 메시지`;
         }
+
+        // 0. 맨 첫 번째 칸: 방명록 스티커 추가 전용 (+) 카드 생성 및 맨 앞에 삽입
+        const addCard = document.createElement('div');
+        addCard.className = 'guestbook-card create-add-card reveal active';
+        addCard.innerHTML = `
+            <div class="create-card-inner">
+                <div class="create-card-plus-box">
+                    <svg class="plus-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </div>
+                <span class="create-card-title">방명록 스티커 남기기</span>
+                <span class="create-card-desc">나만의 캐릭터를 제작하고<br>응원의 메시지를 작성해보세요!</span>
+            </div>
+        `;
+        addCard.addEventListener('click', () => {
+            const createBtn = document.getElementById('create-sticker-btn');
+            if (createBtn) {
+                createBtn.click();
+            } else {
+                const modalOverlay = document.getElementById('sticker-modal-overlay');
+                if (modalOverlay) {
+                    modalOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        });
+        gridContainer.appendChild(addCard);
 
         // 스티커 카드 렌더링
         allItems.forEach((item, index) => {
@@ -113,14 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="guestbook-card-date">${escapeHTML(item.date)}</span>
                     </div>
                     <p class="guestbook-card-msg">${escapeHTML(item.message)}</p>
-                    <div class="guestbook-card-footer">
-                        <button class="guestbook-like-btn" onclick="toggleGuestbookLike(this)">
-                            <svg class="heart-icon" viewBox="0 0 24 24">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
-                            <span class="like-count-num">${item.likes}</span>
-                        </button>
-                    </div>
                 </div>
             `;
             gridContainer.appendChild(card);

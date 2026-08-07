@@ -817,7 +817,7 @@
         const messageInput = document.getElementById('sticker-message-input');
 
         const author = authorInput ? (authorInput.value.trim() || '익명 방문자') : '익명 방문자';
-        const message = messageInput ? messageInput.value.trim() : '';
+        const message = messageInput ? messageInput.value.trim().slice(0, 40) : '';
 
         const stickerObject = {
             dataUrl: dataUrl,

@@ -24,36 +24,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function getUnitPath(unitNum) {
             const isSubfolder = window.location.pathname.includes('/gallery/') || window.location.pathname.includes('/about/');
-            return (isSubfolder ? '../unit/unit_' : './unit/unit_') + unitNum + '.png';
+            return (isSubfolder ? '../unit/unit_' : './unit/unit_') + unitNum + '.svg';
         }
 
         if (cursorImg) {
             cursorImg.src = getUnitPath(currentUnit);
         }
 
-        window.addEventListener('mousemove', (e) => {
-            cursor.style.left = `${e.clientX}px`;
-            cursor.style.top = `${e.clientY}px`;
-
-            const videoElem = document.querySelector('.main-video-section');
-            if (videoElem) {
-                const rect = videoElem.getBoundingClientRect();
-                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
-                    cursor.style.opacity = '0';
-                    return;
-                }
-            }
+        function updateCursorPos(x, y) {
+            if (!cursor) return;
+            cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
             cursor.style.opacity = '1';
-        });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            updateCursorPos(e.clientX, e.clientY);
+        }, { passive: true });
+
+        document.addEventListener('pointermove', (e) => {
+            updateCursorPos(e.clientX, e.clientY);
+        }, { passive: true });
 
         window.addEventListener('click', (e) => {
-            const isClickable = e.target.closest('a, button, input, textarea, select, .nav-link, .interactive, iframe, canvas, label');
-            if (isClickable) return;
-
             currentUnit = (currentUnit % 12) + 1;
             if (cursorImg) {
                 cursorImg.src = getUnitPath(currentUnit);
             }
+
+            cursor.classList.remove('cursor-click-pop');
+            void cursor.offsetWidth; // DOM reflow
+            cursor.classList.add('cursor-click-pop');
+            setTimeout(() => cursor.classList.remove('cursor-click-pop'), 240);
         });
     }
 
@@ -78,13 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
               Common = Matter.Common,
               Events = Matter.Events;
 
-        // Matter.js fromVertices 전용 poly-decomp 무적 래퍼 (A.makeCCW TypeError 100% 완전 소멸)
+        // Matter.js fromVertices 전용 poly-decomp 무적 래퍼 (A.removeCollinearPoints TypeError 100% 완전 소멸)
         const origDecomp = window.decomp || (typeof decomp !== 'undefined' ? decomp : {});
         const safeDecomp = {
             decomp: (origDecomp.decomp || (origDecomp.Polygon ? origDecomp.Polygon.decomp : null) || function(poly) { return [poly]; }),
             quickDecomp: (origDecomp.quickDecomp || (origDecomp.Polygon ? origDecomp.Polygon.quickDecomp : null) || function(poly) { return [poly]; }),
             isDegen: (origDecomp.isDegen || (origDecomp.Polygon ? origDecomp.Polygon.isDegen : null) || function() { return false; }),
-            makeCCW: (origDecomp.makeCCW || (origDecomp.Polygon ? origDecomp.Polygon.makeCCW : null) || function(poly) { return true; })
+            makeCCW: (origDecomp.makeCCW || (origDecomp.Polygon ? origDecomp.Polygon.makeCCW : null) || function(poly) { return true; }),
+            removeCollinearPoints: (origDecomp.removeCollinearPoints || (origDecomp.Polygon ? origDecomp.Polygon.removeCollinearPoints : null) || function(poly) { return poly; })
         };
         window.decomp = safeDecomp;
         if (Common && typeof Common.setDecomp === 'function') {
@@ -159,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (e.key === 'h' || e.key === 'H' || e.code === 'KeyH') {
                 isHitboxVisible = !isHitboxVisible;
-                console.log('Hitbox Outline Toggled:', isHitboxVisible ? 'ON (핫핑크 윤곽선 노출)' : 'OFF (숨김)');
             }
         });
 
@@ -175,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
             constraint: {
-                stiffness: 0.02,
-                damping: 0.1,
+                stiffness: 0.2,
+                angularStiffness: 0.8,
                 render: { visible: false }
             }
         });
@@ -417,6 +418,26 @@ document.addEventListener('DOMContentLoaded', () => {
             img.src = src;
         });
 
+        // 1.2초 이내 SVG 파싱 완료 여부와 관계없이 18개 유닛 100% 중력 낙하 강제 보장
+        setTimeout(() => {
+            if (!isUnitsReady) {
+                for (let i = 0; i < 18; i++) {
+                    if (!loadedUnits[i]) {
+                        loadedUnits[i] = {
+                            src: `./unit/unit_${(i % 18) + 1}.svg`,
+                            w: 200,
+                            h: 200,
+                            vertices: null
+                        };
+                    }
+                }
+                isUnitsReady = true;
+                if (typeof window.triggerDropSequence === 'function') {
+                    window.triggerDropSequence();
+                }
+            }
+        }, 1200);
+
         function generateAllUnitsOnceQueue(totalUnitsCount) {
             const queue = [];
             for (let i = 0; i < totalUnitsCount; i++) {
@@ -447,11 +468,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const hitboxH = bodyH * 0.88;
 
             const navOffset = (window.innerWidth > 768) ? 70 : 0;
-            const availableW = width - navOffset;
-            const minX = navOffset + (availableW * 0.05);
-            const maxX = navOffset + (availableW * 0.95);
-            const spawnX = minX + Math.random() * (maxX - minX);
-            const spawnY = -120 - (Math.random() * 60);
+            const availableW = Math.max(window.innerWidth - navOffset, 320);
+            const minX = navOffset + (availableW * 0.12);
+            const maxX = navOffset + (availableW * 0.88);
+            const spawnX = minX + (Math.random() * (maxX - minX));
+            const spawnY = -150 - (Math.random() * 80);
 
             let block;
             if (unit && unit.vertices && unit.vertices.length >= 4) {
@@ -620,11 +641,166 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetEl = document.getElementById('about');
             if (targetEl) {
                 const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname.endsWith('/code/') || window.location.pathname.endsWith('code');
-                if (isHomePage) {
-                    e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            }
+            });
+        });
+
+    // 네비게이션 메뉴 클릭 시 서브탭 필터 버튼과 동일한 좌우 흔들림(Wiggle) 트리거
+    document.querySelectorAll('.side-nav-link, .nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            link.classList.remove('wiggle-anim');
+            void link.offsetWidth; // DOM reflow
+            link.classList.add('wiggle-anim');
+            setTimeout(() => link.classList.remove('wiggle-anim'), 360);
         });
     });
+
+    // ========================================================
+    // 4. 어바웃 섹션 유튜브 비디오 50% 노출 시 자동재생 & 음향 10% 설정
+    // ========================================================
+    function initYouTubeAutoplayOnScroll() {
+        const iframeElem = document.getElementById('about-youtube-player');
+        if (!iframeElem) return;
+
+        // YouTube IFrame API Script 동적 로드
+        if (!window.YT) {
+            const tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        }
+
+        let ytPlayer = null;
+
+        function createPlayer() {
+            ytPlayer = new YT.Player('about-youtube-player', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        if (window.YT && window.YT.Player) {
+            createPlayer();
+        } else {
+            const existingCallback = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = function() {
+                if (typeof existingCallback === 'function') existingCallback();
+                createPlayer();
+            };
+        }
+
+        function onPlayerReady(event) {
+            const player = event.target;
+            const videoContainer = iframeElem.closest('.main-video-section') || iframeElem;
+            let hasPlayedOnce = false;
+
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    // 최초 1회만 화면 50% 노출 시 자동재생 & 볼륨 10%
+                    if (!hasPlayedOnce && entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+                        hasPlayedOnce = true;
+                        try {
+                            player.unMute();
+                            player.setVolume(10);
+                            player.playVideo();
+                        } catch (err) {
+                            // YouTube iframe API 핸들링
+                        }
+                        // 최초 1회 자동재생 후 스크롤 관찰 해제 (재차 자동재생 방지)
+                        videoObserver.disconnect();
+                    }
+                });
+            }, {
+                threshold: [0, 0.5, 1.0]
+            });
+
+            videoObserver.observe(videoContainer);
+        }
+    }
+
+    // ========================================================
+    // 5. 최초 접속 / 새로고침 시에만 3초 심플 유닛 로딩 화면 실행 (요청사항)
+    // ========================================================
+    function initPagePreloader() {
+        // 1) 새로고침 여부 확인 (Performance Navigation API)
+        const navEntries = performance.getEntriesByType('navigation');
+        const isReload = (navEntries.length > 0 && navEntries[0].type === 'reload') ||
+                         (performance.navigation && performance.navigation.type === 1);
+
+        // 2) 이번 세션에서 이미 최초 로딩창을 경험했는지 확인
+        const hasSeenPreloader = sessionStorage.getItem('hasSeenPreloader');
+
+        // 새로고침이거나 최초 접속인 경우에만 3초 로딩창 노출!
+        if (isReload || !hasSeenPreloader) {
+            sessionStorage.setItem('hasSeenPreloader', 'true');
+
+            let preloader = document.getElementById('site-preloader');
+            if (!preloader) {
+                preloader = document.createElement('div');
+                preloader.id = 'site-preloader';
+                
+                const isSubfolder = window.location.pathname.includes('/gallery/') || window.location.pathname.includes('/about/');
+                const basePath = isSubfolder ? '../' : './';
+                const unit1Path = `${basePath}unit/unit_1.svg`;
+                const unit2Path = `${basePath}unit/unit_2.svg`;
+
+                preloader.innerHTML = `
+                    <img id="preloader-unit-img" src="${unit1Path}" alt="Loading Unit" />
+                `;
+                document.body.appendChild(preloader);
+
+                // 로딩 3초 동안 웹사이트 전체 자원 백그라운드 사전 캐싱
+                function preloadWebsiteAssets() {
+                    const assetPaths = [
+                        ...Array.from({ length: 18 }, (_, i) => `${basePath}unit/unit_${i + 1}.svg`)
+                    ];
+
+                    assetPaths.forEach(path => {
+                        const img = new Image();
+                        img.src = path;
+                    });
+                }
+
+                preloadWebsiteAssets();
+
+                const unitImg = document.getElementById('preloader-unit-img');
+
+                // 1.4초 시점에 은은하게 2번 유닛으로 이미지 교체
+                setTimeout(() => {
+                    if (unitImg) {
+                        unitImg.style.opacity = '0';
+                        setTimeout(() => {
+                            unitImg.src = unit2Path;
+                            unitImg.style.opacity = '1';
+                        }, 220);
+                    }
+                }, 1400);
+
+                // 2.7초 시점에 로딩창 스르륵 페이드아웃 되며 메인 18개 유닛이 상단에서 우르르 떨어지기 시작!
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    if (window.startPreloaderDropSequence) {
+                        window.startPreloaderDropSequence();
+                    }
+                    setTimeout(() => {
+                        if (preloader && preloader.parentNode) {
+                            preloader.parentNode.removeChild(preloader);
+                        }
+                    }, 450);
+                }, 2700);
+            }
+        } else {
+            // 내부 페이지 메뉴 이동인 경우: 로딩창 없이 딜레이 제로 즉시 이동 및 유닛 낙하!
+            const existingPreloader = document.getElementById('site-preloader');
+            if (existingPreloader) existingPreloader.remove();
+
+            if (window.startPreloaderDropSequence) {
+                setTimeout(window.startPreloaderDropSequence, 150);
+            }
+        }
+    }
+
+    initPagePreloader();
+    initYouTubeAutoplayOnScroll();
 });

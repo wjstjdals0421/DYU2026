@@ -29,6 +29,39 @@ function applyReveal() {
     elements.forEach(el => revealObserver.observe(el));
 }
 
+// 12가지 2D 대표 유닛 시그니처 원색 컬러 팔레트 (요청사항)
+const unitMainColors = [
+    { bg: '#F472B6', text: '#111111' }, // 1. 파스텔 핑크 (첨부 이미지 핑크)
+    { bg: '#FFE800', text: '#111111' }, // 2. 브라이트 옐로우
+    { bg: '#2563EB', text: '#ffffff' }, // 3. 시그니처 블루
+    { bg: '#EF4444', text: '#ffffff' }, // 4. 스파크 레드
+    { bg: '#4ADE80', text: '#111111' }, // 5. 민트 그린
+    { bg: '#A855F7', text: '#ffffff' }, // 6. 라벤더 퍼플
+    { bg: '#EA580C', text: '#ffffff' }, // 7. 다크 오렌지
+    { bg: '#0284C7', text: '#ffffff' }, // 8. 스카이 블루
+    { bg: '#16A34A', text: '#ffffff' }, // 9. 에메랄드 그린
+    { bg: '#F59E0B', text: '#111111' }, // 10. 주황 옐로우
+    { bg: '#EC4899', text: '#ffffff' }, // 11. 핫 핑크
+    { bg: '#6366F1', text: '#ffffff' }  // 12. 인디고 퍼플
+];
+
+let unitColorIndex = 0; // 유닛 컬러 순환 인덱스 카운터
+
+function applyUnitColorToTab(activeTab) {
+    subTabs.forEach(t => {
+        t.classList.remove('active');
+        t.style.setProperty('background-color', 'transparent', 'important');
+        t.style.setProperty('color', '#555555', 'important');
+    });
+
+    if (activeTab) {
+        activeTab.classList.add('active');
+        const color = unitMainColors[unitColorIndex % unitMainColors.length];
+        activeTab.style.setProperty('background-color', color.bg, 'important');
+        activeTab.style.setProperty('color', color.text, 'important');
+    }
+}
+
 // 작품 상세정보 모달 팝업 열기 함수
 function openProjectDetail(id, clickedElement) {
     const data = galleryData.find(item => item.id == id);
@@ -64,12 +97,6 @@ function openProjectDetail(id, clickedElement) {
 }
 
 // 모달 팝업 닫기 함수
-
-function escapeHtml(text) {
-    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-}
-
-// 모달 팝업 닫기 함수
 function closeProjectDetail() {
     modalOverlay.classList.remove('active');
     document.body.style.overflow = 'auto';
@@ -81,7 +108,8 @@ if (modalOverlay) modalOverlay.addEventListener('click', (e) => { if (e.target =
 // 서브탭 활성화 상태 업데이트
 function updateSubTabs(activeMajor) {
     currentMajor = activeMajor;
-    subTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.major === activeMajor));
+    const tabToSelect = Array.from(subTabs).find(tab => tab.dataset.major === activeMajor);
+    if (tabToSelect) applyUnitColorToTab(tabToSelect);
 }
 
 // Works 뷰 (작품 그리드) 렌더링 함수 - 전공 필터링 지원 (All, Visual, Space)
@@ -146,7 +174,6 @@ function renderDesigners(filterMajor = currentMajor) {
     filteredData.forEach((item, index) => {
         const delayClass = `delay-${(index % 5) + 1}`;
         
-        // 작품이 2개인 시각디자인 전공은 두 줄로 표시
         let projectTitleHtml = '';
         if (item.major === 'Visual') {
             const title1 = item.projectName.split('/')[0] || item.projectName;
@@ -189,7 +216,6 @@ function renderDesigners(filterMajor = currentMajor) {
     const previewSticky = document.getElementById('designer-preview-sticky');
     const designerListElem = document.getElementById('designer-list');
 
-    // 프리뷰 영역 마우스 이탈 시 초기화
     if (designerListElem && previewSticky) {
         designerListElem.addEventListener('mouseleave', () => {
             previewSticky.innerHTML = `
@@ -200,30 +226,27 @@ function renderDesigners(filterMajor = currentMajor) {
         });
     }
 
-    // 각 디자이너 항목 마우스 호버 이벤트
     document.querySelectorAll('.designer-item').forEach(item => {
         item.addEventListener('mouseenter', () => {
             const dataId = item.dataset.id;
             const itemData = galleryData.find(d => d.id == dataId);
 
             if (previewSticky && itemData) {
-                // 시각디자인(Visual) 전공의 경우 아래에 사각박스가 하나 더 있는 2개 수직 사각박스 노출
                 if (itemData.major === 'Visual') {
                     const img1 = itemData.imagePath;
                     const img2 = (itemData.id % 2 === 0) ? 'img/project3.jpg' : 'img/project5.jpg';
                     previewSticky.innerHTML = `
                         <div class="designer-preview-box active">
-                            <img src="./${img1}" alt="${itemData.name} 작품1" onerror="this.style.display='none'">
+                            <img class="fade-in" src="./${img1}" alt="${itemData.name} 작품1" onerror="this.style.display='none'">
                         </div>
                         <div class="designer-preview-box active">
-                            <img src="./${img2}" alt="${itemData.name} 작품2" onerror="this.style.display='none'">
+                            <img class="fade-in" src="./${img2}" alt="${itemData.name} 작품2" onerror="this.style.display='none'">
                         </div>
                     `;
                 } else {
-                    // 공간디자인(Space) 전공의 경우 1개 사각박스 노출
                     previewSticky.innerHTML = `
                         <div class="designer-preview-box active">
-                            <img src="./${itemData.imagePath}" alt="${itemData.projectName}" onerror="this.style.display='none'">
+                            <img class="fade-in" src="./${itemData.imagePath}" alt="${itemData.projectName}" onerror="this.style.display='none'">
                         </div>
                     `;
                 }
@@ -252,7 +275,14 @@ if (navDesigner) navDesigner.addEventListener('click', (e) => {
 // 서브 탭 (All, Visual, Space) 클릭 이벤트 핸들러 - Works & Designers 모두 동작
 subTabs.forEach(tab => {
     tab.addEventListener('click', () => {
+        unitColorIndex++;
         const major = tab.dataset.major;
+
+        tab.classList.remove('wiggle-anim');
+        void tab.offsetWidth; // DOM reflow
+        tab.classList.add('wiggle-anim');
+        setTimeout(() => tab.classList.remove('wiggle-anim'), 360);
+
         if (currentView === 'designer') {
             renderDesigners(major);
             window.history.pushState({view: 'designer', major: major}, '', `./gallery.html?view=designer&major=${major}`);
@@ -265,8 +295,13 @@ subTabs.forEach(tab => {
 
 // URL 쿼리 파라미터 확인 및 초기화
 const urlParams = new URLSearchParams(window.location.search);
-const view = urlParams.get('view');
+const view = urlParams.get('view') || 'project';
 const major = urlParams.get('major') || 'All';
+
+// 초기 active 탭에 유닛 색상 적용
+const initialTab = Array.from(subTabs).find(t => t.dataset.major === major) || subTabs[0];
+if (initialTab) applyUnitColorToTab(initialTab);
+
 if (view === 'designer') renderDesigners(major);
 else renderProjects(major);
 
@@ -274,8 +309,12 @@ else renderProjects(major);
 window.addEventListener('popstate', (e) => {
     const state = e.state;
     if (state) {
-        if (state.view === 'designer') renderDesigners(state.major || 'All');
-        else renderProjects(state.major || 'All');
+        const majorVal = state.major || 'All';
+        const tabToSelect = Array.from(subTabs).find(t => t.dataset.major === majorVal);
+        if (tabToSelect) applyUnitColorToTab(tabToSelect);
+
+        if (state.view === 'designer') renderDesigners(majorVal);
+        else renderProjects(majorVal);
     } else {
         renderProjects('All');
     }

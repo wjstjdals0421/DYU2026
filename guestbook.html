@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="guestbook-page-html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook — Finding Balance In ___</title>
     <link rel="stylesheet" href="./style.css">
-    <link rel="icon" type="image/png" href="./unit/unit_1.png">
+    <link rel="icon" type="image/svg+xml" href="./unit/unit_1.svg">
 </head>
 <body class="guestbook-page-body">
     <div id="main-wrapper">
@@ -92,15 +92,7 @@
                     <span id="guestbook-total-count">총 0개의 방명록 메시지</span>
                 </div>
 
-                <!-- 우측 하단 고정 사각형 방명록 제작 & 관리 버튼 -->
-                <div class="hero-sticker-btn-wrapper">
-                    <button id="manage-stickers-btn" class="manage-stickers-btn dev-only-hidden" title="방명록 스티커 개발자 관리 모드" style="display: none;">
-                        <span class="btn-label-text">스티커 관리</span>
-                    </button>
-                    <button id="create-sticker-btn" class="create-sticker-btn text-button" title="방명록 스티커 만들기" aria-label="방명록 스티커 만들기">
-                        <span class="btn-label-text">방명록 스티커 남기기</span>
-                    </button>
-                </div>
+
 
                 <div id="guestbook-grid" class="guestbook-grid-container">
                     <!-- JS로 방명록 스티커 카드들이 동적으로 생성됩니다 -->
@@ -200,7 +192,7 @@
                         <div class="sticker-user-info-inputs">
                             <div class="input-row-group">
                                 <input type="text" id="sticker-author-input" class="studio-text-input" placeholder="작성자 이름 / 닉네임" maxlength="12">
-                                <input type="text" id="sticker-message-input" class="studio-text-input message-input" placeholder="응원 한마디 메시지를 남겨주세요!" maxlength="35">
+                                <input type="text" id="sticker-message-input" class="studio-text-input message-input" placeholder="응원 메시지를 남겨주세요! (최대 40자)" maxlength="40">
                             </div>
                         </div>
                     </div>
