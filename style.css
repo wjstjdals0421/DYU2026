@@ -2932,7 +2932,6 @@ nav.side-nav {
 body {
     padding-left: 70px;
 }
-padding-top: 
 /* full-width 요소: body padding 상쇄 */
 #hero-section,
 .archive-page-container {
@@ -3214,6 +3213,7 @@ body.guestbook-page-body footer.site-footer {
     margin: 0;
     word-break: break-word;
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2; /* 2줄까지만 표출 후 ... 처리 */
     -webkit-box-orient: vertical;
     overflow: hidden;
