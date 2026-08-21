@@ -887,6 +887,11 @@ function initPhysics() {
     const gbStage = document.getElementById('main-guestbook-stage');
     if(!stage) return;
 
+    // 갤럭시 S26 및 아이폰 17 기준 가로 해상도 (대략 390px)를 기준점으로 동적 스케일링 계수 계산
+    const baseWidth = 390;
+    const currentWidth = stage.clientWidth || window.innerWidth || 390;
+    const screenScale = Math.max(0.75, Math.min(1.25, currentWidth / baseWidth));
+
     if(gbStage) {
         gbStage.style.left = '0';
         gbStage.style.width = '100vw';
@@ -932,9 +937,9 @@ function initPhysics() {
         recentGbEntries.forEach((entry, idx) => {
             if (idx >= 10) return; 
 
-            // 모바일 화면용 크기 추가 축소 (기존 120/80 -> 90/60)
-            const visualSize = 90; 
-            const hitBoxSize = 60; 
+            // 모바일 화면용 크기 추가 축소 (기존 120/80 -> 90/60) 및 화면 크기별 스케일 계수 반영
+            const visualSize = 90 * screenScale; 
+            const hitBoxSize = 60 * screenScale; 
             
             const startX = randomXForWidth(hitBoxSize);
             // y축 스폰 간격을 주어 겹침 방지
@@ -1007,14 +1012,14 @@ function initPhysics() {
     ];
 
     mainGraphics.forEach((image, index) => {
-        const minScale = 0.06;
-        const maxScale = 0.11;
+        const minScale = 0.06 * screenScale;
+        const maxScale = 0.11 * screenScale;
         const randomScale = Math.random() * (maxScale - minScale) + minScale;
 
         // 겹침이 많다는 피드백에 따라 보정계수를 0.93~0.95 수준으로 높여 물리 경계를 넓게 재설정
         const hitBoxScale = image.hitboxScale || 1.0;
-        const hitBoxWidth = Math.max(30, image.width * randomScale * hitBoxScale);
-        const hitBoxHeight = Math.max(30, image.height * randomScale * hitBoxScale);
+        const hitBoxWidth = Math.max(30 * screenScale, image.width * randomScale * hitBoxScale);
+        const hitBoxHeight = Math.max(30 * screenScale, image.height * randomScale * hitBoxScale);
         const startX = randomXForWidth(hitBoxWidth);
         const startY = -150 - (index * 130) - (Math.random() * 40); 
 
@@ -1045,11 +1050,11 @@ function initPhysics() {
     });
 
     // 타이포 그래픽 모바일 대응 축소 스케일링 적용 및 최소 두께 강화 (겹침 방지)
-    const typoScale = 0.12; 
+    const typoScale = 0.12 * screenScale; 
     const typoGraphics = [
-        { src: '../typo-1.png', width: 3132, height: 398, customScale: 0.08 },
+        { src: '../typo-1.png', width: 3132, height: 398, customScale: 0.08 * screenScale },
         { src: '../typo-2.png', width: 925, height: 134 },
-        { src: '../typo-3.png', width: 1242, height: 350, customScale: 0.08 },
+        { src: '../typo-3.png', width: 1242, height: 350, customScale: 0.08 * screenScale },
         { src: '../typo-4.png', width: 884, height: 134 },
         { src: '../typo-5.png', width: 423, height: 134 }
     ];
@@ -1058,7 +1063,7 @@ function initPhysics() {
         const scale = typo.customScale || typoScale;
         const hitBoxWidth = typo.width * scale;
         // 얇은 이미지 터널링(관통/겹침)을 방지하기 위해 최소 물리 두께 28px 보장
-        const hitBoxHeight = Math.max(28, typo.height * scale);
+        const hitBoxHeight = Math.max(28 * screenScale, typo.height * scale);
         const startX = randomXForWidth(hitBoxWidth);
         // 메인 그래픽스 낙하 완료 후 순차적으로 낙하하도록 높은 Y축 스폰 위치 배정
         const startY = -2000 - (index * 180); 
@@ -1070,10 +1075,10 @@ function initPhysics() {
         Composite.add(world, typoBody);
     });
 
-    // 클릭 버튼 모바일 대응 축소 (반지름 86 -> 35, 스케일 0.3 -> 0.12)
-    const clickBody = Bodies.circle(stage.clientWidth / 2, -1800, 35, {
+    // 클릭 버튼 모바일 대응 축소 (반지름 35 -> 35 * screenScale, 스케일 0.12 -> 0.12 * screenScale)
+    const clickBody = Bodies.circle(stage.clientWidth / 2, -1800, 35 * screenScale, {
         label: 'clickBtn', restitution: 0.01, friction: 1, frictionStatic: 10, frictionAir: 0.02, density: 2.0,
-        render: { sprite: { texture: '../Click1.png', xScale: 0.12, yScale: 0.12 } }
+        render: { sprite: { texture: '../Click1.png', xScale: 0.12 * screenScale, yScale: 0.12 * screenScale } }
     });
     Composite.add(world, clickBody);
 
