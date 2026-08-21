@@ -334,7 +334,7 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;     /* 가로 중앙 정렬 */
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom)); /* 화면 높이 전체 차지 */
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom)); /* 화면 높이 전체 차지 */
-    padding-top: calc(50px + env(safe-area-inset-top) + 10px); /* 로고 영역(50px) 제외하고 상단 마진 10px로 지정 */
+    padding-top: calc(50px + env(safe-area-inset-top) + 20px); /* 로고 영역(50px) 제외하고 상단 마진 20px로 지정 */
     padding-bottom: calc(55px + env(safe-area-inset-bottom) + 10px); /* 하단 메뉴바(55px) 제외하고 하단 마진 10px로 지정 */ 
 }
 #section-archive.active {
