@@ -378,7 +378,7 @@ body.is-main-page .nav-link { color: #000; }
 
 .archive-text-area { 
     width: 100%;
-    height: 160px; /* 설명 텍스트 영역 높이를 160px로 고정하여 슬라이더 조작 버튼 위치 고정 */
+    height: 195px; /* 폰트 확대 및 긴 텍스트 잘림 방지를 위해 195px로 대폭 늘림 */
     padding-top: 10px;
     text-align: center;
     overflow: hidden;
@@ -590,7 +590,7 @@ body.is-main-page .nav-link { color: #000; }
         max-width: 175px !important; /* 세로가 짧은 폰에서는 포스터 크기 축소 */
     }
     .archive-text-area {
-        height: 105px !important; /* 세로가 짧은 폰에서는 설명글 영역 축소 */
+        height: 135px !important; /* 폰트 확대에 맞춰 135px로 영역을 넓혀 긴 설명글 잘림 방지 */
     }
     .archive-title {
         font-size: 16px !important; /* 14px에서 16px로 확대 */
@@ -601,7 +601,7 @@ body.is-main-page .nav-link { color: #000; }
         line-height: 1.4 !important;
     }
     .archive-controls {
-        margin-top: 20px !important; /* 10px에서 20px로 확대해 버튼 하강 */
+        margin-top: 12px !important; /* 텍스트 영역이 넓어진 만큼 여백을 12px로 살짝 줄여 화면 세로 스크롤 방지 */
         margin-bottom: 5px !important;
     }
     .archive-nav-icon {
