@@ -878,9 +878,9 @@ function initPhysics() {
     const engine = Engine.create();
     const world = engine.world;
     
-    // 모바일 기기 성능 최적화와 정밀도의 균형을 위해 반복 연산 횟수 조정 (30 -> 20)
-    engine.positionIterations = 20; 
-    engine.velocityIterations = 20; 
+    // 물리 엔진 해상도/반복 연산 횟수 증가 (겹침/터널링 완벽 차단)
+    engine.positionIterations = 30; 
+    engine.velocityIterations = 30; 
     engine.world.gravity.y = 1.0; 
     
     const stage = document.getElementById('physics-stage');
