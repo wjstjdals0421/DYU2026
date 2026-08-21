@@ -334,8 +334,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;     /* 가로 중앙 정렬 */
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom)); /* 화면 높이 전체 차지 */
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom)); /* 화면 높이 전체 차지 */
-    padding-top: calc(75px + env(safe-area-inset-top));
-    padding-bottom: calc(85px + env(safe-area-inset-bottom)); 
+    padding-top: calc(55px + env(safe-area-inset-top)); /* 75px에서 55px로 압축 */
+    padding-bottom: calc(65px + env(safe-area-inset-bottom)); /* 85px에서 65px로 압축 */ 
 }
 #section-archive.active {
     display: flex;
@@ -582,4 +582,30 @@ body.is-main-page .nav-link { color: #000; }
 
 #floating-preview {
     display: none !important;
+}
+
+/* 세로 높이가 짧은 폰을 위한 반응형 뷰포트 높이 비율 조율 (아카이브 스크롤 제거 및 버튼 보장) */
+@media (max-height: 740px) {
+    .archive-poster-wrapper {
+        max-width: 175px !important; /* 세로가 짧은 폰에서는 포스터 크기 축소 */
+    }
+    .archive-text-area {
+        height: 105px !important; /* 세로가 짧은 폰에서는 설명글 영역 축소 */
+    }
+    .archive-title {
+        font-size: 14px !important;
+        margin-bottom: 4px !important;
+    }
+    .archive-desc {
+        font-size: 10px !important;
+        line-height: 1.4 !important;
+    }
+    .archive-controls {
+        margin-top: 10px !important;
+        margin-bottom: 5px !important;
+    }
+    .archive-nav-icon {
+        width: 30px !important;
+        height: 30px !important;
+    }
 }
