@@ -384,7 +384,7 @@ body.is-main-page .nav-link { color: #000; }
     overflow: hidden;
 }
 .archive-title { 
-    font-size: 16px; 
+    font-size: 18px; /* 16px에서 18px로 확대 */
     font-weight: 800; 
     margin-top: 0;
     margin-bottom: 8px; 
@@ -392,7 +392,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-desc { 
     font-family: var(--font-family); 
-    font-size: 11px; /* 텍스트 폰트 사이즈를 11px로 줄여 고정 영역 내에 오버플로우 없이 최장 설명글 안착 */
+    font-size: 12px; /* 11px에서 12px로 확대 */
     line-height: 1.5; 
     font-weight: 400; 
 }
@@ -402,11 +402,11 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center; 
     justify-content: center; 
     gap: 20px; 
-    margin-top: 20px; /* 버튼 위치를 아래로 내림 (5px -> 20px) */
+    margin-top: 30px; /* 버튼 위치를 더 아래로 내림 (20px -> 30px) */
     margin-bottom: 15px;
 }
 .archive-btn { background: transparent; border: none; padding: 0; display: flex; align-items: center; justify-content: center; }
-.archive-nav-icon { width: 35px; height: 35px; object-fit: contain; } 
+.archive-nav-icon { width: 42px; height: 42px; object-fit: contain; } /* 버튼 크기 확대 (35px -> 42px) */ 
 .archive-dots { display: flex; gap: 6px; }
 .archive-dot { width: 6px; height: 6px; background-color: #ccc; border-radius: 50%; transition: transform 0.2s, background-color 0.2s; }
 .archive-dot.active { background-color: var(--color-text-main); transform: scale(1.2); }
@@ -593,19 +593,19 @@ body.is-main-page .nav-link { color: #000; }
         height: 105px !important; /* 세로가 짧은 폰에서는 설명글 영역 축소 */
     }
     .archive-title {
-        font-size: 14px !important;
+        font-size: 16px !important; /* 14px에서 16px로 확대 */
         margin-bottom: 4px !important;
     }
     .archive-desc {
-        font-size: 10px !important;
+        font-size: 11px !important; /* 10px에서 11px로 확대 */
         line-height: 1.4 !important;
     }
     .archive-controls {
-        margin-top: 10px !important;
+        margin-top: 20px !important; /* 10px에서 20px로 확대해 버튼 하강 */
         margin-bottom: 5px !important;
     }
     .archive-nav-icon {
-        width: 30px !important;
-        height: 30px !important;
+        width: 36px !important; /* 30px에서 36px로 확대 */
+        height: 36px !important;
     }
 }
