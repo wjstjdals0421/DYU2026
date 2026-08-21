@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 GSDD - Mobile</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/xjx2wtn.css">
+    <link rel="stylesheet" href="m_style.css">
+</head>
+<body class="is-main-page">
+    <!-- 마우스 커서를 따라다니는 커스텀 이미지 커서 (모바일에서는 display: none 처리) -->
+    <img id="custom-cursor" src="../mouse/mouse1.png" alt="커서" class="custom-cursor">
+    
+    <!-- 최초 접속 시 나오는 오프닝 영상 영역 (새로고침 시 항상 재생) -->
+    <div id="intro-screen">
+        <video id="intro-video" muted playsinline>
+            <source src="../op.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- 서브페이지 전환 시 나오는 커스텀 로딩 화면 -->
+    <div id="loading-screen" class="hidden">
+        <div class="character-loader-wrapper" id="loading-chars">
+            <div class="loader-item item-1">
+                <img src="" alt="캐릭터1" class="loader-char" id="loader-img-1">
+            </div>
+            <div class="loader-item item-2">
+                <img src="" alt="캐릭터2" class="loader-char" id="loader-img-2">
+            </div>
+            <div class="loader-item item-3">
+                <img src="" alt="캐릭터3" class="loader-char" id="loader-img-3">
+            </div>
+        </div>
+        <img src="../loding-mb.png" alt="로딩 이미지" id="loading-final-img">
+    </div>
+
+    <header class="top-title-bar" onclick="navigateToPage('main')">
+        <img src="../title.png" alt="Finding Balance In ___" class="top-title-img">
+    </header>
+
+    <!-- 하단 네비게이션 (모바일에서는 햄버거 버튼과 오버레이 메뉴 형태로 전환 가능) -->
+    <nav class="global-header bottom-nav">
+        <div class="nav-wrapper">
+            <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a class="nav-link nav-about" onclick="navigateToPage('about')" id="link-about">About</a></li>
+                <li><a class="nav-link nav-works" onclick="navigateToPage('works')" id="link-works">Works</a></li>
+                <li><a class="nav-link nav-designers" onclick="navigateToPage('designers')" id="link-designers">Designers</a></li>
+                <li><a class="nav-link nav-archive" onclick="navigateToPage('archive')" id="link-archive">Archive</a></li>
+                <li><a class="nav-link nav-guestbook" onclick="navigateToPage('guestbook')" id="link-guestbook">Guestbook</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Main Section -->
+        <section id="section-main" class="container page-section active main-section-wrapper">
+            <div id="physics-stage" class="physics-stage"></div>
+            <div id="main-guestbook-stage" class="main-guestbook-stage"></div>
+            <article class="main-content"></article>
+        </section>
+
+        <!-- Works List Section -->
+        <section id="section-works" class="container page-section">
+            <nav class="works-filter-group">
+                <button class="works-filter-btn active" onclick="filterWorksByCategory('All')" id="filter-all">All</button>
+                <button class="works-filter-btn" onclick="filterWorksByCategory('Visual')" id="filter-visual">Visual</button>
+                <button class="works-filter-btn" onclick="filterWorksByCategory('Space')" id="filter-space">Space</button>
+            </nav>
+            <ul class="works-grid-list" id="works-list-grid"></ul>
+        </section>
+
+        <!-- Works Detail Section -->
+        <section id="section-detail" class="container page-section">
+            <article class="detail-container">
+                <!-- 왼쪽: 작품 이미지 영역 (모바일에서는 상단에 위치) -->
+                <figure class="detail-image-area" id="detail-images-list"></figure>
+                
+                <!-- 오른쪽: 작품 설명 텍스트 영역 및 X 버튼 (모바일에서는 하단에 위치) -->
+                <aside class="detail-text-area">
+                    <header class="detail-text-header">
+                        <h2 class="detail-title" id="detail-project-title">작품명</h2>
+                        <button class="detail-close-btn" onclick="closeWorkDetail()">✕</button>
+                    </header>
+                    
+                    <address class="detail-author-info">
+                        <p class="detail-author" id="detail-author-name">홍길동</p>
+                        <p class="detail-contact" id="detail-author-email">abcd1@gmail.com</p>
+                        <p class="detail-contact" id="detail-author-insta">@h_h121</p>
+                    </address>
+                    
+                    <p class="detail-desc" id="detail-description-text">작품 설명글 영역입니다.</p>
+                </aside>
+            </article>
+        </section>
+
+        <!-- Archive Section -->
+        <section id="section-archive" class="container page-section">
+            <div class="archive-visual-area">
+                <!-- 연도와 포스터를 하나로 묶는 Wrapper -->
+                <div class="archive-poster-wrapper">
+                    <p class="archive-year-display" id="archive-display-year">2025</p>
+                    <figure class="archive-poster" id="archive-poster-container" onclick="openArchiveExternalLink()">
+                    </figure>
+                </div>
+            </div>
+            
+            <article class="archive-text-area">
+                <h2 class="archive-title" id="archive-title-text">Graduation Exhibition Title</h2>
+                <p class="archive-desc" id="archive-description-text">해당 년도의 전시 설명 내용...</p>
+            </article>
+
+            <nav class="archive-controls">
+                <button class="archive-btn" onclick="moveArchiveSlide(-1)">
+                    <img src="../archive1.png" alt="이전" class="archive-nav-icon">
+                </button>
+                <div class="archive-dots" id="archive-dots-container"></div>
+                <button class="archive-btn" onclick="moveArchiveSlide(1)">
+                    <img src="../archive2.png" alt="다음" class="archive-nav-icon">
+                </button>
+            </nav>
+        </section>
+
+        <!-- About Section -->
+        <section id="section-about" class="container page-section about-page">
+            <article class="about-container">
+                <img src="../about-1-mb.png" alt="Finding Balance In 소개" class="about-img">
+                <img src="../about-2-mb.png" alt="감정 그래픽 소개" class="about-img">
+                
+                <figure class="about-video-wrapper" onclick="window.open('https://youtu.be/lvRDLkjtDs0', '_blank')">
+                    <img src="https://img.youtube.com/vi/lvRDLkjtDs0/maxresdefault.jpg" alt="전시 소개 영상 재생" class="about-video-thumb">
+                    <div class="about-video-overlay">
+                        <div class="about-play-btn"><span>▶</span></div>
+                    </div>
+                </figure>
+                
+                <img src="../about-3-mb.png" alt="Finding Balance In 전시 포스터와 제작진" class="about-img auto-height">
+            </article>
+        </section>
+
+        <!-- Designers Section -->
+        <section id="section-designers" class="container page-section designers-page">
+            <nav class="works-filter-group" id="designers-filter-group">
+                <button class="works-filter-btn active" onclick="filterDesignersByCategory('All')" id="d-filter-all">All</button>
+                <button class="works-filter-btn" onclick="filterDesignersByCategory('Visual')" id="d-filter-visual">Visual</button>
+                <button class="works-filter-btn" onclick="filterDesignersByCategory('Space')" id="d-filter-space">Space</button>
+            </nav>
+
+            <ul class="designer-list" id="designers-list-grid"></ul>
+            <img id="floating-preview" src="" alt="작품 미리보기">
+        </section>
+
+        <!-- Guestbook Section -->
+        <section id="section-guestbook" class="guestbook-page page-section">
+            <div id="guestbook-physics-stage"></div>
+            <div id="guestbook-dom-stage"></div>
+            <button class="guestbook-add-floating" onclick="openGuestbookPopup()" aria-label="방명록 남기기">
+                <img src="../plus.png" alt="방명록 추가">
+            </button>
+        </section>
+    </main>
+
+    <!-- 방명록 팝업 모달 -->
+    <section id="guestbook-popup" class="popup-overlay hidden">
+        <article class="popup-content">
+            <button class="popup-close-btn" onclick="closeGuestbookPopup()">✕</button>
+            <header>
+                <h3 class="popup-title">나만의 감정을 만들어 방명록을 남겨주세요!</h3>
+            </header>
+            
+            <figure class="popup-preview-area" id="gb-preview-area" onmousedown="deselectFace(event)">
+                <div class="preview-character" id="gb-preview-character">
+                    <img id="gb-preview-shape" src="" alt="형태" style="display: none;">
+                    <div id="gb-faces-container" class="gb-faces-container"></div>
+                </div>
+                <button class="popup-submit-btn" onclick="saveGuestbookEntry()"></button>
+            </figure>
+
+            <nav class="popup-tabs">
+                <button class="tab-btn active" data-tab="shape" onclick="setGuestbookTab('shape')"><span class="tab-text">형태</span></button>
+                <button class="tab-btn" data-tab="face" onclick="setGuestbookTab('face')"><span class="tab-text">표정</span></button>
+                <button class="tab-btn" data-tab="message" onclick="setGuestbookTab('message')"><span class="tab-text">방명록 메시지</span></button>
+            </nav>
+
+            <div class="popup-options">
+                <section class="gb-tab-panel active" id="gb-panel-shape">
+                    <div class="color-palette" id="gb-shape-colors"></div>
+                    <div class="shape-picker" id="gb-shape-picker"></div>
+                </section>
+                
+                <section class="gb-tab-panel" id="gb-panel-face">
+                    <div class="color-palette" id="gb-face-colors"></div>
+                    <div class="face-picker" id="gb-face-picker"></div>
+                </section>
+                
+                <section class="gb-tab-panel" id="gb-panel-message">
+                    <div class="message-inputs">
+                        <input type="text" id="gb-name" placeholder="이름을 작성해주세요">
+                        <input type="text" id="gb-message" placeholder="자유롭게 작성해주세요 (최대 40자)" maxlength="40">
+                    </div>
+                </section>
+            </div>
+        </article>
+    </section>
+    
+    <script src="m_script.js"></script>
+</body>
+</html>
