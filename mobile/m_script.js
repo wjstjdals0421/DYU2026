@@ -895,7 +895,7 @@ function initPhysics() {
     if(gbStage) {
         gbStage.style.left = '0';
         gbStage.style.width = '100vw';
-        gbStage.style.height = `calc(100vh - 55px - env(safe-area-inset-bottom))`;
+        gbStage.style.height = `calc(100dvh - 55px - env(safe-area-inset-bottom))`;
     }
 
     const randomXForWidth = (width) => {
@@ -1142,6 +1142,8 @@ function initPhysics() {
 
         render.canvas.width = stage.clientWidth;
         render.canvas.height = stage.clientHeight;
+        render.options.width = stage.clientWidth;
+        render.options.height = stage.clientHeight;
         Matter.Body.setPosition(floor, { x: stage.clientWidth / 2, y: stage.clientHeight + 250 });
         Matter.Body.setPosition(rightWall, { x: stage.clientWidth + 250, y: stage.clientHeight / 2 });
         Matter.Body.setPosition(leftWall, { x: -250, y: stage.clientHeight / 2 });
