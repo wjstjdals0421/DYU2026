@@ -887,6 +887,14 @@ function initPhysics() {
     const gbStage = document.getElementById('main-guestbook-stage');
     if(!stage) return;
 
+    // 모바일 기기의 하단 메뉴바 실제 렌더링 높이를 측정하여 정밀 차감 계산
+    const bottomNav = document.querySelector('.bottom-nav');
+    const bottomNavHeight = bottomNav ? bottomNav.offsetHeight : 55;
+    const stageHeight = window.innerHeight - bottomNavHeight;
+    
+    // stage와 gbStage의 높이를 동적으로 실제 브라우저 영역에 맞게 제어
+    stage.style.height = `${stageHeight}px`;
+
     // 갤럭시 S26 및 아이폰 17 기준 가로 해상도 (대략 390px)를 기준점으로 동적 스케일링 계수 계산
     const baseWidth = 390;
     const currentWidth = stage.clientWidth || window.innerWidth || 390;
@@ -895,7 +903,7 @@ function initPhysics() {
     if(gbStage) {
         gbStage.style.left = '0';
         gbStage.style.width = '100vw';
-        gbStage.style.height = `calc(100dvh - 55px - env(safe-area-inset-bottom))`;
+        gbStage.style.height = `${stageHeight}px`;
     }
 
     const randomXForWidth = (width) => {
@@ -908,7 +916,7 @@ function initPhysics() {
         engine: engine,
         options: {
             width: stage.clientWidth,
-            height: stage.clientHeight,
+            height: stageHeight,
             wireframes: false,
             background: 'transparent',
             pixelRatio: window.devicePixelRatio || 1
@@ -921,10 +929,10 @@ function initPhysics() {
 
     const wallOptions = { isStatic: true, restitution: 0.1, friction: 0.8, render: { visible: false } };
     
-    const floorY = stage.clientHeight + 250; 
+    const floorY = stageHeight + 250; 
     const floor = Bodies.rectangle(stage.clientWidth / 2, floorY, stage.clientWidth * 2, 500, wallOptions);
-    const leftWall = Bodies.rectangle(-250, stage.clientHeight / 2, 500, stage.clientHeight * 5, wallOptions);
-    const rightWall = Bodies.rectangle(stage.clientWidth + 250, stage.clientHeight / 2, 500, stage.clientHeight * 5, wallOptions);
+    const leftWall = Bodies.rectangle(-250, stageHeight / 2, 500, stageHeight * 5, wallOptions);
+    const rightWall = Bodies.rectangle(stage.clientWidth + 250, stageHeight / 2, 500, stageHeight * 5, wallOptions);
     
     Composite.add(world, [floor, leftWall, rightWall]);
 
@@ -1139,15 +1147,24 @@ function initPhysics() {
     });
 
     window.addEventListener('resize', () => {
-        if (stage.clientWidth === 0 || stage.clientHeight === 0) return; 
+        if (stage.clientWidth === 0) return; 
+
+        const currentBottomNavHeight = bottomNav ? bottomNav.offsetHeight : 55;
+        const currentStageHeight = window.innerHeight - currentBottomNavHeight;
+
+        stage.style.height = `${currentStageHeight}px`;
+        if (gbStage) {
+            gbStage.style.height = `${currentStageHeight}px`;
+        }
 
         render.canvas.width = stage.clientWidth;
-        render.canvas.height = stage.clientHeight;
+        render.canvas.height = currentStageHeight;
         render.options.width = stage.clientWidth;
-        render.options.height = stage.clientHeight;
-        Matter.Body.setPosition(floor, { x: stage.clientWidth / 2, y: stage.clientHeight + 250 });
-        Matter.Body.setPosition(rightWall, { x: stage.clientWidth + 250, y: stage.clientHeight / 2 });
-        Matter.Body.setPosition(leftWall, { x: -250, y: stage.clientHeight / 2 });
+        render.options.height = currentStageHeight;
+
+        Matter.Body.setPosition(floor, { x: stage.clientWidth / 2, y: currentStageHeight + 250 });
+        Matter.Body.setPosition(rightWall, { x: stage.clientWidth + 250, y: currentStageHeight / 2 });
+        Matter.Body.setPosition(leftWall, { x: -250, y: currentStageHeight / 2 });
     });
 }
 
