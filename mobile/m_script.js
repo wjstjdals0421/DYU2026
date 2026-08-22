@@ -917,7 +917,7 @@ function initPhysics() {
         options: {
             width: stage.clientWidth,
             height: stageHeight,
-            wireframes: false,
+            wireframes: true, // 디버깅 모드 활성화로 물리박스 와이어프레임 노출
             background: 'transparent',
             pixelRatio: window.devicePixelRatio || 1
         }
