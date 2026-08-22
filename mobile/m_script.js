@@ -945,9 +945,9 @@ function initPhysics() {
         recentGbEntries.forEach((entry, idx) => {
             if (idx >= 10) return; 
 
-            // 모바일 화면용 크기 추가 축소 (기존 120/80 -> 90/60) 및 화면 크기별 스케일 계수 반영
+            // 방명록 유닛들의 겹침 방지를 위해 물리 히트박스 크기를 비주얼 크기와 완전히 동화 (60 -> 90)
             const visualSize = 90 * screenScale; 
-            const hitBoxSize = 60 * screenScale; 
+            const hitBoxSize = 90 * screenScale; 
             
             const startX = randomXForWidth(hitBoxSize);
             // y축 스폰 간격을 주어 겹침 방지
@@ -1002,21 +1002,21 @@ function initPhysics() {
         });
     }
 
-    // 메인 그래픽 크기 및 형태별 충돌체 속성 추가 (원형 판단 및 히트박스 보정계수 도입)
+    // 메인 그래픽 크기 및 형태별 충돌체 속성 추가 (물리박스가 이미지 실제 크기 이상으로 확대되어 겹침 완전 방지)
     const mainGraphics = [
-        { src: '../maingraphic-01.png', width: 1063, height: 1063, isCircle: true },
-        { src: '../maingraphic-02.png', width: 1075, height: 963, hitboxScale: 0.95 },
-        { src: '../maingraphic-03.png', width: 746, height: 742, isCircle: true },
-        { src: '../maingraphic-04.png', width: 746, height: 742, isCircle: true },
-        { src: '../maingraphic-05.png', width: 1117, height: 1080, hitboxScale: 0.95 },
-        { src: '../maingraphic-06.png', width: 896, height: 646, hitboxScale: 0.95 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
-        { src: '../maingraphic-07.png', width: 880, height: 621, hitboxScale: 0.95 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
-        { src: '../maingraphic-08.png', width: 909, height: 767, hitboxScale: 0.95 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
-        { src: '../maingraphic-09.png', width: 621, height: 721, isCircle: true },
-        { src: '../maingraphic-10.png', width: 1259, height: 330 },
-        { src: '../maingraphic-11.png', width: 1125, height: 875, hitboxScale: 0.93 }, // 보정계수 확대 (0.82 -> 0.93)로 겹침 방지
-        { src: '../maingraphic-12.png', width: 1338, height: 759, hitboxScale: 0.93 }, // 보정계수 확대 (0.82 -> 0.93)로 겹침 방지
-        { src: '../maingraphic-13.png', width: 1000, height: 400 } 
+        { src: '../maingraphic-01.png', width: 1063, height: 1063, isCircle: true, hitboxScale: 1.03 },
+        { src: '../maingraphic-02.png', width: 1075, height: 963, hitboxScale: 1.03 },
+        { src: '../maingraphic-03.png', width: 746, height: 742, isCircle: true, hitboxScale: 1.03 },
+        { src: '../maingraphic-04.png', width: 746, height: 742, isCircle: true, hitboxScale: 1.03 },
+        { src: '../maingraphic-05.png', width: 1117, height: 1080, hitboxScale: 1.03 },
+        { src: '../maingraphic-06.png', width: 896, height: 646, hitboxScale: 1.03 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
+        { src: '../maingraphic-07.png', width: 880, height: 621, hitboxScale: 1.03 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
+        { src: '../maingraphic-08.png', width: 909, height: 767, hitboxScale: 1.03 }, // 타원형은 양옆 겹침을 방지하기 위해 사각형 충돌체로 교체
+        { src: '../maingraphic-09.png', width: 621, height: 721, isCircle: true, hitboxScale: 1.03 },
+        { src: '../maingraphic-10.png', width: 1259, height: 330, hitboxScale: 1.03 },
+        { src: '../maingraphic-11.png', width: 1125, height: 875, hitboxScale: 1.01 }, // 이미지 경계 최적화로 겹침 방지
+        { src: '../maingraphic-12.png', width: 1338, height: 759, hitboxScale: 1.01 }, // 이미지 경계 최적화로 겹침 방지
+        { src: '../maingraphic-13.png', width: 1000, height: 400, hitboxScale: 1.03 } 
     ];
 
     mainGraphics.forEach((image, index) => {
