@@ -80,10 +80,7 @@
         <!-- Works Detail Section -->
         <section id="section-detail" class="container page-section">
             <article class="detail-container">
-                <!-- 왼쪽: 작품 이미지 영역 (모바일에서는 상단에 위치) -->
-                <figure class="detail-image-area" id="detail-images-list"></figure>
-                
-                <!-- 오른쪽: 작품 설명 텍스트 영역 및 X 버튼 (모바일에서는 하단에 위치) -->
+                <!-- 상단: 작품 설명 텍스트 영역 및 X 버튼 (텍스트가 이미지 위에 배치) -->
                 <aside class="detail-text-area">
                     <header class="detail-text-header">
                         <h2 class="detail-title" id="detail-project-title">작품명</h2>
@@ -98,6 +95,9 @@
                     
                     <p class="detail-desc" id="detail-description-text">작품 설명글 영역입니다.</p>
                 </aside>
+
+                <!-- 하단: 작품 이미지 영역 -->
+                <figure class="detail-image-area" id="detail-images-list"></figure>
             </article>
         </section>
 
@@ -210,6 +210,7 @@
         </article>
     </section>
     
-    <script src="m_script.js"></script>
+    <script src="../data.js"></script>
+    <script src="m_script.js?v=2"></script>
 </body>
 </html>
