@@ -823,26 +823,7 @@ function initPhysics() {
     });
     Runner.run(runner, engine);
 
-    // 이미지 스크린 위에 물리 박스 충돌선을 빨간색 라인으로 덧그리기
-    Events.on(render, 'afterRender', () => {
-        const ctx = render.context;
-        ctx.strokeStyle = '#FF0000'; // 빨간색 선 지정
-        ctx.lineWidth = 2.5; // 선 두께 지정
 
-        const bodies = Composite.allBodies(world);
-        bodies.forEach(body => {
-            if (body.isStatic) return; // 바닥 및 양옆 벽면 제외
-
-            ctx.beginPath();
-            const vertices = body.vertices;
-            ctx.moveTo(vertices[0].x, vertices[0].y);
-            for (let i = 1; i < vertices.length; i++) {
-                ctx.lineTo(vertices[i].x, vertices[i].y);
-            }
-            ctx.closePath();
-            ctx.stroke();
-        });
-    });
 
     const wallOptions = { isStatic: true, restitution: 0.1, friction: 0.8, render: { visible: false } };
     
