@@ -824,7 +824,6 @@ function initPhysics() {
     Runner.run(runner, engine);
 
 
-
     const wallOptions = { isStatic: true, restitution: 0.1, friction: 0.8, render: { visible: false } };
     
     const floorY = stageHeight + 250; 
@@ -851,9 +850,20 @@ function initPhysics() {
             // y축 스폰 간격을 주어 겹침 방지
             const startY = -600 - (idx * 180); 
 
-            const gbBody = Bodies.rectangle(startX, startY, hitBoxSize, hitBoxSize, { 
-                restitution: 0.01, friction: 1, frictionStatic: 10, frictionAir: 0.02, density: 2.0, chamfer: { radius: 6 }, render: { visible: false } 
-            });
+            const isCircle = [1, 3, 8].includes(Number(entry.shapeIdx));
+            let gbBody;
+            const bodyOptions = {
+                restitution: 0.01, friction: 1, frictionStatic: 10, frictionAir: 0.02, density: 2.0, render: { visible: false }
+            };
+            if (isCircle) {
+                const radius = hitBoxSize / 2;
+                gbBody = Bodies.circle(startX, startY, radius, bodyOptions);
+            } else {
+                gbBody = Bodies.rectangle(startX, startY, hitBoxSize, hitBoxSize, {
+                    ...bodyOptions,
+                    chamfer: { radius: 6 }
+                });
+            }
             Composite.add(world, gbBody);
 
             const wrapper = document.createElement('div');
@@ -1288,14 +1298,29 @@ function initGuestbookPhysics() {
 
         contentLayer.appendChild(character);
 
-        const characterBodyWidth = characterSize * 0.85; 
-        const characterBodyHeight = characterSize * 0.5; 
-        const characterBody = makeContentBody(
-            card.w / 2 + (Math.random() - 0.5) * card.w * 0.12,
-            50, 
-            characterBodyWidth,
-            characterBodyHeight
-        );
+        const isCircle = [1, 3, 8].includes(Number(entry.shapeIdx));
+        let characterBody;
+        const charX = card.w / 2 + (Math.random() - 0.5) * card.w * 0.12;
+        const charY = 50;
+        const bodyOptions = {
+            restitution: 0,
+            friction: 0.92,
+            frictionStatic: 1,
+            frictionAir: 0.05,
+            density: 0.05,
+            sleepThreshold: 30,
+            render: { visible: false }
+        };
+
+        if (isCircle) {
+            const radius = characterSize / 2;
+            characterBody = Bodies.circle(charX, charY, radius, bodyOptions);
+        } else {
+            characterBody = Bodies.rectangle(charX, charY, characterSize, characterSize, {
+                ...bodyOptions,
+                chamfer: { radius: Math.min(6, characterSize / 4) }
+            });
+        }
         registerContent(characterBody, character);
         Body.setInertia(characterBody, Infinity);
         Body.setAngularVelocity(characterBody, 0);
