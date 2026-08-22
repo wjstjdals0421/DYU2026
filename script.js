@@ -818,6 +818,7 @@ function initPhysics() {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
+
     const wallOptions = { isStatic: true, restitution: 0.1, friction: 0.8, render: { visible: false } };
     
     const floorY = stage.clientHeight + 250; 
@@ -918,7 +919,7 @@ function initPhysics() {
         { src: 'maingraphic-13.png', width: 1000, height: 400 } 
     ];
 
-    mainGraphics.forEach((image) => {
+    mainGraphics.forEach((image, index) => {
         const minScale = 0.25;
         const maxScale = 0.1;
         const randomScale = Math.random() * (maxScale - minScale) + minScale;
@@ -935,6 +936,7 @@ function initPhysics() {
             frictionAir: 0.02,
             density: 2.0,
             chamfer: { radius: 4 }, 
+            angle: (index === 4) ? 45 * Math.PI / 180 : 0,
             render: { sprite: { texture: image.src, xScale: randomScale, yScale: randomScale } }
         });
         Composite.add(world, graphic);

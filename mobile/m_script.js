@@ -819,7 +819,7 @@ function initPhysics() {
 
     Render.run(render);
     const runner = Runner.create({
-        isFixed: true // 타 페이지 이동 시(display:none) 누적된 시간 차이로 인해 유닛이 화면 밖으로 탈출하는 현상(터널링) 방지
+        isFixed: true
     });
     Runner.run(runner, engine);
 
@@ -959,6 +959,7 @@ function initPhysics() {
                 frictionAir: 0.02,
                 density: 2.0,
                 chamfer: { radius: 3 }, 
+                angle: (index === 4) ? 45 * Math.PI / 180 : 0,
                 render: { sprite: { texture: image.src, xScale: randomScale, yScale: randomScale } }
             });
         }
