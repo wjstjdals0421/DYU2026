@@ -772,10 +772,10 @@ function initPhysics() {
     const engine = Engine.create();
     const world = engine.world;
     
-    // 물리 엔진 해상도/반복 연산 횟수 증가 (겹침/터널링 완벽 차단)
-    engine.positionIterations = 30; 
-    engine.velocityIterations = 30; 
-    engine.world.gravity.y = 1.0; 
+    // 물리 엔진 해상도/반복 연산 횟수 최적 조율 (30 -> 12로 최적화 및 중력 복구)
+    engine.positionIterations = 12; 
+    engine.velocityIterations = 12; 
+    engine.world.gravity.y = 1.2; 
     
     const stage = document.getElementById('physics-stage');
     const gbStage = document.getElementById('main-guestbook-stage');
@@ -813,7 +813,7 @@ function initPhysics() {
             height: stageHeight,
             wireframes: false, // 와이어프레임 끄기 (이미지 정상 출력)
             background: 'transparent',
-            pixelRatio: window.devicePixelRatio || 1
+            pixelRatio: Math.min(2, window.devicePixelRatio || 1)
         }
     });
 
@@ -1209,7 +1209,7 @@ function initGuestbookPhysics() {
                 height: card.h,
                 wireframes: false,
                 background: 'transparent',
-                pixelRatio: window.devicePixelRatio || 1
+                pixelRatio: Math.min(2, window.devicePixelRatio || 1)
             }
         });
 
