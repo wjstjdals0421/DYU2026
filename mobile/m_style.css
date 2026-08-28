@@ -465,7 +465,6 @@ body.is-main-page .nav-link { color: #000; }
 .archive-poster {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1.414; 
     background-color: transparent; 
     overflow: hidden;
     display: flex; 
@@ -476,8 +475,8 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-poster-img { 
     width: 100%; 
-    height: 100%; 
-    object-fit: contain; /* 이미지 비율 유지하여 잘림 방지 */
+    height: auto; /* 가로폭에 강제 맞춤하고 세로는 이미지 본연의 비율로 자동 계산 */
+    display: block;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 그림자를 이미지 자체에 부여 */
     transition: filter 0.3s ease;
 }
