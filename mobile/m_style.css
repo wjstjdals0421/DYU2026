@@ -567,8 +567,8 @@ body.is-main-page .nav-link { color: #000; }
     transform: translateY(-50%);
 }
 .archive-nav-icon { 
-    width: 32px; /* 화살표 사이즈 최적화 */
-    height: 32px; 
+    width: 36px; /* 화살표 버튼 사이즈 증대 */
+    height: 36px; 
     object-fit: contain; 
 }
 .archive-dots { 
