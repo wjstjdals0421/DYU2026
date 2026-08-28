@@ -3,7 +3,7 @@
    =========================================================== */
 @font-face {
     font-family: '2026GSDD';
-    src: url('../2026GSDD-Bold.otf') format('opentype');
+    src: url('2026GSDD-Bold.otf') format('opentype');
     font-weight: normal; 
 }
 :root {
@@ -185,6 +185,7 @@ ul, ol { list-style: none; }
     display: block; 
     padding: 8px 0;
     transition: color 0.2s; 
+    text-transform: uppercase;
 }
 .nav-link.active { color: #000; }
 body.is-main-page .nav-link { color: #000; }
@@ -238,8 +239,10 @@ body.is-main-page .nav-link { color: #000; }
     margin-bottom: 12px; 
 }
 .works-filter-btn { 
+    font-family: '2026GSDD', sans-serif;
+    text-transform: uppercase;
     font-size: 13px; 
-    font-weight: 700; 
+    font-weight: normal; 
     color: #8a8a8a; 
     padding: 4px 10px; 
     line-height: 1; 

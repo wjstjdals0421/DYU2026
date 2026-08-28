@@ -70,7 +70,7 @@ function renderWorksGrid(data) {
         
         workItem.innerHTML = `
             <figure class="works-thumb">
-                2 Columns<br>(${work.thumbFile})
+                <img src="../${work.thumbFile}" alt="${work.title}" onerror="this.style.display='none'" class="thumb-bg-img" style="width: 100%; height: 100%; object-fit: cover;">
             </figure>
             <article class="works-meta">
                 <h3 class="works-title">${work.title}</h3>
