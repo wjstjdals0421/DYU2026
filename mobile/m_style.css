@@ -241,7 +241,7 @@ body.is-main-page .nav-link { color: #000; }
 .works-filter-btn { 
     font-family: '2026GSDD', sans-serif;
     text-transform: uppercase;
-    font-size: 11px; 
+    font-size: 10px; 
     font-weight: normal; 
     color: #8a8a8a; 
     padding: 6px 10px 4px; 
@@ -339,14 +339,18 @@ body.is-main-page .nav-link { color: #000; }
     padding-top: calc(50px + env(safe-area-inset-top) + 15px);
     padding-bottom: calc(55px + env(safe-area-inset-bottom) + 15px);
     box-sizing: border-box;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 #section-archive.active {
     display: flex;
-    align-items: center;
 }
 .archive-scroll-container {
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -373,7 +377,7 @@ body.is-main-page .nav-link { color: #000; }
     display: flex; 
     flex-direction: column; 
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 .archive-poster-wrapper {
     width: 55vw; 
@@ -415,23 +419,60 @@ body.is-main-page .nav-link { color: #000; }
     width: 100%;
     max-width: 280px;
     text-align: center;
-    padding: 10px 0;
+    padding: 8px 0;
 }
 .archive-title { 
     font-size: 16px; 
     font-weight: 800; 
     margin-top: 0;
-    margin-bottom: 8px; 
+    margin-bottom: 6px; 
     line-height: 1.3; 
     text-align: center;
 }
 .archive-desc { 
     font-family: var(--font-family); 
     font-size: 13px; 
-    line-height: 1.7; 
+    line-height: 1.6; 
     font-weight: 400; 
     text-align: center; 
     color: var(--color-text-sub);
+}
+.archive-controls { 
+    margin-top: 10px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 20px; 
+    width: 100%;
+    margin-bottom: 5px;
+}
+.archive-btn { 
+    background: transparent; 
+    border: none; 
+    padding: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.archive-nav-icon { 
+    width: 36px; 
+    height: 36px; 
+    object-fit: contain; 
+}
+.archive-dots { 
+    display: flex; 
+    gap: 6px; 
+}
+.archive-dot { 
+    width: 6px; 
+    height: 6px; 
+    background-color: #ccc; 
+    border-radius: 50%; 
+    transition: transform 0.2s, background-color 0.2s; 
+}
+.archive-dot.active { 
+    background-color: var(--color-text-main); 
+    transform: scale(1.2); 
 }
 
 /* ===========================================================

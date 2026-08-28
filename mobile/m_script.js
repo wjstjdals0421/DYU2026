@@ -220,8 +220,47 @@ function initDesignersInteractions() {
 }
 
 /* -----------------------------------------------------------
-   Archive 렌더링 로직 (모바일 가로 스크롤 방식)
+   Archive 렌더링 로직 (모바일 가로 스크롤 방식 + 슬라이드 컨트롤 연동)
 ----------------------------------------------------------- */
+function updateArchiveDotsOnScroll() {
+    const container = document.getElementById('archive-scroll-container');
+    if (!container) return;
+    
+    const cardWidth = container.clientWidth;
+    if (cardWidth <= 0) return;
+    
+    const activeIndex = Math.round(container.scrollLeft / cardWidth);
+    
+    const dots = document.querySelectorAll('#archive-dots-container .archive-dot');
+    dots.forEach((dot, idx) => {
+        if (idx === activeIndex) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+}
+
+function moveArchiveSlide(direction) {
+    const container = document.getElementById('archive-scroll-container');
+    if (!container) return;
+    
+    const cardWidth = container.clientWidth;
+    if (cardWidth <= 0) return;
+    
+    // 현재 인덱스 계산 후 direction만큼 이동
+    const currentIndex = Math.round(container.scrollLeft / cardWidth);
+    let nextIndex = currentIndex + direction;
+    
+    if (nextIndex < 0) nextIndex = archiveDataset.length - 1;
+    if (nextIndex >= archiveDataset.length) nextIndex = 0;
+    
+    container.scrollTo({
+        left: nextIndex * cardWidth,
+        behavior: 'smooth'
+    });
+}
+
 function initArchiveScroll() {
     const container = document.getElementById('archive-scroll-container');
     if (!container) return;
@@ -248,6 +287,25 @@ function initArchiveScroll() {
         `;
         container.appendChild(card);
     });
+
+    // dots 조작기 동적 생성
+    const dotsContainer = document.getElementById('archive-dots-container');
+    if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        archiveDataset.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = idx === 0 ? 'archive-dot active' : 'archive-dot';
+            dot.onclick = () => {
+                const cardWidth = container.clientWidth;
+                container.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+            };
+            dotsContainer.appendChild(dot);
+        });
+    }
+
+    // 스크롤 시 도트 활성화 동기화 이벤트
+    container.removeEventListener('scroll', updateArchiveDotsOnScroll);
+    container.addEventListener('scroll', updateArchiveDotsOnScroll);
 }
 
 /* -----------------------------------------------------------
@@ -370,8 +428,8 @@ function completeNavigation(pageName) {
     }
     
     if (pageName === 'archive') {
-        archiveIndex = 0; 
-        updateArchiveView();
+        const scrollContainer = document.getElementById('archive-scroll-container');
+        if (scrollContainer) scrollContainer.scrollLeft = 0;
     }
     
     const navMenu = document.getElementById('nav-menu');
