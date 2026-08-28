@@ -388,8 +388,8 @@ body.is-main-page .nav-link { color: #000; }
     position: relative;
     display: none;
     width: 100%;
-    min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
-    min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
+    height: calc(100vh - 55px - env(safe-area-inset-bottom));
+    height: calc(100dvh - 55px - env(safe-area-inset-bottom));
     padding-top: calc(50px + env(safe-area-inset-top)); /* 헤더 영역만큼만 밀어줌 */
     padding-bottom: 0; /* 세로 정렬에 간섭하지 않도록 패딩 제거 */
     box-sizing: border-box;
@@ -480,16 +480,10 @@ body.is-main-page .nav-link { color: #000; }
 .archive-text-area { 
     width: 100%;
     max-width: 280px;
-    max-height: 120px; /* 긴 텍스트 대비 최대 높이 지정 */
-    overflow-y: auto;
+    height: auto;
     text-align: center;
     padding: 6px 0;
     box-sizing: border-box;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-.archive-text-area::-webkit-scrollbar {
-    display: none; /* 스크롤바 감추기 */
 }
 .archive-title { 
     font-size: 16px; 
