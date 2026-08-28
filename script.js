@@ -934,10 +934,10 @@ function initPhysics() {
     const typoScale = 0.3; 
     const typoGraphics = [
         { src: 'typo-1.png', width: 3132, height: 398, customScale: 0.15 },
-        { src: 'typo-2.png', width: 925, height: 134, customScale: 0.45 }, /* 50% 확대 */
-        { src: 'typo-3.png', width: 1242, height: 350, customScale: 0.225 }, /* 50% 확대 */
-        { src: 'typo-4.png', width: 884, height: 134, customScale: 0.45 }, /* 50% 확대 */
-        { src: 'typo-5.png', width: 423, height: 134, customScale: 0.45 }  /* 50% 확대 */
+        { src: 'typo-2.png', width: 925, height: 134 },
+        { src: 'typo-3.png', width: 1242, height: 350, customScale: 0.15 },
+        { src: 'typo-4.png', width: 884, height: 134 },
+        { src: 'typo-5.png', width: 423, height: 134 }
     ];
 
     typoGraphics.forEach((typo, index) => {
