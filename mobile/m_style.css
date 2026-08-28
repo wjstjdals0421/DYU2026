@@ -427,12 +427,12 @@ body.is-main-page .nav-link { color: #000; }
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* 카드 내용물(포스터 + 텍스트) 세로축 중앙 정렬 */
+    justify-content: center; 
     box-sizing: border-box;
-    padding-left: 45px; /* 좌우 화살표 버튼 공간 확보 */
-    padding-right: 45px;
+    padding-left: 55px; /* 화살표 크기 확대로 인한 공간 추가 확보 */
+    padding-right: 55px;
     padding-top: 25px;
-    padding-bottom: 45px; /* 하단 도트 조작기(bottom 15px)와의 겹침 방지 여백 */
+    padding-bottom: 45px; 
 }
 .archive-visual-area { 
     width: 100%;
@@ -442,26 +442,31 @@ body.is-main-page .nav-link { color: #000; }
     margin-bottom: 12px;
 }
 .archive-poster-wrapper {
-    width: 50vw; /* 포스터 사이즈 모바일 최적화 조정 */
-    max-width: 200px;
-    min-width: 150px;
+    position: relative; /* 연도 오버레이 기준점 설정 */
+    width: 65vw; /* 포스터 면적 최대 확대 */
+    max-width: 250px;
+    min-width: 170px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 .archive-year-display { 
-    font-size: 15px; 
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 13px; 
     font-weight: 800; 
     line-height: 1;
     text-align: center; 
-    padding: 5px 12px;  
+    padding: 6px 10px;  
     color: #000000;     
     white-space: nowrap;
-    margin-bottom: 8px;
-    border-radius: 4px;
+    border-radius: 0 !important; /* 각진 박스로 라운딩 제거 */
+    margin: 0;
+    z-index: 5;
 }
 .archive-poster {
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1.414; 
     background-color: transparent; 
@@ -471,35 +476,73 @@ body.is-main-page .nav-link { color: #000; }
     justify-content: center; 
     border: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    cursor: pointer;
 }
-.archive-poster img { 
+.archive-poster-img { 
     width: 100%; 
     height: 100%; 
     object-fit: cover; 
+    transition: filter 0.3s ease;
+}
+/* 설명글 터치 시 흐려지고 어두워지는 오버레이 스타일 */
+.archive-desc-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 2;
+}
+.archive-poster.show-desc .archive-poster-img {
+    filter: blur(5px) brightness(30%);
+}
+.archive-poster.show-desc .archive-desc-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+.archive-overlay-desc {
+    font-family: var(--font-family);
+    font-size: 11px;
+    line-height: 1.6;
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    margin: 0 0 12px 0;
+    word-break: keep-all;
+}
+.archive-link-btn {
+    background-color: #ffffff;
+    color: #000000;
+    border: none;
+    padding: 6px 12px;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    white-space: nowrap;
 }
 .archive-text-area { 
     width: 100%;
     max-width: 280px;
-    height: auto;
     text-align: center;
     padding: 6px 0;
     box-sizing: border-box;
 }
 .archive-title { 
-    font-size: 16px; 
+    font-size: 15px; 
     font-weight: 800; 
     margin-top: 0;
     margin-bottom: 6px; 
     line-height: 1.3; 
     text-align: center;
-}
-.archive-desc { 
-    font-family: var(--font-family); 
-    font-size: 13px; 
-    line-height: 1.6; 
-    font-weight: 400; 
-    text-align: center; 
-    color: var(--color-text-sub);
 }
 .archive-btn { 
     background: transparent; 
@@ -508,29 +551,28 @@ body.is-main-page .nav-link { color: #000; }
     display: flex; 
     align-items: center; 
     justify-content: center; 
+    z-index: 10;
 }
 .archive-btn.prev-btn {
     position: absolute;
     left: 8px;
-    top: 40%; /* 포스터 좌우 중간 높이에 오도록 설정 */
+    top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
-    z-index: 10;
 }
 .archive-btn.next-btn {
     position: absolute;
     right: 8px;
-    top: 40%; /* 포스터 좌우 중간 높이에 오도록 설정 */
+    top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
-    z-index: 10;
 }
 .archive-nav-icon { 
-    width: 32px; /* 좌우 배치용 아이콘 크기 살짝 조정 */
-    height: 32px; 
+    width: 42px; /* 화살표 사이즈 확대 */
+    height: 42px; 
     object-fit: contain; 
 }
 .archive-dots { 
     position: absolute;
-    bottom: 15px; /* 메뉴바(55px+safe-area) 영역은 부모 박스 크기 연산에서 이미 빠졌으므로, 순수 하단 여백 15px만 지정 */
+    bottom: 15px; 
     left: 50%;
     transform: translateX(-50%);
     display: flex; 

@@ -271,6 +271,16 @@ function updateArchiveDotsOnScroll() {
             dot.classList.remove('active');
         }
     });
+
+    // 스크롤 시 모든 포스터의 설명글 오버레이 상태를 닫음 (기본 포스터 노출 상태로 리셋)
+    document.querySelectorAll('.archive-poster').forEach(poster => {
+        poster.classList.remove('show-desc');
+    });
+}
+
+function toggleArchiveDesc(posterElement) {
+    if (!posterElement) return;
+    posterElement.classList.toggle('show-desc');
 }
 
 function moveArchiveSlide(direction) {
@@ -306,15 +316,20 @@ function initArchiveScroll() {
             <div class="archive-visual-area">
                 <div class="archive-poster-wrapper">
                     <p class="archive-year-display" style="background-color: ${data.bgColor};">${data.year}</p>
-                    <figure class="archive-poster" onclick="window.open('${data.link}', '_blank')">
-                        <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster">
+                    <figure class="archive-poster" onclick="toggleArchiveDesc(this)">
+                        <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster" class="archive-poster-img">
+                        <div class="archive-desc-overlay">
+                            <p class="archive-overlay-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
+                            <button class="archive-link-btn" onclick="window.open('${data.link}', '_blank'); event.stopPropagation();">
+                                전시 사이트 보기 →
+                            </button>
+                        </div>
                     </figure>
                 </div>
             </div>
             
             <div class="archive-text-area">
                 <h2 class="archive-title">${data.title}</h2>
-                <p class="archive-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
             </div>
         `;
         container.appendChild(card);
