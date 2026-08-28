@@ -22,8 +22,12 @@ function preloadPhysicsResources() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 돔 로드 즉시 백그라운드 이미지 사전 로드 가동
+    // 돔 로드 즉시 백그라운드 이미지 사전 로드 가동 (캐시 유입)
     preloadPhysicsResources();
+    
+    // 오프닝 영상이 재생되는 동안 CPU 유휴 시간을 선제적으로 활용하여 Works/Designers 그리드 등 돔 렌더링 작업을 완료시킴
+    // (영상이 끝난 후 돔 대량 생성으로 인한 CPU 과부하 차단)
+    initDomAndData();
 
     const introScreen = document.getElementById('intro-screen');
     const introVideo = document.getElementById('intro-video');
@@ -38,10 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (sessionStorage.getItem('gsdd_intro_played')) {
         if (introScreen) {
-            introScreen.style.display = 'none';
-            introScreen.classList.add('hidden');
+            introScreen.remove(); // 돔에서 비디오 요소를 완전히 영구 삭제하여 하드웨어 가속 리소스 즉시 반환
         }
-        initMainApp();
+        initPhysics(); // 물리 엔진 즉시 구동 (랙 유발 요인이 이미 차단됨)
     } else {
         if (introVideo) {
             introVideo.currentTime = 0; 
@@ -52,13 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
             introVideo.onended = hideIntro;
             introVideo.onerror = hideIntro;
         } else {
-            initMainApp();
+            if (introScreen) introScreen.remove();
+            initPhysics();
         }
     }
 
     function hideIntro() {
         sessionStorage.setItem('gsdd_intro_played', 'true');
-        // 오프닝 영상 종료 즉시 비디오 하드웨어 가속기 메모리를 해제하여 CPU 점유율 반환
+        // 오프닝 영상 종료 즉시 비디오 하드웨어 가속기 메모리를 완전 정지하고 소멸
         if (introVideo) {
             introVideo.pause();
             introVideo.src = "";
@@ -68,16 +72,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (introScreen) {
             introScreen.classList.add('hidden');
-            setTimeout(() => introScreen.style.display = 'none', 500);
+            // 페이드아웃 애니메이션(500ms)이 끝나는 즉시 돔에서 엘리먼트를 아예 삭제해 GPU 전력 사용을 차단하고 물리 엔진 기동
+            setTimeout(() => {
+                introScreen.remove();
+                initPhysics();
+            }, 500);
+        } else {
+            initPhysics();
         }
-        initMainApp(); 
     }
 });
 
-let isAppInitialized = false;
-function initMainApp() {
-    if (isAppInitialized) return;
-    isAppInitialized = true;
+let isDomInitialized = false;
+function initDomAndData() {
+    if (isDomInitialized) return;
+    isDomInitialized = true;
 
     renderWorksGrid(worksDataset);
     initArchiveScroll();
@@ -88,12 +97,6 @@ function initMainApp() {
     
     // 처음 실행 시 메인으로 가며 로딩은 스킵 
     navigateToPage('main', true); 
-
-    // 인트로 비디오 페이드아웃(500ms) 및 초기 돔 렌더링 부하가 완전히 정착된 뒤인 1200ms(1.2초) 후에
-    // CPU/GPU가 완전히 가볍고 여유로운 유휴 상태(Idle)가 되면 물리 시뮬레이션을 60fps로 깔끔하게 시작
-    setTimeout(() => {
-        initPhysics();
-    }, 1200);
 }
 
 /* -----------------------------------------------------------
