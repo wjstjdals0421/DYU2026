@@ -385,7 +385,7 @@ body.is-main-page .nav-link { color: #000; }
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
     padding-top: calc(50px + env(safe-area-inset-top) + 15px);
-    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 15px);
+    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 45px); /* 버튼 간섭 방지를 위해 바텀 패딩 확대 */
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
@@ -414,6 +414,7 @@ body.is-main-page .nav-link { color: #000; }
 .archive-card {
     flex: 0 0 100%;
     scroll-snap-align: start;
+    scroll-snap-stop: always; /* 한 번 스크롤할 때 무조건 카드 하나씩만 멈추도록 강제 설정 */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -466,8 +467,16 @@ body.is-main-page .nav-link { color: #000; }
 .archive-text-area { 
     width: 100%;
     max-width: 280px;
+    max-height: 95px; /* 설명글이 무한정 길어져 잘리는 현상 방지를 위해 최대 높이 제한 후 스크롤 제공 */
+    overflow-y: auto;
     text-align: center;
-    padding: 8px 0;
+    padding: 6px 0;
+    box-sizing: border-box;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.archive-text-area::-webkit-scrollbar {
+    display: none; /* 스크롤바 감추기 */
 }
 .archive-title { 
     font-size: 16px; 
@@ -487,7 +496,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-controls { 
     position: absolute;
-    bottom: 20px; /* 로고/메뉴바를 제외한 화면 최하단 부분에 고정 배치 */
+    bottom: 40px; /* 로고/메뉴바를 제외한 화면 최하단 부분에 고정 배치 (위치를 40px로 위로 올림) */
     left: 50%;
     transform: translateX(-50%);
     display: flex; 
