@@ -428,8 +428,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; 
     box-sizing: border-box;
-    padding-left: 44px; /* 버튼과의 10px 안전 거리를 위한 수학적 패딩 (버튼34px + 간격10px) */
-    padding-right: 44px;
+    padding-left: 55px; /* 버튼 45px 증대에 따른 안전 갭 확보 패딩 (버튼한계47px + 8px 여백) */
+    padding-right: 55px;
     padding-top: 25px;
     padding-bottom: 45px; 
 }
@@ -567,8 +567,8 @@ body.is-main-page .nav-link { color: #000; }
     transform: translateY(-50%);
 }
 .archive-nav-icon { 
-    width: 36px; /* 화살표 버튼 사이즈 증대 */
-    height: 36px; 
+    width: 45px; /* 화살표 버튼 사이즈 증대 (45px) */
+    height: 45px; 
     object-fit: contain; 
 }
 .archive-dots { 
