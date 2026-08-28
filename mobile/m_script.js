@@ -84,16 +84,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let isDomInitialized = false;
+let isWorksInitialized = false;
+let isArchiveInitialized = false;
+let isDesignersInitialized = false;
+
+function lazyInitializePage(pageName) {
+    if ((pageName === 'works' || pageName === 'detail') && !isWorksInitialized) {
+        renderWorksGrid(worksDataset);
+        isWorksInitialized = true;
+    } else if (pageName === 'archive' && !isArchiveInitialized) {
+        initArchiveScroll();
+        isArchiveInitialized = true;
+    } else if (pageName === 'designers' && !isDesignersInitialized) {
+        renderDesignersList('All');
+        isDesignersInitialized = true;
+    }
+}
+
 function initDomAndData() {
     if (isDomInitialized) return;
     isDomInitialized = true;
 
-    renderWorksGrid(worksDataset);
-    initArchiveScroll();
-    initGuestbookControls();
-    
-    // 디자이너 페이지 렌더링 & 초기화
-    renderDesignersList('All');
+    initGuestbookControls(); // 가벼운 방명록 컨트롤만 미리 설정
     
     // 처음 실행 시 메인으로 가며 로딩은 스킵 
     navigateToPage('main', true); 
@@ -407,6 +419,9 @@ const loadingCombinations = [
 function navigateToPage(pageName, skipLoading = false) {
     const targetId = `section-${pageName}`;
     const targetSection = document.getElementById(targetId);
+    
+    // 이동하려는 타겟 페이지 지연 로딩(Lazy Load) 구동
+    lazyInitializePage(pageName);
     
     if (targetSection && targetSection.classList.contains('active') && !skipLoading) return;
     if (isNavigating) return;
