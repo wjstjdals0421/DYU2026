@@ -766,28 +766,4 @@ body.is-main-page .nav-link { color: #000; }
     display: none !important;
 }
 
-/* 세로 높이가 짧은 폰을 위한 반응형 뷰포트 높이 비율 조율 (아카이브 스크롤 제거 및 버튼 보장) */
-@media (max-height: 740px) {
-    .archive-poster-wrapper {
-        max-width: 175px !important; /* 세로가 짧은 폰에서는 포스터 크기 축소 */
-    }
-    .archive-text-area {
-        height: 135px !important; /* 세로가 짧은 폰에서도 포스터 위치가 흔들리지 않도록 고정 높이 원복 */
-    }
-    .archive-title {
-        font-size: 16px !important; /* 14px에서 16px로 확대 */
-        margin-bottom: 4px !important;
-    }
-    .archive-desc {
-        font-size: 11px !important; /* 10px에서 11px로 확대 */
-        line-height: 1.4 !important;
-    }
-    .archive-controls {
-        bottom: 10px !important; /* 세로가 짧은 폰에서는 바닥 마진을 10px로 더 좁혀서 공간 압축 */
-        margin: 0 !important;
-    }
-    .archive-nav-icon {
-        width: 36px !important; /* 30px에서 36px로 확대 */
-        height: 36px !important;
-    }
-}
+
