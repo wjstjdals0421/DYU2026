@@ -428,8 +428,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; 
     box-sizing: border-box;
-    padding-left: 48px; /* 양옆 화살표 버튼 공간 확보를 위한 패딩 설정 */
-    padding-right: 48px;
+    padding-left: 42px; /* 포스터 크기 20% 확대를 위해 좌우 여백 패딩 소폭 축소 */
+    padding-right: 42px;
     padding-top: 25px;
     padding-bottom: 45px; 
 }
@@ -442,8 +442,8 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-poster-wrapper {
     width: 100%; /* 포스터가 카드 내에서 활용할 수 있는 가로 영역을 최대로 활용 */
-    max-width: 300px; /* 대화면이나 가로 모드에서도 너무 거대해지지 않도록 상한 지정 */
-    min-width: 180px;
+    max-width: 360px; /* 기존 300px 대비 20% 확대 적용 */
+    min-width: 200px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -557,19 +557,19 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-btn.prev-btn {
     position: absolute;
-    left: 4px;
+    left: 2px;
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
 .archive-btn.next-btn {
     position: absolute;
-    right: 4px;
+    right: 2px;
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
 .archive-nav-icon { 
-    width: 38px; /* 화살표 사이즈 최적화 */
-    height: 38px; 
+    width: 36px; /* 화살표 사이즈 미세 최적화 */
+    height: 36px; 
     object-fit: contain; 
 }
 .archive-dots { 
