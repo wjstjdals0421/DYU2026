@@ -428,8 +428,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; 
     box-sizing: border-box;
-    padding-left: 38px; /* 포스터의 실물 폰 크기를 더욱 극대화하기 위해 여백 패딩을 최소화(38px) */
-    padding-right: 38px;
+    padding-left: 44px; /* 버튼과의 10px 안전 거리를 위한 수학적 패딩 (버튼34px + 간격10px) */
+    padding-right: 44px;
     padding-top: 25px;
     padding-bottom: 45px; 
 }
@@ -442,7 +442,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-poster-wrapper {
     width: 100%; /* 포스터가 카드 내에서 활용할 수 있는 가로 영역을 최대로 활용 */
-    max-width: 380px; /* 실기기용 극대화 사이즈 적용 */
+    max-width: 340px; /* 대화면 및 해상도 대응 상한값 */
     min-width: 200px;
     margin: 0 auto;
     display: flex;
