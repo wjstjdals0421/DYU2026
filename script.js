@@ -1,6 +1,3 @@
-// worksDataset 및 archiveDataset은 공통 파일인 works_data.js에서 로드되므로 본 파일에서는 중복 선언을 삭제합니다.
-
-
 /* -----------------------------------------------------------
    최초 진입 오프닝 영상 (최초 1회만 재생, 새로고침 시 스킵)
 ----------------------------------------------------------- */
@@ -63,19 +60,24 @@ function renderWorksGrid(data) {
     const grid = document.getElementById('works-list-grid');
     grid.innerHTML = '';
     
-    data.forEach(work => {
+    const sortedData = [...data].sort((a, b) => a.designer.localeCompare(b.designer));
+    
+    sortedData.forEach(work => {
         const workItem = document.createElement('li'); 
-        workItem.className = 'works-item';
+        workItem.className = `works-item category-${work.category.toLowerCase()}`;
         workItem.onclick = () => showWorkDetail(work.id);
         
         workItem.innerHTML = `
             <figure class="works-thumb">
-                3 Columns<br>282px x 352px<br>(${work.thumbFile})
+                <img src="${work.thumbFile}" alt="${work.title}" onerror="this.style.display='none'" class="thumb-bg-img">
+                <div class="works-hover-overlay">
+                    <div class="works-hover-content">
+                        <p class="works-hover-title">${work.title}</p>
+                        <p class="works-hover-name">${work.designer}</p>
+                    </div>
+                    <p class="works-hover-category">${work.category.toUpperCase()}</p>
+                </div>
             </figure>
-            <article class="works-meta">
-                <h3 class="works-title">${work.title}</h3>
-                <p class="works-author">${work.designer} / ${work.category}</p>
-            </article>
         `;
         grid.appendChild(workItem);
     });
@@ -818,7 +820,6 @@ function initPhysics() {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-
     const wallOptions = { isStatic: true, restitution: 0.1, friction: 0.8, render: { visible: false } };
     
     const floorY = stage.clientHeight + 250; 
@@ -843,20 +844,9 @@ function initPhysics() {
             const startX = randomXForWidth(hitBoxSize);
             const startY = -800 - (idx * 250); 
 
-            const isCircle = [1, 3, 8].includes(Number(entry.shapeIdx));
-            let gbBody;
-            const bodyOptions = {
-                restitution: 0.01, friction: 1, frictionStatic: 10, frictionAir: 0.02, density: 2.0, render: { visible: false }
-            };
-            if (isCircle) {
-                const radius = hitBoxSize / 2;
-                gbBody = Bodies.circle(startX, startY, radius, bodyOptions);
-            } else {
-                gbBody = Bodies.rectangle(startX, startY, hitBoxSize, hitBoxSize, {
-                    ...bodyOptions,
-                    chamfer: { radius: 10 }
-                });
-            }
+            const gbBody = Bodies.rectangle(startX, startY, hitBoxSize, hitBoxSize, { 
+                restitution: 0.01, friction: 1, frictionStatic: 10, frictionAir: 0.02, density: 2.0, chamfer: { radius: 10 }, render: { visible: false } 
+            });
             Composite.add(world, gbBody);
 
             const wrapper = document.createElement('div');
@@ -919,7 +909,7 @@ function initPhysics() {
         { src: 'maingraphic-13.png', width: 1000, height: 400 } 
     ];
 
-    mainGraphics.forEach((image, index) => {
+    mainGraphics.forEach((image) => {
         const minScale = 0.25;
         const maxScale = 0.1;
         const randomScale = Math.random() * (maxScale - minScale) + minScale;
@@ -936,7 +926,6 @@ function initPhysics() {
             frictionAir: 0.02,
             density: 2.0,
             chamfer: { radius: 4 }, 
-            angle: (index === 4) ? 45 * Math.PI / 180 : 0,
             render: { sprite: { texture: image.src, xScale: randomScale, yScale: randomScale } }
         });
         Composite.add(world, graphic);
@@ -945,10 +934,10 @@ function initPhysics() {
     const typoScale = 0.3; 
     const typoGraphics = [
         { src: 'typo-1.png', width: 3132, height: 398, customScale: 0.15 },
-        { src: 'typo-2.png', width: 925, height: 134 },
-        { src: 'typo-3.png', width: 1242, height: 350, customScale: 0.15 },
-        { src: 'typo-4.png', width: 884, height: 134 },
-        { src: 'typo-5.png', width: 423, height: 134 }
+        { src: 'typo-2.png', width: 925, height: 134, customScale: 0.45 }, /* 50% 확대 */
+        { src: 'typo-3.png', width: 1242, height: 350, customScale: 0.225 }, /* 50% 확대 */
+        { src: 'typo-4.png', width: 884, height: 134, customScale: 0.45 }, /* 50% 확대 */
+        { src: 'typo-5.png', width: 423, height: 134, customScale: 0.45 }  /* 50% 확대 */
     ];
 
     typoGraphics.forEach((typo, index) => {
@@ -1068,7 +1057,7 @@ function initGuestbookPhysics() {
     const getColumns = () => {
         if (window.innerWidth <= 768) return 2;
         if (window.innerWidth <= 1100) return 3;
-        return 4;
+        return 5;
     };
 
     const getTopMargin = () => window.innerWidth <= 768 ? 100 : 150; 
@@ -1250,29 +1239,14 @@ function initGuestbookPhysics() {
 
         contentLayer.appendChild(character);
 
-        const isCircle = [1, 3, 8].includes(Number(entry.shapeIdx));
-        let characterBody;
-        const charX = card.w / 2 + (Math.random() - 0.5) * card.w * 0.16;
-        const charY = 60;
-        const bodyOptions = {
-            restitution: 0,
-            friction: 0.92,
-            frictionStatic: 1,
-            frictionAir: 0.05,
-            density: 0.05,
-            sleepThreshold: 30,
-            render: { visible: false }
-        };
-
-        if (isCircle) {
-            const radius = characterSize / 2;
-            characterBody = Bodies.circle(charX, charY, radius, bodyOptions);
-        } else {
-            characterBody = Bodies.rectangle(charX, charY, characterSize, characterSize, {
-                ...bodyOptions,
-                chamfer: { radius: Math.min(6, characterSize / 4) }
-            });
-        }
+        const characterBodyWidth = characterSize * 0.85; 
+        const characterBodyHeight = characterSize * 0.5; 
+        const characterBody = makeContentBody(
+            card.w / 2 + (Math.random() - 0.5) * card.w * 0.16,
+            60, 
+            characterBodyWidth,
+            characterBodyHeight
+        );
         registerContent(characterBody, character);
         Body.setInertia(characterBody, Infinity);
         Body.setAngularVelocity(characterBody, 0);
