@@ -442,18 +442,15 @@ body.is-main-page .nav-link { color: #000; }
     margin-bottom: 12px;
 }
 .archive-poster-wrapper {
-    position: relative; /* 연도 오버레이 기준점 설정 */
     width: 65vw; /* 포스터 면적 최대 확대 */
     max-width: 250px;
     min-width: 170px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
+    align-items: flex-start; /* 내부 연도 뱃지와 포스터를 왼쪽 정렬 */
 }
 .archive-year-display { 
-    position: absolute;
-    left: 0;
-    top: 0;
     font-size: 13px; 
     font-weight: 800; 
     line-height: 1;
@@ -463,6 +460,7 @@ body.is-main-page .nav-link { color: #000; }
     white-space: nowrap;
     border-radius: 0 !important; /* 각진 박스로 라운딩 제거 */
     margin: 0;
+    align-self: flex-start; /* 포스터 위 왼쪽 상단에 정확히 배치 */
     z-index: 5;
 }
 .archive-poster {
@@ -517,17 +515,22 @@ body.is-main-page .nav-link { color: #000; }
     margin: 0 0 12px 0;
     word-break: keep-all;
 }
-.archive-link-btn {
-    background-color: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 6px 12px;
-    font-size: 10px;
-    font-weight: bold;
-    border-radius: 2px;
+.archive-link-text {
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    font-size: 9px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.05em;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    white-space: nowrap;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5); /* 슬림하고 예쁜 밑선 */
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+    text-transform: uppercase;
+}
+.archive-link-text:active {
+    opacity: 0.6;
 }
 .archive-text-area { 
     width: 100%;

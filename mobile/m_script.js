@@ -320,9 +320,9 @@ function initArchiveScroll() {
                         <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster" class="archive-poster-img">
                         <div class="archive-desc-overlay">
                             <p class="archive-overlay-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
-                            <button class="archive-link-btn" onclick="window.open('${data.link}', '_blank'); event.stopPropagation();">
-                                전시 사이트 보기 →
-                            </button>
+                            <span class="archive-link-text" onclick="window.open('${data.link}', '_blank'); event.stopPropagation();">
+                                VIEW EXHIBITION →
+                            </span>
                         </div>
                     </figure>
                 </div>
