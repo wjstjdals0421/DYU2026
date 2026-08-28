@@ -13,9 +13,9 @@
     --color-text-sub: #555555;
     --color-placeholder: #e0e0e0;
     
-    --grid-container: 1200px;
+    --grid-container: 100%; 
     --grid-gap: 24px;
-    --site-margin: 20px; 
+    --site-margin: 32px; 
     
     --font-family: 'avenir-lt-pro', 'Pretendard', sans-serif;
 
@@ -84,7 +84,8 @@ ul, ol { list-style: none; }
    3. 공통 레이아웃
 =========================================================== */
 .container {
-    max-width: var(--grid-container);
+    width: calc(100% - 64px); 
+    max-width: 100%;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -106,10 +107,13 @@ ul, ol { list-style: none; }
 .top-title-img { height: 50px; object-fit: contain; transition: height 0.3s ease; }
 
 .global-header.bottom-nav { width: 100%; background: var(--color-background); position: fixed; top: auto; bottom: 0; z-index: 1000; border-top: 4.5px solid #111; border-bottom: none; }
-.nav-wrapper { max-width: calc(var(--grid-container) + (var(--site-margin) * 2)); padding: 0 var(--site-margin); margin: 0 auto; display: flex; align-items: center; justify-content: center; height: 80px; }
+.nav-wrapper { max-width: 100%; padding: 0 32px; margin: 0 auto; display: flex; align-items: center; justify-content: center; height: 80px; } 
 .nav-menu { display: flex; justify-content: space-between; width: 100%; max-width: 960px; gap: 20px; }
 
-.nav-link { font-family: '2026GSDD', sans-serif; font-size: var(--text-md); font-weight: normal; color: #8a8a8a; display: inline-block; transform-origin: center; transition: color 0.2s; }
+/* ===========================================================
+   메뉴바 글씨 크기 조절
+=========================================================== */
+.nav-link { font-family: '2026GSDD', sans-serif; font-size: 16px; font-weight: normal; color: #8a8a8a; display: inline-block; transform-origin: center; transition: color 0.2s; text-transform: uppercase; } 
 .nav-link:hover { animation: nav-wiggle 0.45s ease-in-out infinite alternate; }
 .nav-link.active { color: #000; }
 body.is-main-page .nav-link { color: #000; }
@@ -132,7 +136,8 @@ body.is-main-page .nav-link { color: #000; }
    6. Works List Section
 =========================================================== */
 .works-filter-group { grid-column: span 12; display: flex; gap: 20px; justify-content: center; margin-bottom: 20px; }
-.works-filter-btn { font-size: var(--text-sm); font-weight: 700; color: #8a8a8a; padding: 5px 13px; line-height: 1; transition: color 0.2s; }
+/* 수정: 폰트 사이즈를 15px에서 13px로, 패딩을 약간 줄여 버튼 전체 크기 축소 */
+.works-filter-btn { font-family: '2026GSDD', sans-serif; text-transform: uppercase; font-size: 13px; font-weight: normal; color: #8a8a8a; padding: 9px 12px 6px; line-height: 1; transition: color 0.2s; }
 .works-filter-btn.active { color: var(--color-text-main); }
 #filter-all.active { background-color: #009FE8; }
 #filter-visual.active { background-color: #ED83B2; }
@@ -141,16 +146,93 @@ body.is-main-page .nav-link { color: #000; }
 #d-filter-visual.active { background-color: #ED83B2; }
 #d-filter-space.active { background-color: #F39800; }
 
-.works-grid-list { grid-column: span 12; display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--grid-gap); }
-.works-item { grid-column: span 3; margin-bottom: 50px; transition: opacity 0.2s; transform-origin: center; cursor: pointer; }
+.works-grid-list { grid-column: span 12; display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--grid-gap); } 
+.works-item { grid-column: span 1; transition: opacity 0.2s; transform-origin: center; cursor: pointer; }
 .works-item:hover { opacity: 0.8; animation: work-wiggle 0.45s ease-in-out infinite alternate; }
 
 @keyframes work-wiggle { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
 
-.works-thumb { width: 100%; aspect-ratio: 282 / 352; background-color: var(--color-placeholder); display: flex; align-items: center; justify-content: center; color: var(--color-text-sub); font-size: 12px; padding: 20px; text-align: center; }
-.works-meta { margin-top: 18px; }
-.works-title { font-size: var(--text-sm); font-weight: 700; margin-bottom: 6px; }
-.works-author { font-size: var(--text-base); color: var(--color-text-sub); }
+/* ===========================================================
+   Works 호버 인터랙션 (스크린샷 디자인 적용)
+=========================================================== */
+.works-thumb { 
+    position: relative; 
+    width: 100%; 
+    aspect-ratio: 282 / 352; 
+    background-color: var(--color-placeholder); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    overflow: hidden; 
+}
+
+.thumb-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: -webkit-optimize-contrast; 
+    transform: translateZ(0); 
+    backface-visibility: hidden; 
+}
+
+/* 호버 시 나타나는 오버레이 기본 상태 (숨김) */
+.works-hover-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #ffffff;
+    text-align: center;
+    padding: 30px 20px;
+}
+
+/* 호버 시 오버레이 표시 */
+.works-item:hover .works-hover-overlay {
+    opacity: 1;
+}
+
+/* 카테고리별 오버레이 배경색 (Visual / Space) */
+.works-item.category-visual .works-hover-overlay {
+    background-color: #ED83B2;
+}
+.works-item.category-space .works-hover-overlay {
+    background-color: #F39800;
+}
+
+/* 텍스트 컨텐츠 정렬 (작품명, 이름) */
+.works-hover-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 13px;
+}
+
+/* 작품명, 이름 같은 크기 적용 */
+.works-hover-title,
+.works-hover-name {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* 하단 카테고리 (VISUAL / SPACE) */
+.works-hover-category {
+    font-family: '2026GSDD', sans-serif;
+    font-size: 10px;
+    margin: 0;
+    letter-spacing: 1px;
+}
+
+.works-meta { 
+    display: none; 
+}
 
 /* ===========================================================
    7. Works Detail Section
@@ -159,7 +241,14 @@ body.is-main-page .nav-link { color: #000; }
 .detail-container { display: flex; gap: 40px; justify-content: center; align-items: flex-start; max-width: 1200px; margin: 0 auto; width: 100%; }
 .detail-image-area { width: 588px; display: flex; flex-direction: column; flex-shrink: 0; }
 .detail-img-placeholder { width: 588px; min-height: 900px; background-color: #eaeaea; display: flex; align-items: center; justify-content: center; text-align: center; color: #555; font-size: 16px; margin-bottom: 20px; }
-.detail-img-placeholder img { width: 100%; height: auto; display: block; }
+.detail-img-placeholder img { 
+    width: 100%; 
+    height: auto; 
+    display: block; 
+    image-rendering: -webkit-optimize-contrast; 
+    transform: translateZ(0); 
+    backface-visibility: hidden; 
+}
 
 .detail-text-area { flex: 1; max-width: 450px; position: sticky; top: 120px; }
 .detail-text-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
@@ -176,10 +265,9 @@ body.is-main-page .nav-link { color: #000; }
 =========================================================== */
 #section-archive { 
     position: relative; 
-    padding-top: 110px; /* 기존(120px)에서 살짝만 올리도록 수정 */
+    padding-top: 110px; 
     padding-bottom: 180px; 
 }
-
 
 .archive-visual-area { 
     grid-column: 2 / 7; 
@@ -188,7 +276,6 @@ body.is-main-page .nav-link { color: #000; }
     padding-right: 15px; 
 }
 
-
 .archive-poster-wrapper {
     width: 100%;
     max-width: calc((100vh - 350px) / 1.414); 
@@ -196,7 +283,6 @@ body.is-main-page .nav-link { color: #000; }
     display: flex;
     flex-direction: column;
 }
-
 
 .archive-year-display { 
     font-size: 24px; 
@@ -209,7 +295,6 @@ body.is-main-page .nav-link { color: #000; }
     color: #000000;     
     background-color: #F6A700; 
 }
-
 
 .archive-poster {
     width: 100%;
@@ -224,10 +309,9 @@ body.is-main-page .nav-link { color: #000; }
     object-fit: cover; 
 }
 
-
 .archive-text-area { 
     grid-column: 7 / 12; 
-    padding-top: 35px; /* 포스터 위치 변경에 맞춰 자연스럽게 조정 (기존 48px) */
+    padding-top: 35px; 
     padding-left: 15px; 
 }
 .archive-title { 
@@ -246,7 +330,7 @@ body.is-main-page .nav-link { color: #000; }
 
 .archive-controls { 
     position: absolute;
-    bottom: 85px; /* 기존 위치(105px)에서 조금 더 아래로 내림 */
+    bottom: 85px; 
     left: 50%;
     transform: translateX(-50%); 
     margin-top: 0; 
@@ -267,7 +351,6 @@ body.is-main-page .nav-link { color: #000; }
 .archive-dots { display: flex; gap: 8px; }
 .archive-dot { width: 8px; height: 8px; background-color: #ccc; border-radius: 50%; cursor: pointer; transition: transform 0.2s, background-color 0.2s; }
 .archive-dot.active { background-color: var(--color-text-main); transform: scale(1.3); }
-
 
 /* ===========================================================
    9. About Section
@@ -440,7 +523,8 @@ body.is-main-page .nav-link { color: #000; }
 
 @media screen and (max-width: 768px) {
     :root { --text-md: 18px; } 
-    .container { grid-template-columns: repeat(4, 1fr); padding-left: 20px; padding-right: 20px; padding-bottom: 60px; padding-top: 30px; }
+    /* 모바일 환경 여백 설정 */
+    .container { grid-template-columns: repeat(4, 1fr); padding-left: 20px; padding-right: 20px; padding-bottom: 60px; padding-top: 30px; width: 100%; max-width: 100%; }
     .main-content { padding-top: 80px; }
     .main-subtitle { word-break: keep-all; }
     .nav-wrapper { padding-left: 20px; padding-right: 20px; }
@@ -451,9 +535,12 @@ body.is-main-page .nav-link { color: #000; }
     .nav-menu.active { display: flex; }
     .nav-link { font-size: 20px; } 
     .works-filter-group { margin-bottom: 16px; }
+    
+    /* 모바일에서는 2열 유지 */
     .works-grid-list { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .works-item { grid-column: span 1; margin-bottom: 30px; }
-    .detail-container { flex-direction: column; }
+    .works-item { grid-column: span 1; }
+    
+    .detail-container { flex-direction: column; padding: 0 10px; }
     .detail-text-area { max-width: 100%; position: static; margin-bottom: 40px; }
     .detail-image-area { width: 100%; }
     .detail-img-placeholder { width: 100%; }
@@ -463,7 +550,7 @@ body.is-main-page .nav-link { color: #000; }
     
  .archive-poster-wrapper {
     width: 100%;
-    max-width: calc((100vh - 350px) / 1.414); /* 높이에 따라 크기가 변함 */
+    max-width: calc((100vh - 350px) / 1.414);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -493,7 +580,7 @@ body.is-main-page .nav-link { color: #000; }
     }
     .archive-nav-icon { width: 40px; height: 40px; } 
     
-    .archive-text-area { grid-column: span 4; padding-top: 20px; padding-left: 0; } 
+    .archive-text-area { grid-column: span 4; padding-top: 20px; padding-left: 20px; padding-right: 20px; } 
     .archive-title { font-size: 20px; margin-bottom: 10px; line-height: 1; }
     .archive-desc { font-size: 14px; }
     
@@ -505,7 +592,7 @@ body.is-main-page .nav-link { color: #000; }
     .character-loader-wrapper { width: 340px; height: 160px; }
     .loader-item { width: 90px; height: 90px; }
     
-    .designer-list { grid-column: span 4; }
+    .designer-list { grid-column: span 4; padding: 0 10px;}
     .designer-item { grid-template-columns: 1fr; gap: 8px; padding: 15px 5px; }
     
     #floating-preview, #floating-preview.visible { display: none; } 
@@ -519,7 +606,6 @@ body.is-main-page .nav-link { color: #000; }
     }
     .about-container > img.about-img:nth-of-type(3) {
         content: url('about-3-mb.png');
-        margin-bottom: 50px; /* 추가된 하단 여백 */
     }
 
     .about-video-wrapper {
