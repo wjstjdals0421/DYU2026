@@ -390,8 +390,8 @@ body.is-main-page .nav-link { color: #000; }
     width: 100%;
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
-    padding-top: calc(50px + env(safe-area-inset-top) + 10px);
-    padding-bottom: 55px; /* 남은 높이 안에서 카드 아래 여백을 55px 확보 (도트 15px + 예비 여백 40px) */
+    padding-top: calc(50px + env(safe-area-inset-top)); /* 헤더 영역만큼만 밀어줌 */
+    padding-bottom: 0; /* 세로 정렬에 간섭하지 않도록 패딩 제거 */
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
@@ -429,7 +429,10 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; /* 카드 내용물(포스터 + 텍스트) 세로축 중앙 정렬 */
     box-sizing: border-box;
-    padding: 0 45px; /* 좌우 화살표 버튼 공간 확보 */
+    padding-left: 45px; /* 좌우 화살표 버튼 공간 확보 */
+    padding-right: 45px;
+    padding-top: 10px;
+    padding-bottom: 45px; /* 하단 도트 조작기(bottom 15px)와의 겹침 방지 여백 */
 }
 .archive-visual-area { 
     width: 100%;
