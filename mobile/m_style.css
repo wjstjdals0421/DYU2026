@@ -3,7 +3,7 @@
    =========================================================== */
 @font-face {
     font-family: '2026GSDD';
-    src: url('2026GSDD-Bold.otf') format('opentype');
+    src: url('../2026GSDD-Bold.otf') format('opentype');
     font-weight: normal; 
 }
 :root {
