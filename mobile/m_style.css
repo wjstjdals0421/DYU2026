@@ -391,7 +391,7 @@ body.is-main-page .nav-link { color: #000; }
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
     padding-top: calc(50px + env(safe-area-inset-top) + 10px);
-    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 55px); /* 하단 도트 조작기 상단까지로 제한 */
+    padding-bottom: 55px; /* 남은 높이 안에서 카드 아래 여백을 55px 확보 (도트 15px + 예비 여백 40px) */
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
@@ -534,7 +534,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-dots { 
     position: absolute;
-    bottom: calc(55px + env(safe-area-inset-bottom) + 15px); /* 메뉴바 바로 위에 도트들만 깔끔하게 배치 */
+    bottom: 15px; /* 메뉴바(55px+safe-area) 영역은 부모 박스 크기 연산에서 이미 빠졌으므로, 순수 하단 여백 15px만 지정 */
     left: 50%;
     transform: translateX(-50%);
     display: flex; 
