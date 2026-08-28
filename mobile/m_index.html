@@ -48,7 +48,7 @@
     <!-- 하단 네비게이션 (모바일에서는 햄버거 버튼과 오버레이 메뉴 형태로 전환 가능) -->
     <nav class="global-header bottom-nav">
         <div class="nav-wrapper">
-            <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
+            <button class="hamburger-btn" onclick="toggleMobileMenu()" ontouchstart="toggleMobileMenu(); event.preventDefault();">☰</button>
             <ul class="nav-menu" id="nav-menu">
                 <li><a class="nav-link nav-about" onclick="navigateToPage('about')" id="link-about">About</a></li>
                 <li><a class="nav-link nav-works" onclick="navigateToPage('works')" id="link-works">Works</a></li>

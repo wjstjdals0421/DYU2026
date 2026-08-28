@@ -241,10 +241,10 @@ body.is-main-page .nav-link { color: #000; }
 .works-filter-btn { 
     font-family: '2026GSDD', sans-serif;
     text-transform: uppercase;
-    font-size: 10px; 
+    font-size: 9px; 
     font-weight: normal; 
     color: #8a8a8a; 
-    padding: 6px 10px 4px; 
+    padding: 8px 10px 5px; 
     line-height: 1; 
     transition: color 0.2s; 
 }
@@ -332,6 +332,7 @@ body.is-main-page .nav-link { color: #000; }
    8. Archive Section (모바일)
    =========================================================== */
 #section-archive { 
+    position: relative;
     display: none;
     width: 100%;
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
@@ -438,13 +439,16 @@ body.is-main-page .nav-link { color: #000; }
     color: var(--color-text-sub);
 }
 .archive-controls { 
-    margin-top: 10px;
+    position: absolute;
+    bottom: 20px; /* 로고/메뉴바를 제외한 화면 최하단 부분에 고정 배치 */
+    left: 50%;
+    transform: translateX(-50%);
     display: flex; 
     align-items: center; 
     justify-content: center; 
     gap: 20px; 
     width: 100%;
-    margin-bottom: 5px;
+    margin: 0;
 }
 .archive-btn { 
     background: transparent; 

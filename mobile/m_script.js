@@ -1027,7 +1027,7 @@ function initPhysics() {
     Composite.add(world, clickBody);
 
     const mouse = Mouse.create(render.canvas);
-    mouse.pixelRatio = window.devicePixelRatio || 1; // 기기 픽셀 비율 매핑으로 모바일 터치 드래그 위치 불일치 현상 해결
+    mouse.pixelRatio = Math.min(2, window.devicePixelRatio || 1); // 기기 픽셀 비율 매핑으로 모바일 터치 드래그 위치 불일치 현상 해결
     const mouseConstraint = MouseConstraint.create(engine, {
         mouse: mouse, constraint: { stiffness: 0.2, render: { visible: false } }
     });
@@ -1409,7 +1409,7 @@ function initGuestbookPhysics() {
         });
 
         const mouse = Mouse.create(render.canvas);
-        mouse.pixelRatio = window.devicePixelRatio || 1;
+        mouse.pixelRatio = Math.min(2, window.devicePixelRatio || 1);
 
         mouse.element.removeEventListener("mousewheel", mouse.mousewheel);
         mouse.element.removeEventListener("DOMMouseScroll", mouse.mousewheel);
