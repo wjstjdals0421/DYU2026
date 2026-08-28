@@ -431,7 +431,7 @@ body.is-main-page .nav-link { color: #000; }
     box-sizing: border-box;
     padding-left: 45px; /* 좌우 화살표 버튼 공간 확보 */
     padding-right: 45px;
-    padding-top: 10px;
+    padding-top: 25px;
     padding-bottom: 45px; /* 하단 도트 조작기(bottom 15px)와의 겹침 방지 여백 */
 }
 .archive-visual-area { 
@@ -480,8 +480,7 @@ body.is-main-page .nav-link { color: #000; }
 .archive-text-area { 
     width: 100%;
     max-width: 280px;
-    flex: 1; 
-    min-height: 0;
+    max-height: 120px; /* 긴 텍스트 대비 최대 높이 지정 */
     overflow-y: auto;
     text-align: center;
     padding: 6px 0;
