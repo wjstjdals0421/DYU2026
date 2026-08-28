@@ -385,7 +385,7 @@ body.is-main-page .nav-link { color: #000; }
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
     padding-top: calc(50px + env(safe-area-inset-top) + 15px);
-    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 90px); /* 조작 버튼 위까지만 컨텐츠 영역이 도달하도록 하단 배리어 확보 */
+    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 75px); /* 메뉴바 높이와 조작 버튼 높이/간격을 배리어로 지정 */
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
@@ -501,7 +501,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-controls { 
     position: absolute;
-    bottom: 40px; /* 로고/메뉴바를 제외한 화면 최하단 부분에 고정 배치 (위치를 40px로 위로 올림) */
+    bottom: calc(55px + env(safe-area-inset-bottom) + 20px); /* 메뉴바(55px+safe-area) 영역 위에 여백 20px을 두어 배치 */
     left: 50%;
     transform: translateX(-50%);
     display: flex; 
