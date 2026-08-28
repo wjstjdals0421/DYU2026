@@ -472,13 +472,13 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center; 
     justify-content: center; 
     border: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     cursor: pointer;
 }
 .archive-poster-img { 
     width: 100%; 
     height: 100%; 
-    object-fit: cover; 
+    object-fit: contain; /* 이미지 비율 유지하여 잘림 방지 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 그림자를 이미지 자체에 부여 */
     transition: filter 0.3s ease;
 }
 /* 설명글 터치 시 흐려지고 어두워지는 오버레이 스타일 */
