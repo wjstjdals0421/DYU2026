@@ -1047,7 +1047,7 @@ function initPhysics() {
         { src: '../typo-2.png', width: 925, height: 134, customScale: 0.25 * screenScale }, /* typo-1과 유사한 실물 크기 매칭 */
         { src: '../typo-3.png', width: 1242, height: 350, customScale: 0.18 * screenScale }, /* typo-1과 유사한 실물 크기 매칭 */
         { src: '../typo-4.png', width: 884, height: 134, customScale: 0.26 * screenScale }, /* typo-1과 유사한 실물 크기 매칭 */
-        { src: '../typo-5.png', width: 423, height: 134, customScale: 0.55 * screenScale }  /* typo-1과 유사한 실물 크기 매칭 */
+        { src: '../typo-5.png', width: 423, height: 134, customScale: 0.275 * screenScale } /* typo-5 크기 50% 축소 적용 */
     ];
 
     typoGraphics.forEach((typo, index) => {
