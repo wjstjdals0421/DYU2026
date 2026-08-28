@@ -385,7 +385,7 @@ body.is-main-page .nav-link { color: #000; }
     min-height: calc(100vh - 55px - env(safe-area-inset-bottom));
     min-height: calc(100dvh - 55px - env(safe-area-inset-bottom));
     padding-top: calc(50px + env(safe-area-inset-top) + 15px);
-    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 45px); /* 버튼 간섭 방지를 위해 바텀 패딩 확대 */
+    padding-bottom: calc(55px + env(safe-area-inset-bottom) + 90px); /* 조작 버튼 위까지만 컨텐츠 영역이 도달하도록 하단 배리어 확보 */
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
@@ -405,6 +405,8 @@ body.is-main-page .nav-link { color: #000; }
     width: 100%;
     gap: 0;
     padding: 0;
+    flex: 1; /* 바텀 패딩 배리어(버튼 상단)까지 유연하게 공간을 늘림 */
+    min-height: 0;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -413,6 +415,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-card {
     flex: 0 0 100%;
+    height: 100%; /* 상위 영역 높이에 맞춰 전체 높이 고정 */
     scroll-snap-align: start;
     scroll-snap-stop: always; /* 한 번 스크롤할 때 무조건 카드 하나씩만 멈추도록 강제 설정 */
     display: flex;
@@ -420,6 +423,7 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     box-sizing: border-box;
     padding: 0 30px;
+    justify-content: flex-start;
 }
 .archive-visual-area { 
     width: 100%;
@@ -467,7 +471,8 @@ body.is-main-page .nav-link { color: #000; }
 .archive-text-area { 
     width: 100%;
     max-width: 280px;
-    max-height: 95px; /* 설명글이 무한정 길어져 잘리는 현상 방지를 위해 최대 높이 제한 후 스크롤 제공 */
+    flex: 1; /* 비주얼 영역 아래 나머지 공간을 남김없이 꽉 메우고, 영역 초과 시 내부에 세로 스크롤 허용 */
+    min-height: 0;
     overflow-y: auto;
     text-align: center;
     padding: 6px 0;
