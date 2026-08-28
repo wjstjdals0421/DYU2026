@@ -4,7 +4,27 @@
 /* -----------------------------------------------------------
    최초 진입 오프닝 영상 (최초 1회만 재생, 새로고침 시 스킵)
 ----------------------------------------------------------- */
+// 물리 유닛 이미지 사전 로딩 리스트 (오프닝 영상 재생되는 비행 시간 동안 캐시 유입 유도)
+const physicsImagesToPreload = [
+    '../maingraphic-01.png', '../maingraphic-02.png', '../maingraphic-03.png',
+    '../maingraphic-04.png', '../maingraphic-05.png', '../maingraphic-06.png',
+    '../maingraphic-07.png', '../maingraphic-08.png', '../maingraphic-09.png',
+    '../maingraphic-10.png', '../maingraphic-11.png', '../maingraphic-12.png',
+    '../maingraphic-13.png', '../typo-1.png', '../typo-2.png',
+    '../typo-3.png', '../typo-4.png', '../typo-5.png', '../Click1.png'
+];
+
+function preloadPhysicsResources() {
+    physicsImagesToPreload.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // 돔 로드 즉시 백그라운드 이미지 사전 로드 가동
+    preloadPhysicsResources();
+
     const introScreen = document.getElementById('intro-screen');
     const introVideo = document.getElementById('intro-video');
 
@@ -38,6 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideIntro() {
         sessionStorage.setItem('gsdd_intro_played', 'true');
+        // 오프닝 영상 종료 즉시 비디오 하드웨어 가속기 메모리를 해제하여 CPU 점유율 반환
+        if (introVideo) {
+            introVideo.pause();
+            introVideo.src = "";
+            try {
+                introVideo.load();
+            } catch (e) {}
+        }
         if (introScreen) {
             introScreen.classList.add('hidden');
             setTimeout(() => introScreen.style.display = 'none', 500);
@@ -54,13 +82,18 @@ function initMainApp() {
     renderWorksGrid(worksDataset);
     initArchiveScroll();
     initGuestbookControls();
-    initPhysics();
     
     // 디자이너 페이지 렌더링 & 초기화
     renderDesignersList('All');
     
     // 처음 실행 시 메인으로 가며 로딩은 스킵 
     navigateToPage('main', true); 
+
+    // 인트로 비디오 제거 및 초기 렌더링 부하가 모두 끝난 뒤인 350ms 후에 
+    // CPU가 완전히 깨끗하고 여유로운 상태에서 물리 시뮬레이션(60fps)을 부드럽게 구동 시작
+    setTimeout(() => {
+        initPhysics();
+    }, 350);
 }
 
 /* -----------------------------------------------------------
