@@ -505,9 +505,9 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-overlay-desc {
     font-family: var(--font-family);
-    font-size: 11px;
+    font-size: 12px; /* 11px에서 12px로 확대 */
     line-height: 1.6;
-    font-weight: 400;
+    font-weight: 300; /* 400에서 300(Light)으로 얇게 조정 */
     text-align: center;
     color: #ffffff;
     margin: 0 0 12px 0;
