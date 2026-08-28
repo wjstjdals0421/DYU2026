@@ -4,31 +4,7 @@
 /* -----------------------------------------------------------
    최초 진입 오프닝 영상 (최초 1회만 재생, 새로고침 시 스킵)
 ----------------------------------------------------------- */
-// 물리 유닛 이미지 사전 로딩 리스트 (오프닝 영상 재생되는 비행 시간 동안 캐시 유입 유도)
-const physicsImagesToPreload = [
-    '../maingraphic-01.png', '../maingraphic-02.png', '../maingraphic-03.png',
-    '../maingraphic-04.png', '../maingraphic-05.png', '../maingraphic-06.png',
-    '../maingraphic-07.png', '../maingraphic-08.png', '../maingraphic-09.png',
-    '../maingraphic-10.png', '../maingraphic-11.png', '../maingraphic-12.png',
-    '../maingraphic-13.png', '../typo-1.png', '../typo-2.png',
-    '../typo-3.png', '../typo-4.png', '../typo-5.png', '../Click1.png'
-];
-
-function preloadPhysicsResources() {
-    physicsImagesToPreload.forEach(src => {
-        const img = new Image();
-        img.src = src;
-    });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    // 돔 로드 즉시 백그라운드 이미지 사전 로드 가동 (캐시 유입)
-    preloadPhysicsResources();
-    
-    // 오프닝 영상이 재생되는 동안 CPU 유휴 시간을 선제적으로 활용하여 Works/Designers 그리드 등 돔 렌더링 작업을 완료시킴
-    // (영상이 끝난 후 돔 대량 생성으로 인한 CPU 과부하 차단)
-    initDomAndData();
-
     const introScreen = document.getElementById('intro-screen');
     const introVideo = document.getElementById('intro-video');
 
@@ -42,9 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (sessionStorage.getItem('gsdd_intro_played')) {
         if (introScreen) {
-            introScreen.remove(); // 돔에서 비디오 요소를 완전히 영구 삭제하여 하드웨어 가속 리소스 즉시 반환
+            introScreen.style.display = 'none';
+            introScreen.classList.add('hidden');
         }
-        initPhysics(); // 물리 엔진 즉시 구동 (랙 유발 요인이 이미 차단됨)
+        initMainApp();
     } else {
         if (introVideo) {
             introVideo.currentTime = 0; 
@@ -55,57 +32,32 @@ document.addEventListener('DOMContentLoaded', () => {
             introVideo.onended = hideIntro;
             introVideo.onerror = hideIntro;
         } else {
-            if (introScreen) introScreen.remove();
-            initPhysics();
+            initMainApp();
         }
     }
 
     function hideIntro() {
         sessionStorage.setItem('gsdd_intro_played', 'true');
-        // 오프닝 영상 종료 즉시 비디오 하드웨어 가속기 메모리를 완전 정지하고 소멸
-        if (introVideo) {
-            introVideo.pause();
-            introVideo.src = "";
-            try {
-                introVideo.load();
-            } catch (e) {}
-        }
         if (introScreen) {
             introScreen.classList.add('hidden');
-            // 페이드아웃 애니메이션(500ms)이 끝나는 즉시 돔에서 엘리먼트를 아예 삭제해 GPU 전력 사용을 차단하고 물리 엔진 기동
-            setTimeout(() => {
-                introScreen.remove();
-                initPhysics();
-            }, 500);
-        } else {
-            initPhysics();
+            setTimeout(() => introScreen.style.display = 'none', 500);
         }
+        initMainApp(); 
     }
 });
 
-let isDomInitialized = false;
-let isWorksInitialized = false;
-let isArchiveInitialized = false;
-let isDesignersInitialized = false;
+let isAppInitialized = false;
+function initMainApp() {
+    if (isAppInitialized) return;
+    isAppInitialized = true;
 
-function lazyInitializePage(pageName) {
-    if ((pageName === 'works' || pageName === 'detail') && !isWorksInitialized) {
-        renderWorksGrid(worksDataset);
-        isWorksInitialized = true;
-    } else if (pageName === 'archive' && !isArchiveInitialized) {
-        initArchiveScroll();
-        isArchiveInitialized = true;
-    } else if (pageName === 'designers' && !isDesignersInitialized) {
-        renderDesignersList('All');
-        isDesignersInitialized = true;
-    }
-}
-
-function initDomAndData() {
-    if (isDomInitialized) return;
-    isDomInitialized = true;
-
-    initGuestbookControls(); // 가벼운 방명록 컨트롤만 미리 설정
+    renderWorksGrid(worksDataset);
+    initArchiveScroll();
+    initGuestbookControls();
+    initPhysics();
+    
+    // 디자이너 페이지 렌더링 & 초기화
+    renderDesignersList('All');
     
     // 처음 실행 시 메인으로 가며 로딩은 스킵 
     navigateToPage('main', true); 
@@ -419,9 +371,6 @@ const loadingCombinations = [
 function navigateToPage(pageName, skipLoading = false) {
     const targetId = `section-${pageName}`;
     const targetSection = document.getElementById(targetId);
-    
-    // 이동하려는 타겟 페이지 지연 로딩(Lazy Load) 구동
-    lazyInitializePage(pageName);
     
     if (targetSection && targetSection.classList.contains('active') && !skipLoading) return;
     if (isNavigating) return;
