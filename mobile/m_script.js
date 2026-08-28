@@ -8,6 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const introScreen = document.getElementById('intro-screen');
     const introVideo = document.getElementById('intro-video');
 
+    document.addEventListener('touchstart', (e) => {
+        if (!e.target.closest('.works-item')) {
+            document.querySelectorAll('#works-list-grid .works-item').forEach(item => {
+                item.classList.remove('hover-active');
+            });
+        }
+    });
+
     if (sessionStorage.getItem('gsdd_intro_played')) {
         if (introScreen) {
             introScreen.style.display = 'none';
@@ -60,22 +68,46 @@ function initMainApp() {
 ----------------------------------------------------------- */
 function renderWorksGrid(data) {
     const grid = document.getElementById('works-list-grid');
+    if (!grid) return;
     grid.innerHTML = '';
     
-    data.forEach(work => {
+    // 데스크탑과 동일하게 디자이너 한글 이름 순 정렬
+    const sortedData = [...data].sort((a, b) => a.designer.localeCompare(b.designer, 'ko'));
+    
+    sortedData.forEach(work => {
         const workItem = document.createElement('li'); 
-        workItem.className = 'works-item';
-        workItem.onclick = () => showWorkDetail(work.id);
+        workItem.className = `works-item category-${work.category.toLowerCase()}`;
         
         workItem.innerHTML = `
             <figure class="works-thumb">
-                <img src="../${work.thumbFile}" alt="${work.title}" onerror="this.style.display='none'" class="thumb-bg-img" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="../${work.thumbFile}" alt="${work.title}" onerror="this.style.display='none'" class="thumb-bg-img">
+                <div class="works-hover-overlay">
+                    <div class="works-hover-content">
+                        <p class="works-hover-title">${work.title}</p>
+                        <p class="works-hover-name">${work.designer}</p>
+                    </div>
+                    <p class="works-hover-category">${work.category.toUpperCase()}</p>
+                </div>
             </figure>
-            <article class="works-meta">
-                <h3 class="works-title">${work.title}</h3>
-                <p class="works-author">${work.designer} / ${work.category}</p>
-            </article>
         `;
+        
+        workItem.onclick = (e) => {
+            if (workItem.classList.contains('hover-active')) {
+                // 두 번째 터치 시 상세페이지 이동
+                showWorkDetail(work.id);
+            } else {
+                // 첫 번째 터치 시 호버 오버레이 켜기
+                e.stopPropagation();
+                
+                // 다른 작품들의 호버 해제
+                document.querySelectorAll('#works-list-grid .works-item').forEach(item => {
+                    item.classList.remove('hover-active');
+                });
+                
+                workItem.classList.add('hover-active');
+            }
+        };
+        
         grid.appendChild(workItem);
     });
 }
