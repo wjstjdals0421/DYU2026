@@ -103,29 +103,9 @@
 
         <!-- Archive Section -->
         <section id="section-archive" class="container page-section">
-            <div class="archive-visual-area">
-                <!-- 연도와 포스터를 하나로 묶는 Wrapper -->
-                <div class="archive-poster-wrapper">
-                    <p class="archive-year-display" id="archive-display-year">2025</p>
-                    <figure class="archive-poster" id="archive-poster-container" onclick="openArchiveExternalLink()">
-                    </figure>
-                </div>
+            <div class="archive-scroll-container" id="archive-scroll-container">
+                <!-- Dynamically generated archive cards will go here -->
             </div>
-            
-            <article class="archive-text-area">
-                <h2 class="archive-title" id="archive-title-text">Graduation Exhibition Title</h2>
-                <p class="archive-desc" id="archive-description-text">해당 년도의 전시 설명 내용...</p>
-            </article>
-
-            <nav class="archive-controls">
-                <button class="archive-btn" onclick="moveArchiveSlide(-1)">
-                    <img src="../archive1.png" alt="이전" class="archive-nav-icon">
-                </button>
-                <div class="archive-dots" id="archive-dots-container"></div>
-                <button class="archive-btn" onclick="moveArchiveSlide(1)">
-                    <img src="../archive2.png" alt="다음" class="archive-nav-icon">
-                </button>
-            </nav>
         </section>
 
         <!-- About Section -->

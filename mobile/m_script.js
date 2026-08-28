@@ -44,8 +44,7 @@ function initMainApp() {
     isAppInitialized = true;
 
     renderWorksGrid(worksDataset);
-    initArchivePagination();
-    updateArchiveView();
+    initArchiveScroll();
     initGuestbookControls();
     initPhysics();
     
@@ -221,64 +220,34 @@ function initDesignersInteractions() {
 }
 
 /* -----------------------------------------------------------
-   Archive 렌더링 로직 
+   Archive 렌더링 로직 (모바일 가로 스크롤 방식)
 ----------------------------------------------------------- */
-let archiveIndex = 0;
-
-function initArchivePagination() {
-    const dotsContainer = document.getElementById('archive-dots-container');
-    if (!dotsContainer) return;
-    dotsContainer.innerHTML = '';
+function initArchiveScroll() {
+    const container = document.getElementById('archive-scroll-container');
+    if (!container) return;
+    container.innerHTML = '';
     
-    archiveDataset.forEach((data, index) => {
-        const dot = document.createElement('div');
-        dot.className = index === 0 ? 'archive-dot active' : 'archive-dot';
-        dot.onclick = () => { archiveIndex = index; updateArchiveView(); };
-        dotsContainer.appendChild(dot);
+    archiveDataset.forEach(data => {
+        const card = document.createElement('article');
+        card.className = 'archive-card';
+        
+        card.innerHTML = `
+            <div class="archive-visual-area">
+                <div class="archive-poster-wrapper">
+                    <p class="archive-year-display" style="background-color: ${data.bgColor};">${data.year}</p>
+                    <figure class="archive-poster" onclick="window.open('${data.link}', '_blank')">
+                        <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster">
+                    </figure>
+                </div>
+            </div>
+            
+            <div class="archive-text-area">
+                <h2 class="archive-title">${data.title}</h2>
+                <p class="archive-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
+            </div>
+        `;
+        container.appendChild(card);
     });
-}
-
-function moveArchiveSlide(direction) {
-    archiveIndex += direction; 
-    if (archiveIndex < 0) archiveIndex = archiveDataset.length - 1;
-    if (archiveIndex >= archiveDataset.length) archiveIndex = 0;
-    updateArchiveView();
-}
-
-function updateArchiveView() {
-    const data = archiveDataset[archiveIndex];
-    if (!data) return;
-    
-    const displayYear = document.getElementById('archive-display-year');
-    const titleText = document.getElementById('archive-title-text');
-    const descText = document.getElementById('archive-description-text');
-    const posterContainer = document.getElementById('archive-poster-container');
-    
-    if (displayYear) {
-        displayYear.innerText = data.year;
-        displayYear.style.backgroundColor = data.bgColor;
-    }
-    
-    if (titleText) titleText.innerText = data.title;
-    if (descText) descText.innerHTML = (data.desc || '').replace(/\n/g, '<br>');
-    
-    if (posterContainer) {
-        // 상위 폴더 경로(../) 적용
-        posterContainer.innerHTML = `<img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster">`;
-    }
-
-    const dots = document.querySelectorAll('#archive-dots-container .archive-dot');
-    dots.forEach((dot, idx) => {
-        if (idx === archiveIndex) dot.classList.add('active');
-        else dot.classList.remove('active');
-    });
-}
-
-function openArchiveExternalLink() {
-    const data = archiveDataset[archiveIndex];
-    if (data && data.link) {
-        window.open(data.link, '_blank');
-    }
 }
 
 /* -----------------------------------------------------------
