@@ -4,7 +4,26 @@
 /* -----------------------------------------------------------
    최초 진입 오프닝 영상 (최초 1회만 재생, 새로고침 시 스킵)
 ----------------------------------------------------------- */
+// 물리 유닛 이미지 사전 로딩 리스트 (최초 진입 시 오프닝 시간 동안 이미지 파일 캐시 유입)
+const physicsImagesToPreload = [
+    '../maingraphic-01.png', '../maingraphic-02.png', '../maingraphic-03.png',
+    '../maingraphic-04.png', '../maingraphic-05.png', '../maingraphic-06.png',
+    '../maingraphic-07.png', '../maingraphic-08.png', '../maingraphic-09.png',
+    '../maingraphic-10.png', '../maingraphic-11.png', '../maingraphic-12.png',
+    '../maingraphic-13.png', '../typo-1.png', '../typo-2.png',
+    '../typo-3.png', '../typo-4.png', '../typo-5.png', '../Click1.png'
+];
+
+function preloadPhysicsResources() {
+    physicsImagesToPreload.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // 돔 로드 즉시 백그라운드 이미지 사전 로드 구동 (투명하게 떨어지는 현상 방지)
+    preloadPhysicsResources();
     const introScreen = document.getElementById('intro-screen');
     const introVideo = document.getElementById('intro-video');
 
