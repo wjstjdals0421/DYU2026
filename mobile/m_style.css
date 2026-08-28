@@ -428,8 +428,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; 
     box-sizing: border-box;
-    padding-left: 45px; /* 화살표 크기 확대로 인한 공간 최적화 조정 */
-    padding-right: 45px;
+    padding-left: 48px; /* 양옆 화살표 버튼 공간 확보를 위한 패딩 설정 */
+    padding-right: 48px;
     padding-top: 25px;
     padding-bottom: 45px; 
 }
@@ -441,8 +441,8 @@ body.is-main-page .nav-link { color: #000; }
     margin-bottom: 12px;
 }
 .archive-poster-wrapper {
-    width: 72vw; /* 포스터 화면 면적 크게 확대 */
-    max-width: min(280px, 100%); /* 기기 가로폭에 따라 절대 넘치지 않도록 제한 */
+    width: 100%; /* 포스터가 카드 내에서 활용할 수 있는 가로 영역을 최대로 활용 */
+    max-width: 300px; /* 대화면이나 가로 모드에서도 너무 거대해지지 않도록 상한 지정 */
     min-width: 180px;
     margin: 0 auto;
     display: flex;
@@ -568,8 +568,8 @@ body.is-main-page .nav-link { color: #000; }
     transform: translateY(-50%);
 }
 .archive-nav-icon { 
-    width: 42px; /* 화살표 사이즈 확대 */
-    height: 42px; 
+    width: 38px; /* 화살표 사이즈 최적화 */
+    height: 38px; 
     object-fit: contain; 
 }
 .archive-dots { 
