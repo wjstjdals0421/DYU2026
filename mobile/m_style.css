@@ -428,8 +428,8 @@ body.is-main-page .nav-link { color: #000; }
     align-items: center;
     justify-content: center; 
     box-sizing: border-box;
-    padding-left: 55px; /* 화살표 크기 확대로 인한 공간 추가 확보 */
-    padding-right: 55px;
+    padding-left: 45px; /* 화살표 크기 확대로 인한 공간 최적화 조정 */
+    padding-right: 45px;
     padding-top: 25px;
     padding-bottom: 45px; 
 }
@@ -442,7 +442,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-poster-wrapper {
     width: 72vw; /* 포스터 화면 면적 크게 확대 */
-    max-width: 280px; /* 최대폭도 확장 */
+    max-width: min(280px, 100%); /* 기기 가로폭에 따라 절대 넘치지 않도록 제한 */
     min-width: 180px;
     margin: 0 auto;
     display: flex;
@@ -533,7 +533,7 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-text-area { 
     width: 100%;
-    max-width: 280px;
+    max-width: min(280px, 100%);
     text-align: center;
     padding: 6px 0;
     box-sizing: border-box;
@@ -557,13 +557,13 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-btn.prev-btn {
     position: absolute;
-    left: 8px;
+    left: 4px;
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
 .archive-btn.next-btn {
     position: absolute;
-    right: 8px;
+    right: 4px;
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
