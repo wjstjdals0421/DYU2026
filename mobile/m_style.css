@@ -498,7 +498,7 @@ body.is-main-page .nav-link { color: #000; }
     z-index: 2;
 }
 .archive-poster.show-desc .archive-poster-img {
-    filter: blur(5px) brightness(30%);
+    filter: blur(5px) brightness(75%); /* 이미지 자체의 밝기 저하를 완화하여 오버레이 컬러가 맑고 화사하게 드러나도록 조절 */
 }
 .archive-poster.show-desc .archive-desc-overlay {
     opacity: 1;
