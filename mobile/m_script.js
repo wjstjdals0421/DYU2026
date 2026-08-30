@@ -344,7 +344,7 @@ function initArchiveScroll() {
                     <p class="archive-year-display" style="background-color: ${data.bgColor};">${data.year}</p>
                     <figure class="archive-poster" onclick="toggleArchiveDesc(this)">
                         <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster" class="archive-poster-img">
-                        <div class="archive-desc-overlay" style="background-color: ${hexToRgba(data.bgColor, 0.3)};">
+                        <div class="archive-desc-overlay" style="background-color: ${hexToRgba(data.bgColor, 0.5)};">
                             <p class="archive-overlay-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
                             <span class="archive-link-text" onclick="window.open('${data.link}', '_blank'); event.stopPropagation();">
                                 VIEW EXHIBITION →
