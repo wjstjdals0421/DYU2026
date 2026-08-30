@@ -322,6 +322,13 @@ function moveArchiveSlide(direction) {
     });
 }
 
+function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 function initArchiveScroll() {
     const container = document.getElementById('archive-scroll-container');
     if (!container) return;
@@ -337,7 +344,7 @@ function initArchiveScroll() {
                     <p class="archive-year-display" style="background-color: ${data.bgColor};">${data.year}</p>
                     <figure class="archive-poster" onclick="toggleArchiveDesc(this)">
                         <img src="../${data.year}gsdd.${data.format}" alt="${data.year} GSDD Poster" class="archive-poster-img">
-                        <div class="archive-desc-overlay">
+                        <div class="archive-desc-overlay" style="background-color: ${hexToRgba(data.bgColor, 0.9)};">
                             <p class="archive-overlay-desc">${(data.desc || '').replace(/\n/g, '<br>')}</p>
                             <span class="archive-link-text" onclick="window.open('${data.link}', '_blank'); event.stopPropagation();">
                                 VIEW EXHIBITION →
