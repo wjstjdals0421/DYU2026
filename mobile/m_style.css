@@ -556,19 +556,19 @@ body.is-main-page .nav-link { color: #000; }
 }
 .archive-btn.prev-btn {
     position: absolute;
-    left: 2px;
+    left: -20px; /* 화면 가장자리에 붙여서 둥근 버튼의 일부를 컷오프 처리 */
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
 .archive-btn.next-btn {
     position: absolute;
-    right: 2px;
+    right: -20px; /* 화면 가장자리에 붙여서 둥근 버튼의 일부를 컷오프 처리 */
     top: 50%; /* 세로 정중앙 정렬 */
     transform: translateY(-50%);
 }
 .archive-nav-icon { 
-    width: 45px; /* 화살표 버튼 사이즈 증대 (45px) */
-    height: 45px; 
+    width: 60px; /* 시각적 매칭을 위해 버튼 크기를 60px로 증대 */
+    height: 60px; 
     object-fit: contain; 
 }
 .archive-dots { 
